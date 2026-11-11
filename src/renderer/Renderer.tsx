@@ -12,6 +12,41 @@ function renderNode(node: ComponentNode): ReactNode {
   ))
 
   switch (node.type) {
+    case 'navbar': {
+      const links = (node.content.links ?? '')
+        .split(',')
+        .map((link) => link.trim())
+        .filter(Boolean)
+
+      return (
+        <nav
+          aria-label="Main navigation"
+          className={node.style.container ?? ''}
+        >
+          <div className="flex items-center justify-between gap-6">
+            <a
+              className="font-semibold text-slate-900"
+              href="/"
+              aria-label={`${node.content.brand ?? 'Home'} home`}
+            >
+              {node.content.brand ?? 'Home'}
+            </a>
+            <ul className="flex flex-wrap items-center gap-6">
+              {links.map((link) => (
+                <li key={link}>
+                  <a
+                    className="text-slate-600 hover:text-slate-950"
+                    href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      )
+    }
     case 'heading':
       return (
         <h1 className={node.style.text ?? ''}>{node.content.text ?? ''}</h1>
@@ -93,6 +128,13 @@ function renderNode(node: ComponentNode): ReactNode {
         </div>
       )
     }
+    case 'footer':
+      return (
+        <footer className={node.style.container ?? ''}>
+          {node.content.text ?? ''}
+          {children}
+        </footer>
+      )
     default:
       return <>{children}</>
   }
