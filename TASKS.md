@@ -23,7 +23,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 ## M2 — Renderer (Week 2-3)
 
-- [ ] **T11** Basic `Renderer.tsx` (heading, text, button, image). — _Done when:_ small JSON shows on screen.
+- [x] **T11** Basic `Renderer.tsx` (heading, text, button, image). — _Done when:_ small JSON shows on screen.
 - [ ] **T12** Layout components: section, columns (grid/flex from `layout`). — _Done when:_ 3 columns appear side by side.
 - [ ] **T13** Navbar and footer components. — _Done when:_ landing sample's top and bottom render.
 - [ ] **T14** Hero and card components. — _Done when:_ hero + 3 cards render.
