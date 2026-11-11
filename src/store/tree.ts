@@ -105,6 +105,36 @@ export function removeNode(tree: ComponentNode, id: string): ComponentNode {
   return removeNodeFromChildren(tree, id)
 }
 
+export function moveNode(
+  tree: ComponentNode,
+  id: string,
+  newParentId: string,
+  index: number,
+): ComponentNode {
+  if (tree.id === id) {
+    throw new Error('Cannot move the website root.')
+  }
+
+  const node = findNode(tree, id)
+  if (!node) {
+    throw new Error(`Cannot move component "${id}": node not found.`)
+  }
+
+  const newParent = findNode(tree, newParentId)
+  if (!newParent) {
+    throw new Error(`Cannot move component: parent "${newParentId}" not found.`)
+  }
+  if (!containerTypes.has(newParent.type)) {
+    throw new Error(`Cannot add children to "${newParent.type}" components.`)
+  }
+  if (findNode(node, newParentId)) {
+    throw new Error('Cannot move a component into itself or its descendants.')
+  }
+
+  const treeWithoutNode = removeNode(tree, id)
+  return addNode(treeWithoutNode, newParentId, node, index)
+}
+
 function removeNodeFromChildren(
   tree: ComponentNode,
   id: string,

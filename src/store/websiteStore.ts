@@ -5,6 +5,7 @@ import { websiteSamples } from '../samples'
 import {
   addNode as addNodeToTree,
   findNode,
+  moveNode as moveNodeInTree,
   removeNode as removeNodeFromTree,
   updateTree,
 } from './tree'
@@ -21,6 +22,7 @@ interface WebsiteState {
   updateNode: (id: string, updates: ComponentNodeUpdate) => void
   addNode: (parentId: string, node: ComponentNode, index?: number) => void
   removeNode: (id: string) => void
+  moveNode: (id: string, newParentId: string, index: number) => void
 }
 
 function containsWebsiteNode(node: ComponentNode): boolean {
@@ -115,5 +117,16 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         website,
         selectedId: clearSelection ? null : state.selectedId,
       }
+    }),
+  moveNode: (id, newParentId, index) =>
+    set((state) => {
+      const website = moveNodeInTree(state.website, id, newParentId, index)
+      if (!isWebsiteDocument(website)) {
+        throw new Error(
+          'Moving a component produced an invalid website document.',
+        )
+      }
+
+      return { website }
     }),
 }))
