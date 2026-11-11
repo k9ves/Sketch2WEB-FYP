@@ -12,6 +12,10 @@ function renderNode(node: ComponentNode): ReactNode {
   ))
 
   switch (node.type) {
+    case 'hero':
+      return (
+        <section className={node.style.container ?? ''}>{children}</section>
+      )
     case 'navbar': {
       const links = (node.content.links ?? '')
         .split(',')
@@ -78,6 +82,26 @@ function renderNode(node: ComponentNode): ReactNode {
         />
       ) : null
     }
+    case 'card':
+      return (
+        <article className={node.style.container ?? ''}>
+          {node.content.title ? (
+            <h3
+              className={
+                node.style.title ?? 'text-xl font-semibold text-slate-900'
+              }
+            >
+              {node.content.title}
+            </h3>
+          ) : null}
+          {node.content.description ? (
+            <p className={node.style.description ?? 'mt-2 text-slate-600'}>
+              {node.content.description}
+            </p>
+          ) : null}
+          {children}
+        </article>
+      )
     case 'section':
       return (
         <section
