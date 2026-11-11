@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "title": "Northstar Studio",
+  "root": {
+    "id": "landing-root",
+    "type": "section",
+    "children": [
+      {
+        "id": "landing-navbar",
+        "type": "navbar",
+        "props": {
+          "brand": "Northstar",
+          "links": [
+            { "label": "Work", "href": "#work" },
+            { "label": "About", "href": "#about" },
+            { "label": "Contact", "href": "#contact" }
+          ]
+        }
+      },
+      {
+        "id": "landing-hero",
+        "type": "hero",
+        "props": {
+          "title": "Design that moves your business forward.",
+          "description": "We build thoughtful digital experiences for ambitious teams."
+        },
+        "children": [
+          {
+            "id": "landing-hero-button",
+            "type": "button",
+            "props": { "label": "Explore our work", "href": "#work" }
+          }
+        ]
+      },
+      {
+        "id": "landing-work",
+        "type": "section",
+        "props": {
+          "title": "What we do",
+          "text": "A small team for big ideas."
+        },
+        "children": [
+          {
+            "id": "landing-cards",
+            "type": "columns",
+            "layout": { "display": "grid", "columns": 3, "gap": 1.25 },
+            "children": [
+              {
+                "id": "landing-card-brand",
+                "type": "card",
+                "props": {
+                  "title": "Brand strategy",
+                  "text": "Clear positioning and identities built to last."
+                }
+              },
+              {
+                "id": "landing-card-web",
+                "type": "card",
+                "props": {
+                  "title": "Web experiences",
+                  "text": "Fast, accessible websites made for real people."
+                }
+              },
+              {
+                "id": "landing-card-product",
+                "type": "card",
+                "props": {
+                  "title": "Digital products",
+                  "text": "Useful product experiences, from first sketch to launch."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "landing-footer",
+        "type": "footer",
+        "props": { "text": "© 2026 Northstar Studio" }
+      }
+    ]
+  }
+}

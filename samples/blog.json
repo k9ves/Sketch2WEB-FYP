@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "title": "The Sunday Edit",
+  "root": {
+    "id": "blog-root",
+    "type": "section",
+    "children": [
+      {
+        "id": "blog-navbar",
+        "type": "navbar",
+        "props": {
+          "brand": "The Sunday Edit",
+          "links": [
+            { "label": "Stories", "href": "#stories" },
+            { "label": "About", "href": "#about" }
+          ]
+        }
+      },
+      {
+        "id": "blog-hero",
+        "type": "hero",
+        "props": {
+          "title": "Ideas for a more considered life",
+          "description": "Notes on food, places, and the little things worth noticing."
+        }
+      },
+      {
+        "id": "blog-stories",
+        "type": "section",
+        "props": { "title": "Latest stories" },
+        "children": [
+          {
+            "id": "blog-story-columns",
+            "type": "columns",
+            "layout": { "display": "grid", "columns": 3, "gap": 1.25 },
+            "children": [
+              {
+                "id": "blog-story-one",
+                "type": "card",
+                "props": {
+                  "title": "A slower morning",
+                  "text": "Small rituals that make space for a better start."
+                }
+              },
+              {
+                "id": "blog-story-two",
+                "type": "card",
+                "props": {
+                  "title": "Market day",
+                  "text": "Meet the growers bringing the season to our tables."
+                }
+              },
+              {
+                "id": "blog-story-three",
+                "type": "card",
+                "props": {
+                  "title": "Rooms with stories",
+                  "text": "A home should feel collected, not simply decorated."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "blog-footer",
+        "type": "footer",
+        "props": { "text": "The Sunday Edit · Independent since 2024" }
+      }
+    ]
+  }
+}

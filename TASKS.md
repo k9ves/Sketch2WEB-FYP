@@ -14,27 +14,27 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T5** Add `CLAUDE.md` and this `TASKS.md` to project root. — _Done when:_ Claude reads and summarizes them.
 - [ ] **T6** Push to GitHub, add Asim and Noor, create `dev` branch. — _Done when:_ teammates can clone.
 
-## M1 — Schema and samples (Week 1-2, with Noor)
+## M1 — Schema and samples (Week 1-2)
 
-- [ ] **T7** Write `src/schema/types.ts` (ComponentNode, ComponentType). — _Done when:_ no TS errors.
-- [ ] **T8** Make `samples/landing.json` (navbar, hero, 3 cards, footer). — _Done when:_ file validates against the types.
-- [ ] **T9** Make `samples/portfolio.json` and `samples/blog.json`. — _Done when:_ 3 samples exist.
-- [ ] **T10** Review schema with Noor, freeze **v1** (add `version` field). — _Done when:_ Noor agrees, tagged `schema-v1` in git.
+- [x] **T7** Write `src/schema/types.ts` (ComponentNode, ComponentType). — _Done when:_ no TS errors.
+- [x] **T8** Make `samples/landing.json` (navbar, hero, 3 cards, footer). — _Done when:_ file validates against the types.
+- [x] **T9** Make `samples/portfolio.json` and `samples/blog.json`. — _Done when:_ 3 samples exist.
+- [ ] **T10** Review schema internally and freeze **v1** (add `version` field). — _Done when:_ schema is reviewed and tagged `schema-v1` in git.
 
 ## M2 — Renderer (Week 2-3)
 
-- [ ] **T11** Basic `Renderer.tsx` (heading, text, button, image). — _Done when:_ small JSON shows on screen.
-- [ ] **T12** Layout components: section, columns (grid/flex from `layout`). — _Done when:_ 3 columns appear side by side.
-- [ ] **T13** Navbar and footer components. — _Done when:_ landing sample's top and bottom render.
-- [ ] **T14** Hero and card components. — _Done when:_ hero + 3 cards render.
-- [ ] **T15** Safe fallback for unknown type or missing field. — _Done when:_ broken JSON shows a warning box, no crash.
-- [ ] **T16** Show all 3 samples with a dropdown switch. — _Done when:_ switching changes the page. **(Milestone: Renderer complete)**
+- [x] **T11** Basic `Renderer.tsx` (heading, text, button, image). — _Done when:_ small JSON shows on screen.
+- [x] **T12** Layout components: section, columns (grid/flex from `layout`). — _Done when:_ 3 columns appear side by side.
+- [x] **T13** Navbar and footer components. — _Done when:_ landing sample's top and bottom render.
+- [x] **T14** Hero and card components. — _Done when:_ hero + 3 cards render.
+- [x] **T15** Safe fallback for unknown type or missing field. — _Done when:_ broken JSON shows a warning box, no crash.
+- [x] **T16** Show all 3 samples with a dropdown switch. — _Done when:_ switching changes the page. **(Milestone: Renderer complete)**
 
 ## M3 — Store and selection (Week 3)
 
-- [ ] **T17** Zustand store: `website`, `selectedId`. — _Done when:_ App reads tree from store.
-- [ ] **T18** Helper `findNode(tree, id)` and `updateTree` (immutable). — _Done when:_ tested in console.
-- [ ] **T19** Actions: `selectNode`, `updateNode`. — _Done when:_ updating text in store changes screen.
+- [x] **T17** Zustand store: `website`, `selectedId`. — _Done when:_ App reads tree from store.
+- [x] **T18** Helper `findNode(tree, id)` and `updateTree` (immutable). — _Done when:_ tested in console.
+- [x] **T19** Actions: `selectNode`, `updateNode`. — _Done when:_ updating text in store changes screen.
 - [ ] **T20** Actions: `addNode`, `removeNode`. — _Done when:_ works from a temporary test button.
 - [ ] **T21** Action: `moveNode(id, newParentId, index)`. — _Done when:_ node moves between parents.
 - [ ] **T22** Click a component to select it, show blue outline. — _Done when:_ click selects, click outside clears. **(Milestone: Selectable canvas)**
@@ -58,10 +58,10 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [ ] **T34** Move component into another container. — _Done when:_ a card moves into another section.
 - [ ] **T35** Drag overlay, cancel with Esc, no crash on bad drop. — _Done when:_ smooth feel. **(Milestone: Drag and drop)**
 
-## M6 — Properties and tree (Week 6-7, coordinate with Noor)
+## M6 — Properties and tree (Week 6-7)
 
-- [ ] **T36** Agree split with Noor: he builds Tree and Property panels, you provide store API. — _Done when:_ written in a short doc.
-- [ ] **T37** Right panel (or Noor's panel plugged in): edit content fields. — _Done when:_ text/src/href editable.
+- [ ] **T36** Define the Tree/Property panel and store API responsibilities. — _Done when:_ written in a short doc.
+- [ ] **T37** Build the right panel to edit content fields. — _Done when:_ text/src/href editable.
 - [ ] **T38** Edit style: color, font size, padding, background (Tailwind tokens). — _Done when:_ canvas updates live.
 - [ ] **T39** Edit layout: columns count, gap, alignment. — _Done when:_ grid changes live.
 - [ ] **T40** Hierarchy tree panel with select and expand/collapse. — _Done when:_ clicking tree selects on canvas. **(Milestone: Full visual editor)**
@@ -105,13 +105,13 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [ ] **T63** Layout ordering (top-to-bottom, columns by x-position). — _Done when:_ order matches sketch.
 - [ ] **T64** Show result in editor, allow fixing wrong detections. — _Done when:_ full flow Sketch → Editor works. **(Milestone: Sketch input)**
 
-## M12 — AI integration hooks (Week 14-18, with Noor)
+## M12 — AI integration hooks (Week 14-18)
 
-- [ ] **T65** Define API contract with Noor: request/response JSON. — _Done when:_ written and agreed.
+- [ ] **T65** Define the API contract: request/response JSON. — _Done when:_ written and reviewed.
 - [ ] **T66** Prompt box UI, calls a mock endpoint returning sample JSON. — _Done when:_ prompt gives a website.
 - [ ] **T67** Validate AI JSON against schema, show friendly error if invalid. — _Done when:_ bad JSON never crashes.
 - [ ] **T68** Component-level AI edit: select component → instruction box → replace only that node. — _Done when:_ other components unchanged.
-- [ ] **T69** Connect to Noor's real model API. — _Done when:_ real prompt works.
+- [ ] **T69** Connect to the selected real model API. — _Done when:_ real prompt works.
 
 ## M13 — Polish, testing, docs (Week 19-24)
 
