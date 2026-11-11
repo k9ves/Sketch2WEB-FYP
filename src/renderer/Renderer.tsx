@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { ReactNode } from 'react'
 import type { ComponentNode } from '../schema/types'
 
@@ -41,6 +42,56 @@ function renderNode(node: ComponentNode): ReactNode {
           alt={node.content.alt ?? ''}
         />
       ) : null
+    }
+    case 'section':
+      return (
+        <section
+          className={`${node.layout.container ?? ''} ${node.style.container ?? ''}`.trim()}
+        >
+          {node.content.title ? (
+            <h2
+              className={
+                node.style.title ?? 'text-2xl font-semibold text-slate-900'
+              }
+            >
+              {node.content.title}
+            </h2>
+          ) : null}
+          {children}
+        </section>
+      )
+    case 'columns': {
+      const requestedColumns = Number(node.layout.columns)
+      const columnCount =
+        Number.isInteger(requestedColumns) &&
+        requestedColumns > 0 &&
+        requestedColumns <= 12
+          ? requestedColumns
+          : Math.max(node.children.length, 1)
+      const requestedGap =
+        node.layout.gap === undefined ? 6 : Number(node.layout.gap)
+      const gap =
+        Number.isFinite(requestedGap) && requestedGap >= 0 && requestedGap <= 24
+          ? `${requestedGap / 4}rem`
+          : '1.5rem'
+      const isFlex = node.layout.display === 'flex'
+      const containerStyle: CSSProperties = isFlex
+        ? { display: 'flex', flexWrap: 'wrap', gap }
+        : {
+            display: 'grid',
+            gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+            gap,
+          }
+
+      return (
+        <div className={node.style.container ?? ''} style={containerStyle}>
+          {node.children.map((child) => (
+            <div key={child.id} style={isFlex ? { flex: '1 1 0' } : undefined}>
+              <Renderer node={child} />
+            </div>
+          ))}
+        </div>
+      )
     }
     default:
       return <>{children}</>

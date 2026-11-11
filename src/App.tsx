@@ -3,6 +3,9 @@ import { landingSample } from './schema/samples/landing'
 
 function App() {
   const hero = landingSample.children.find((node) => node.type === 'hero')
+  const workSection = landingSample.children.find(
+    (node) => node.id === 'featured-work',
+  )
 
   return (
     <main className="min-h-screen bg-white px-6 py-24">
@@ -12,6 +15,7 @@ function App() {
         </p>
         {hero ? <Renderer node={hero} /> : null}
       </div>
+      {workSection ? <Renderer node={workSection} /> : null}
     </main>
   )
 }
