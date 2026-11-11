@@ -8,6 +8,7 @@ function App() {
   const [sampleName, setSampleName] = useState('landing')
   const website = useWebsiteStore((state) => state.website)
   const setWebsite = useWebsiteStore((state) => state.setWebsite)
+  const selectNode = useWebsiteStore((state) => state.selectNode)
   const websiteTitle = website.content.title || 'Untitled website'
 
   function changeSample(name: string) {
@@ -18,7 +19,7 @@ function App() {
   }
 
   return (
-    <main className="builder-shell">
+    <main className="builder-shell" onClick={() => selectNode(null)}>
       <header className="builder-toolbar">
         <div>
           <p className="eyebrow">Sketch2Web · Renderer</p>

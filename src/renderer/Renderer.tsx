@@ -1,9 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import {
   isComponentNode,
   isComponentType,
   type ComponentNode,
 } from '../schema/types'
+import { useWebsiteStore } from '../store/websiteStore'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -11,6 +12,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function className(node: ComponentNode, slot: string, base: string): string {
   return [base, node.style[slot]].filter(Boolean).join(' ')
+}
+
+function selectableClassName(
+  node: ComponentNode,
+  slot: string,
+  base: string,
+  selectedId: string | null,
+): string {
+  return [
+    className(node, slot, base),
+    'sw-component',
+    node.id === selectedId ? 'sw-selected' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 }
 
 function safeHref(value: string): string | undefined {
@@ -85,6 +101,9 @@ function layoutStyle(
 }
 
 function Renderer({ node }: { node: unknown }) {
+  const selectedId = useWebsiteStore((state) => state.selectedId)
+  const selectNode = useWebsiteStore((state) => state.selectNode)
+
   if (!isRecord(node)) {
     return <WarningBox message="Invalid component: expected an object." />
   }
@@ -105,11 +124,24 @@ function Renderer({ node }: { node: unknown }) {
   const children = renderChildren(node)
   const title = content.title
   const text = content.text
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    selectNode(node.type === 'website' ? null : node.id)
+  }
 
   switch (node.type) {
     case 'website':
       return (
-        <div className={className(node, 'background', 'sw-website')}>
+        <div
+          className={selectableClassName(
+            node,
+            'background',
+            'sw-website',
+            selectedId,
+          )}
+          onClick={handleClick}
+        >
           {children}
         </div>
       )
@@ -122,8 +154,14 @@ function Renderer({ node }: { node: unknown }) {
 
       return (
         <nav
-          className={className(node, 'container', 'sw-navbar')}
+          className={selectableClassName(
+            node,
+            'container',
+            'sw-navbar',
+            selectedId,
+          )}
           aria-label="Main navigation"
+          onClick={handleClick}
         >
           <a className="sw-brand" href="#top">
             {brand}
@@ -145,8 +183,14 @@ function Renderer({ node }: { node: unknown }) {
     case 'hero':
       return (
         <header
-          className={className(node, 'container', 'sw-hero')}
+          className={selectableClassName(
+            node,
+            'container',
+            'sw-hero',
+            selectedId,
+          )}
           style={layoutStyle(node.layout, 'flex')}
+          onClick={handleClick}
         >
           {title && <h1 className="sw-hero-heading">{title}</h1>}
           {content.description && <p>{content.description}</p>}
@@ -155,7 +199,15 @@ function Renderer({ node }: { node: unknown }) {
       )
     case 'section':
       return (
-        <section className={className(node, 'container', 'sw-section')}>
+        <section
+          className={selectableClassName(
+            node,
+            'container',
+            'sw-section',
+            selectedId,
+          )}
+          onClick={handleClick}
+        >
           {title && <h2>{title}</h2>}
           {text && <p className="sw-section-description">{text}</p>}
           {children}
@@ -164,25 +216,42 @@ function Renderer({ node }: { node: unknown }) {
     case 'columns':
       return (
         <div
-          className={className(
+          className={selectableClassName(
             node,
             'container',
             `sw-columns${node.layout.display === 'flex' ? ' is-flex' : ''}`,
+            selectedId,
           )}
           style={layoutStyle(node.layout)}
+          onClick={handleClick}
         >
           {children}
         </div>
       )
     case 'heading':
       return text ? (
-        <h2 className={className(node, 'text', 'sw-heading')}>{text}</h2>
+        <h2
+          className={selectableClassName(
+            node,
+            'text',
+            'sw-heading',
+            selectedId,
+          )}
+          onClick={handleClick}
+        >
+          {text}
+        </h2>
       ) : (
         <WarningBox message="Heading is missing its text." />
       )
     case 'text':
       return text ? (
-        <p className={className(node, 'text', 'sw-text')}>{text}</p>
+        <p
+          className={selectableClassName(node, 'text', 'sw-text', selectedId)}
+          onClick={handleClick}
+        >
+          {text}
+        </p>
       ) : (
         <WarningBox message="Text component is missing its text." />
       )
@@ -194,7 +263,16 @@ function Renderer({ node }: { node: unknown }) {
         )
       }
       return (
-        <a className={className(node, 'button', 'sw-button')} href={href}>
+        <a
+          className={selectableClassName(
+            node,
+            'button',
+            'sw-button',
+            selectedId,
+          )}
+          href={href}
+          onClick={handleClick}
+        >
           {text}
         </a>
       )
@@ -205,16 +283,25 @@ function Renderer({ node }: { node: unknown }) {
       }
       return (
         <img
-          className={className(node, 'image', 'sw-image')}
+          className={selectableClassName(node, 'image', 'sw-image', selectedId)}
           src={content.src}
           alt={content.alt}
+          onClick={handleClick}
         />
       )
     }
     case 'card':
       if (!title) return <WarningBox message="Card is missing its title." />
       return (
-        <article className={className(node, 'container', 'sw-card')}>
+        <article
+          className={selectableClassName(
+            node,
+            'container',
+            'sw-card',
+            selectedId,
+          )}
+          onClick={handleClick}
+        >
           <h3>{title}</h3>
           {text && <p>{text}</p>}
           {content.description && <p>{content.description}</p>}
@@ -223,7 +310,15 @@ function Renderer({ node }: { node: unknown }) {
       )
     case 'footer':
       return (
-        <footer className={className(node, 'container', 'sw-footer')}>
+        <footer
+          className={selectableClassName(
+            node,
+            'container',
+            'sw-footer',
+            selectedId,
+          )}
+          onClick={handleClick}
+        >
           {text && <p>{text}</p>}
           {children}
         </footer>

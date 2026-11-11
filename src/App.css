@@ -90,6 +90,15 @@
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
+.sw-component {
+  cursor: pointer;
+}
+
+.sw-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
 .sw-navbar {
   display: flex;
   justify-content: space-between;

@@ -37,7 +37,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T19** Actions: `selectNode`, `updateNode`. — _Done when:_ updating text in store changes screen.
 - [x] **T20** Actions: `addNode`, `removeNode`. — _Done when:_ works from a temporary test button.
 - [x] **T21** Action: `moveNode(id, newParentId, index)`. — _Done when:_ node moves between parents.
-- [ ] **T22** Click a component to select it, show blue outline. — _Done when:_ click selects, click outside clears. **(Milestone: Selectable canvas)**
+- [x] **T22** Click a component to select it, show blue outline. — _Done when:_ click selects, click outside clears. **(Milestone: Selectable canvas)**
 
 ## M4 — Editor layout (Week 4)
 
