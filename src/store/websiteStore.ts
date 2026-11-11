@@ -1,20 +1,12 @@
 import { create } from 'zustand'
-import type {
-  ComponentLayout,
-  ComponentNode,
-  ComponentProps,
-  WebsiteDocument,
-} from '../schema/types'
+import { isWebsiteDocument } from '../schema/types'
+import type { ComponentNode, WebsiteDocument } from '../schema/types'
 import { websiteSamples } from '../samples'
 import { findNode, updateTree } from './tree'
 
-type ComponentNodeUpdate = Omit<
-  Partial<ComponentNode>,
-  'id' | 'layout' | 'props'
-> & {
-  layout?: Partial<ComponentLayout>
-  props?: Partial<ComponentProps>
-}
+type ComponentNodeUpdate = Partial<
+  Pick<ComponentNode, 'content' | 'layout' | 'style'>
+>
 
 interface WebsiteState {
   website: WebsiteDocument
@@ -31,20 +23,29 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
   selectNode: (selectedId) => set({ selectedId }),
   updateNode: (id, updates) =>
     set((state) => {
-      if (!findNode(state.website.root, id)) {
+      if (!findNode(state.website, id)) {
         throw new Error(`Cannot update component "${id}": node not found.`)
       }
 
-      const root = updateTree(state.website.root, id, (node) => ({
+      const website = updateTree(state.website, id, (node) => ({
         ...node,
         ...updates,
         id: node.id,
-        props: updates.props ? { ...node.props, ...updates.props } : node.props,
+        content: updates.content
+          ? { ...node.content, ...updates.content }
+          : node.content,
         layout: updates.layout
           ? { ...node.layout, ...updates.layout }
           : node.layout,
+        style: updates.style ? { ...node.style, ...updates.style } : node.style,
       }))
 
-      return { website: { ...state.website, root } }
+      if (!isWebsiteDocument(website)) {
+        throw new Error(
+          'Updating a component produced an invalid website document.',
+        )
+      }
+
+      return { website }
     }),
 }))

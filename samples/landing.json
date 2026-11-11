@@ -1,83 +1,134 @@
 {
+  "id": "landing-website",
+  "type": "website",
   "version": 1,
-  "title": "Northstar Studio",
-  "root": {
-    "id": "landing-root",
-    "type": "section",
-    "children": [
-      {
-        "id": "landing-navbar",
-        "type": "navbar",
-        "props": {
-          "brand": "Northstar",
-          "links": [
-            { "label": "Work", "href": "#work" },
-            { "label": "About", "href": "#about" },
-            { "label": "Contact", "href": "#contact" }
+  "content": {
+    "title": "Northstar Studio"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white text-slate-900"
+  },
+  "children": [
+    {
+      "id": "landing-navbar",
+      "type": "navbar",
+      "content": {
+        "brand": "Northstar",
+        "links": "Work, About, Contact"
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-navbar"
+      },
+      "children": []
+    },
+    {
+      "id": "landing-hero",
+      "type": "hero",
+      "content": {
+        "title": "Design that moves your business forward.",
+        "description": "We build thoughtful digital experiences for ambitious teams."
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-hero"
+      },
+      "children": [
+        {
+          "id": "landing-hero-button",
+          "type": "button",
+          "content": {
+            "href": "#work",
+            "text": "Explore our work"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-button"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "landing-work",
+      "type": "section",
+      "content": {
+        "title": "What we do",
+        "text": "A small team for big ideas."
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-section"
+      },
+      "children": [
+        {
+          "id": "landing-cards",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "grid",
+            "columns": "3",
+            "gap": "5"
+          },
+          "style": {
+            "container": "sw-columns"
+          },
+          "children": [
+            {
+              "id": "landing-card-brand",
+              "type": "card",
+              "content": {
+                "title": "Brand strategy",
+                "text": "Clear positioning and identities built to last."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            },
+            {
+              "id": "landing-card-web",
+              "type": "card",
+              "content": {
+                "title": "Web experiences",
+                "text": "Fast, accessible websites made for real people."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            },
+            {
+              "id": "landing-card-product",
+              "type": "card",
+              "content": {
+                "title": "Digital products",
+                "text": "Useful product experiences, from first sketch to launch."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            }
           ]
         }
+      ]
+    },
+    {
+      "id": "landing-footer",
+      "type": "footer",
+      "content": {
+        "text": "© 2026 Northstar Studio"
       },
-      {
-        "id": "landing-hero",
-        "type": "hero",
-        "props": {
-          "title": "Design that moves your business forward.",
-          "description": "We build thoughtful digital experiences for ambitious teams."
-        },
-        "children": [
-          {
-            "id": "landing-hero-button",
-            "type": "button",
-            "props": { "label": "Explore our work", "href": "#work" }
-          }
-        ]
+      "layout": {},
+      "style": {
+        "container": "sw-footer"
       },
-      {
-        "id": "landing-work",
-        "type": "section",
-        "props": {
-          "title": "What we do",
-          "text": "A small team for big ideas."
-        },
-        "children": [
-          {
-            "id": "landing-cards",
-            "type": "columns",
-            "layout": { "display": "grid", "columns": 3, "gap": 1.25 },
-            "children": [
-              {
-                "id": "landing-card-brand",
-                "type": "card",
-                "props": {
-                  "title": "Brand strategy",
-                  "text": "Clear positioning and identities built to last."
-                }
-              },
-              {
-                "id": "landing-card-web",
-                "type": "card",
-                "props": {
-                  "title": "Web experiences",
-                  "text": "Fast, accessible websites made for real people."
-                }
-              },
-              {
-                "id": "landing-card-product",
-                "type": "card",
-                "props": {
-                  "title": "Digital products",
-                  "text": "Useful product experiences, from first sketch to launch."
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "landing-footer",
-        "type": "footer",
-        "props": { "text": "© 2026 Northstar Studio" }
-      }
-    ]
-  }
+      "children": []
+    }
+  ]
 }

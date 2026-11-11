@@ -8,6 +8,7 @@ function App() {
   const [sampleName, setSampleName] = useState('landing')
   const website = useWebsiteStore((state) => state.website)
   const setWebsite = useWebsiteStore((state) => state.setWebsite)
+  const websiteTitle = website.content.title || 'Untitled website'
 
   function changeSample(name: string) {
     const sample = websiteSamples[name]
@@ -35,20 +36,17 @@ function App() {
           </select>
         </label>
       </header>
-      <section
-        className="preview-frame"
-        aria-label={`${website.title} preview`}
-      >
+      <section className="preview-frame" aria-label={`${websiteTitle} preview`}>
         <div className="preview-titlebar">
           <span className="preview-dots" aria-hidden="true">
             <i />
             <i />
             <i />
           </span>
-          <span>{website.title}</span>
+          <span>{websiteTitle}</span>
         </div>
         <div className="preview-page" id="top">
-          <Renderer node={website.root} />
+          <Renderer node={website} />
         </div>
       </section>
     </main>

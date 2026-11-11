@@ -1,72 +1,119 @@
 {
+  "id": "blog-website",
+  "type": "website",
   "version": 1,
-  "title": "The Sunday Edit",
-  "root": {
-    "id": "blog-root",
-    "type": "section",
-    "children": [
-      {
-        "id": "blog-navbar",
-        "type": "navbar",
-        "props": {
-          "brand": "The Sunday Edit",
-          "links": [
-            { "label": "Stories", "href": "#stories" },
-            { "label": "About", "href": "#about" }
+  "content": {
+    "title": "The Sunday Edit"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white text-slate-900"
+  },
+  "children": [
+    {
+      "id": "blog-navbar",
+      "type": "navbar",
+      "content": {
+        "brand": "The Sunday Edit",
+        "links": "Stories, About"
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-navbar"
+      },
+      "children": []
+    },
+    {
+      "id": "blog-hero",
+      "type": "hero",
+      "content": {
+        "title": "Ideas for a more considered life",
+        "description": "Notes on food, places, and the little things worth noticing."
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-hero"
+      },
+      "children": []
+    },
+    {
+      "id": "blog-stories",
+      "type": "section",
+      "content": {
+        "title": "Latest stories"
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-section"
+      },
+      "children": [
+        {
+          "id": "blog-story-columns",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "grid",
+            "columns": "3",
+            "gap": "5"
+          },
+          "style": {
+            "container": "sw-columns"
+          },
+          "children": [
+            {
+              "id": "blog-story-one",
+              "type": "card",
+              "content": {
+                "title": "A slower morning",
+                "text": "Small rituals that make space for a better start."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-story-two",
+              "type": "card",
+              "content": {
+                "title": "Market day",
+                "text": "Meet the growers bringing the season to our tables."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-story-three",
+              "type": "card",
+              "content": {
+                "title": "Rooms with stories",
+                "text": "A home should feel collected, not simply decorated."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            }
           ]
         }
+      ]
+    },
+    {
+      "id": "blog-footer",
+      "type": "footer",
+      "content": {
+        "text": "The Sunday Edit · Independent since 2024"
       },
-      {
-        "id": "blog-hero",
-        "type": "hero",
-        "props": {
-          "title": "Ideas for a more considered life",
-          "description": "Notes on food, places, and the little things worth noticing."
-        }
+      "layout": {},
+      "style": {
+        "container": "sw-footer"
       },
-      {
-        "id": "blog-stories",
-        "type": "section",
-        "props": { "title": "Latest stories" },
-        "children": [
-          {
-            "id": "blog-story-columns",
-            "type": "columns",
-            "layout": { "display": "grid", "columns": 3, "gap": 1.25 },
-            "children": [
-              {
-                "id": "blog-story-one",
-                "type": "card",
-                "props": {
-                  "title": "A slower morning",
-                  "text": "Small rituals that make space for a better start."
-                }
-              },
-              {
-                "id": "blog-story-two",
-                "type": "card",
-                "props": {
-                  "title": "Market day",
-                  "text": "Meet the growers bringing the season to our tables."
-                }
-              },
-              {
-                "id": "blog-story-three",
-                "type": "card",
-                "props": {
-                  "title": "Rooms with stories",
-                  "text": "A home should feel collected, not simply decorated."
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "blog-footer",
-        "type": "footer",
-        "props": { "text": "The Sunday Edit · Independent since 2024" }
-      }
-    ]
-  }
+      "children": []
+    }
+  ]
 }

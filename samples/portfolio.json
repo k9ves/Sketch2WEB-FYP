@@ -1,64 +1,106 @@
 {
+  "id": "portfolio-website",
+  "type": "website",
   "version": 1,
-  "title": "Alex Morgan — Portfolio",
-  "root": {
-    "id": "portfolio-root",
-    "type": "section",
-    "children": [
-      {
-        "id": "portfolio-navbar",
-        "type": "navbar",
-        "props": {
-          "brand": "Alex Morgan",
-          "links": [
-            { "label": "Projects", "href": "#projects" },
-            { "label": "About", "href": "#about" }
+  "content": {
+    "title": "Alex Morgan — Portfolio"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white text-slate-900"
+  },
+  "children": [
+    {
+      "id": "portfolio-navbar",
+      "type": "navbar",
+      "content": {
+        "brand": "Alex Morgan",
+        "links": "Projects, About"
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-navbar"
+      },
+      "children": []
+    },
+    {
+      "id": "portfolio-hero",
+      "type": "hero",
+      "content": {
+        "title": "Product designer & creative thinker",
+        "description": "I turn complex problems into simple, useful digital experiences."
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-hero"
+      },
+      "children": []
+    },
+    {
+      "id": "portfolio-projects",
+      "type": "section",
+      "content": {
+        "title": "Selected projects"
+      },
+      "layout": {},
+      "style": {
+        "container": "sw-section"
+      },
+      "children": [
+        {
+          "id": "portfolio-project-columns",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "grid",
+            "columns": "2",
+            "gap": "6"
+          },
+          "style": {
+            "container": "sw-columns"
+          },
+          "children": [
+            {
+              "id": "portfolio-project-one",
+              "type": "card",
+              "content": {
+                "title": "Finch Finance",
+                "text": "A calmer way to understand everyday spending."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            },
+            {
+              "id": "portfolio-project-two",
+              "type": "card",
+              "content": {
+                "title": "Field Notes",
+                "text": "A digital home for curious people and their ideas."
+              },
+              "layout": {},
+              "style": {
+                "container": "sw-card"
+              },
+              "children": []
+            }
           ]
         }
+      ]
+    },
+    {
+      "id": "portfolio-footer",
+      "type": "footer",
+      "content": {
+        "text": "Designed with care by Alex Morgan"
       },
-      {
-        "id": "portfolio-hero",
-        "type": "hero",
-        "props": {
-          "title": "Product designer & creative thinker",
-          "description": "I turn complex problems into simple, useful digital experiences."
-        }
+      "layout": {},
+      "style": {
+        "container": "sw-footer"
       },
-      {
-        "id": "portfolio-projects",
-        "type": "section",
-        "props": { "title": "Selected projects" },
-        "children": [
-          {
-            "id": "portfolio-project-columns",
-            "type": "columns",
-            "layout": { "display": "grid", "columns": 2, "gap": 1.5 },
-            "children": [
-              {
-                "id": "portfolio-project-one",
-                "type": "card",
-                "props": {
-                  "title": "Finch Finance",
-                  "text": "A calmer way to understand everyday spending."
-                }
-              },
-              {
-                "id": "portfolio-project-two",
-                "type": "card",
-                "props": {
-                  "title": "Field Notes",
-                  "text": "A digital home for curious people and their ideas."
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "portfolio-footer",
-        "type": "footer",
-        "props": { "text": "Designed with care by Alex Morgan" }
-      }
-    ]
-  }
+      "children": []
+    }
+  ]
 }
