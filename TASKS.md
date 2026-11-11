@@ -41,7 +41,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 ## M4 — Editor layout (Week 4)
 
-- [ ] **T23** Three-panel layout: left (components/tree), center (canvas), right (properties). — _Done when:_ panels visible and responsive.
+- [x] **T23** Three-panel layout: left (components/tree), center (canvas), right (properties). — _Done when:_ panels visible and responsive.
 - [ ] **T24** Top toolbar (title, Preview, Code, Export buttons, no logic yet). — _Done when:_ buttons visible.
 - [ ] **T25** Left panel: list of addable components (palette). — _Done when:_ list shows all types.
 - [ ] **T26** "Add" button inserts selected palette item into selected container. — _Done when:_ new heading appears.

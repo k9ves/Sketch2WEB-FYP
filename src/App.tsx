@@ -37,19 +37,35 @@ function App() {
           </select>
         </label>
       </header>
-      <section className="preview-frame" aria-label={`${websiteTitle} preview`}>
-        <div className="preview-titlebar">
-          <span className="preview-dots" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-          <span>{websiteTitle}</span>
-        </div>
-        <div className="preview-page" id="top">
-          <Renderer node={website} />
-        </div>
-      </section>
+      <div className="editor-layout">
+        <aside className="editor-panel components-panel">
+          <h2>Components</h2>
+          <p>Component tree will appear here.</p>
+        </aside>
+        <section className="canvas-panel" aria-label="Canvas">
+          <h2>Canvas</h2>
+          <section
+            className="preview-frame"
+            aria-label={`${websiteTitle} preview`}
+          >
+            <div className="preview-titlebar">
+              <span className="preview-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span>{websiteTitle}</span>
+            </div>
+            <div className="preview-page" id="top">
+              <Renderer node={website} />
+            </div>
+          </section>
+        </section>
+        <aside className="editor-panel properties-panel">
+          <h2>Properties</h2>
+          <p>Select a component on the canvas to view its properties.</p>
+        </aside>
+      </div>
     </main>
   )
 }
