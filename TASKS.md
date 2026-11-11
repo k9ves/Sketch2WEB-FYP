@@ -17,9 +17,9 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 ## M1 — Schema and samples (Week 1-2)
 
 - [x] **T7** Write `src/schema/types.ts` (ComponentNode, ComponentType). — _Done when:_ no TS errors.
-- [ ] **T8** Make `samples/landing.json` (navbar, hero, 3 cards, footer). — _Done when:_ file validates against the types.
-- [ ] **T9** Make `samples/portfolio.json` and `samples/blog.json`. — _Done when:_ 3 samples exist.
-- [ ] **T10** Review and freeze schema **v1** (add `version` field). — _Done when:_ schema validation passes, tagged `schema-v1` in git.
+- [x] **T8** Make `samples/landing.json` (navbar, hero, 3 cards, footer). — _Done when:_ file validates against the types.
+- [x] **T9** Make `samples/portfolio.json` and `samples/blog.json`. — _Done when:_ 3 samples exist.
+- [x] **T10** Freeze schema **v1** (version field on website root). — _Done when:_ schema validation passes, tagged `schema-v1` in git.
 
 ## M2 — Renderer (Week 2-3)
 

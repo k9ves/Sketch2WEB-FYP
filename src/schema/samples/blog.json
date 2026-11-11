@@ -1,0 +1,195 @@
+{
+  "id": "journal-site",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "The Sunday Edit"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white text-neutral-900"
+  },
+  "children": [
+    {
+      "id": "journal-navigation",
+      "type": "navbar",
+      "content": {
+        "brand": "The Sunday Edit",
+        "links": "Stories, Guides, About"
+      },
+      "layout": {
+        "display": "flex",
+        "justify": "between"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-5"
+      },
+      "children": []
+    },
+    {
+      "id": "journal-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "direction": "column",
+        "align": "center"
+      },
+      "style": {
+        "container": "bg-amber-50 px-6 py-20 text-center"
+      },
+      "children": [
+        {
+          "id": "journal-heading",
+          "type": "heading",
+          "content": {
+            "text": "Ideas for a slower, brighter life"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-5xl font-semibold tracking-tight"
+          },
+          "children": []
+        },
+        {
+          "id": "journal-intro",
+          "type": "text",
+          "content": {
+            "text": "Stories, recipes, and small rituals to make more room for what matters."
+          },
+          "layout": {},
+          "style": {
+            "text": "mx-auto mt-5 max-w-2xl text-lg text-neutral-600"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "journal-stories",
+      "type": "section",
+      "content": {
+        "title": "Latest stories"
+      },
+      "layout": {
+        "spacing": "large"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-16"
+      },
+      "children": [
+        {
+          "id": "journal-story-columns",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {
+            "container": "grid gap-8 md:grid-cols-3"
+          },
+          "children": [
+            {
+              "id": "journal-story-one",
+              "type": "card",
+              "content": {
+                "title": "A table set for Sunday",
+                "description": "Simple details that make a weekend meal feel special.",
+                "category": "At home"
+              },
+              "layout": {},
+              "style": {
+                "container": "space-y-3"
+              },
+              "children": [
+                {
+                  "id": "journal-story-image-one",
+                  "type": "image",
+                  "content": {
+                    "src": "/images/sunday-table.jpg",
+                    "alt": "A sunlit table set for a relaxed weekend lunch"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "aspect-[4/3] w-full rounded-xl object-cover"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "journal-story-two",
+              "type": "card",
+              "content": {
+                "title": "The joy of a small garden",
+                "description": "A beginner's guide to growing herbs in any space.",
+                "category": "Growing"
+              },
+              "layout": {},
+              "style": {
+                "container": "space-y-3"
+              },
+              "children": [
+                {
+                  "id": "journal-story-image-two",
+                  "type": "image",
+                  "content": {
+                    "src": "/images/small-garden.jpg",
+                    "alt": "Fresh herbs growing in pots on a bright windowsill"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "aspect-[4/3] w-full rounded-xl object-cover"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "journal-story-three",
+              "type": "card",
+              "content": {
+                "title": "A morning without a rush",
+                "description": "Gentle ways to begin the day with a little more intention.",
+                "category": "Wellbeing"
+              },
+              "layout": {},
+              "style": {
+                "container": "space-y-3"
+              },
+              "children": [
+                {
+                  "id": "journal-story-image-three",
+                  "type": "image",
+                  "content": {
+                    "src": "/images/slow-morning.jpg",
+                    "alt": "A cup of tea and an open book in morning light"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "aspect-[4/3] w-full rounded-xl object-cover"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "journal-footer",
+      "type": "footer",
+      "content": {
+        "text": "© 2026 The Sunday Edit. A little inspiration for every day."
+      },
+      "layout": {
+        "align": "center"
+      },
+      "style": {
+        "container": "border-t border-neutral-200 px-6 py-8 text-center text-sm text-neutral-500"
+      },
+      "children": []
+    }
+  ]
+}

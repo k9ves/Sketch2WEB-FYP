@@ -1,0 +1,163 @@
+{
+  "id": "portfolio-site",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Maya Chen — Designer"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-stone-50 text-stone-950"
+  },
+  "children": [
+    {
+      "id": "portfolio-navigation",
+      "type": "navbar",
+      "content": {
+        "brand": "Maya Chen",
+        "links": "Work, About, Contact"
+      },
+      "layout": {
+        "display": "flex",
+        "justify": "between"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-5"
+      },
+      "children": []
+    },
+    {
+      "id": "portfolio-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "direction": "column",
+        "align": "start"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-24"
+      },
+      "children": [
+        {
+          "id": "portfolio-heading",
+          "type": "heading",
+          "content": {
+            "text": "Independent designer shaping digital experiences."
+          },
+          "layout": {},
+          "style": {
+            "text": "max-w-4xl text-5xl font-semibold tracking-tight"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-intro",
+          "type": "text",
+          "content": {
+            "text": "I partner with thoughtful teams to turn complex ideas into useful, lasting products."
+          },
+          "layout": {},
+          "style": {
+            "text": "mt-6 max-w-2xl text-lg text-stone-600"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-contact",
+          "type": "button",
+          "content": {
+            "text": "Get in touch",
+            "href": "mailto:hello@mayachen.design"
+          },
+          "layout": {},
+          "style": {
+            "button": "mt-8 rounded-full bg-stone-900 px-6 py-3 text-white"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "portfolio-work",
+      "type": "section",
+      "content": {
+        "title": "Selected projects"
+      },
+      "layout": {
+        "spacing": "large"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-16"
+      },
+      "children": [
+        {
+          "id": "portfolio-projects",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {
+            "container": "grid gap-6 md:grid-cols-3"
+          },
+          "children": [
+            {
+              "id": "portfolio-project-one",
+              "type": "card",
+              "content": {
+                "title": "Goodwell",
+                "description": "A friendly identity and online shop for everyday wellness."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl bg-white p-6 shadow-sm"
+              },
+              "children": []
+            },
+            {
+              "id": "portfolio-project-two",
+              "type": "card",
+              "content": {
+                "title": "Openhouse",
+                "description": "A clear booking experience for a community arts space."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl bg-white p-6 shadow-sm"
+              },
+              "children": []
+            },
+            {
+              "id": "portfolio-project-three",
+              "type": "card",
+              "content": {
+                "title": "Common Ground",
+                "description": "A digital home for a neighborhood cafe and gathering place."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl bg-white p-6 shadow-sm"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portfolio-footer",
+      "type": "footer",
+      "content": {
+        "text": "© 2026 Maya Chen. Available for select projects."
+      },
+      "layout": {
+        "align": "center"
+      },
+      "style": {
+        "container": "border-t border-stone-200 px-6 py-8 text-center text-sm text-stone-500"
+      },
+      "children": []
+    }
+  ]
+}
