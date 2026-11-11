@@ -1,4 +1,13 @@
-import type { ComponentNode } from '../schema/types'
+import type { ComponentNode, ComponentType } from '../schema/types'
+
+const containerTypes: ReadonlySet<ComponentType> = new Set([
+  'website',
+  'hero',
+  'section',
+  'columns',
+  'card',
+  'footer',
+])
 
 export function findNode(
   tree: ComponentNode,
@@ -24,6 +33,94 @@ export function updateTree(
   let changed = false
   const children = tree.children?.map((child) => {
     const updatedChild = updateTree(child, id, update)
+    if (updatedChild !== child) changed = true
+    return updatedChild
+  })
+
+  return changed ? { ...tree, children } : tree
+}
+
+export function addNode(
+  tree: ComponentNode,
+  parentId: string,
+  node: ComponentNode,
+  index?: number,
+): ComponentNode {
+  const parent = findNode(tree, parentId)
+  if (!parent) {
+    throw new Error(`Cannot add component: parent "${parentId}" not found.`)
+  }
+  if (!containerTypes.has(parent.type)) {
+    throw new Error(`Cannot add children to "${parent.type}" components.`)
+  }
+
+  return addNodeAtParent(tree, parentId, node, index)
+}
+
+function addNodeAtParent(
+  tree: ComponentNode,
+  parentId: string,
+  node: ComponentNode,
+  index?: number,
+): ComponentNode {
+  if (tree.id === parentId) {
+    const insertionIndex = index ?? tree.children.length
+    if (
+      !Number.isInteger(insertionIndex) ||
+      insertionIndex < 0 ||
+      insertionIndex > tree.children.length
+    ) {
+      throw new RangeError('Child insertion index is out of range.')
+    }
+
+    return {
+      ...tree,
+      children: [
+        ...tree.children.slice(0, insertionIndex),
+        node,
+        ...tree.children.slice(insertionIndex),
+      ],
+    }
+  }
+
+  let changed = false
+  const children = tree.children.map((child) => {
+    if (changed) return child
+    const updatedChild = addNodeAtParent(child, parentId, node, index)
+    if (updatedChild !== child) changed = true
+    return updatedChild
+  })
+
+  return changed ? { ...tree, children } : tree
+}
+
+export function removeNode(tree: ComponentNode, id: string): ComponentNode {
+  if (tree.id === id) {
+    throw new Error('Cannot remove the website root.')
+  }
+  if (!findNode(tree, id)) {
+    throw new Error(`Cannot remove component "${id}": node not found.`)
+  }
+
+  return removeNodeFromChildren(tree, id)
+}
+
+function removeNodeFromChildren(
+  tree: ComponentNode,
+  id: string,
+): ComponentNode {
+  const childIndex = tree.children.findIndex((child) => child.id === id)
+  if (childIndex !== -1) {
+    return {
+      ...tree,
+      children: tree.children.filter((_, index) => index !== childIndex),
+    }
+  }
+
+  let changed = false
+  const children = tree.children.map((child) => {
+    if (changed) return child
+    const updatedChild = removeNodeFromChildren(child, id)
     if (updatedChild !== child) changed = true
     return updatedChild
   })
