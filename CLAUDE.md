@@ -9,8 +9,8 @@ component data, never raw HTML or CSS.
 
 - Keep the existing stack: React, TypeScript, Vite, Tailwind CSS, Zustand,
   dnd-kit, and Monaco Editor.
-- Keep the shared schema in `src/schema/types.ts`. Coordinate schema changes
-  with the team before making them.
+- Keep the shared schema in `src/schema/types.ts`. Treat schema changes as
+  compatibility decisions and ask Bilal before changing the frozen schema.
 - Render and generate code from the shared component model; do not store a
   separate UI structure.
 - Use strict, typed TypeScript without `any`, functional React components, and

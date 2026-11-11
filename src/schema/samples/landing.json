@@ -1,0 +1,164 @@
+{
+  "id": "landing-page",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Northstar Studio"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white text-slate-900"
+  },
+  "children": [
+    {
+      "id": "main-navigation",
+      "type": "navbar",
+      "content": {
+        "brand": "Northstar Studio",
+        "links": "Work, Services, About"
+      },
+      "layout": {
+        "display": "flex",
+        "justify": "between"
+      },
+      "style": {
+        "container": "mx-auto max-w-6xl px-6 py-5"
+      },
+      "children": []
+    },
+    {
+      "id": "hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "direction": "column",
+        "align": "center"
+      },
+      "style": {
+        "container": "bg-slate-50 px-6 py-24 text-center"
+      },
+      "children": [
+        {
+          "id": "hero-heading",
+          "type": "heading",
+          "content": {
+            "text": "Thoughtful design for ambitious ideas"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-5xl font-bold tracking-tight text-slate-900"
+          },
+          "children": []
+        },
+        {
+          "id": "hero-copy",
+          "type": "text",
+          "content": {
+            "text": "We build clear, memorable digital experiences for growing brands."
+          },
+          "layout": {},
+          "style": {
+            "text": "mx-auto mt-6 max-w-2xl text-lg text-slate-600"
+          },
+          "children": []
+        },
+        {
+          "id": "hero-cta",
+          "type": "button",
+          "content": {
+            "text": "Explore our work",
+            "href": "#work"
+          },
+          "layout": {},
+          "style": {
+            "button": "mt-8 rounded-lg bg-slate-900 px-6 py-3 text-white"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "featured-work",
+      "type": "section",
+      "content": {
+        "title": "Selected work"
+      },
+      "layout": {
+        "container": "max-w-6xl",
+        "spacing": "large"
+      },
+      "style": {
+        "container": "mx-auto px-6 py-20"
+      },
+      "children": [
+        {
+          "id": "work-columns",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {
+            "container": "grid gap-6 md:grid-cols-3"
+          },
+          "children": [
+            {
+              "id": "work-card-one",
+              "type": "card",
+              "content": {
+                "title": "Fieldnotes",
+                "description": "A calm, editorial home for an independent travel journal."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl border border-slate-200 p-6"
+              },
+              "children": []
+            },
+            {
+              "id": "work-card-two",
+              "type": "card",
+              "content": {
+                "title": "Forma",
+                "description": "A flexible storefront for a considered homeware collection."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl border border-slate-200 p-6"
+              },
+              "children": []
+            },
+            {
+              "id": "work-card-three",
+              "type": "card",
+              "content": {
+                "title": "Common Ground",
+                "description": "A welcoming digital presence for a neighborhood cafe."
+              },
+              "layout": {},
+              "style": {
+                "container": "rounded-2xl border border-slate-200 p-6"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "site-footer",
+      "type": "footer",
+      "content": {
+        "text": "© 2026 Northstar Studio. Designed with intention."
+      },
+      "layout": {
+        "align": "center"
+      },
+      "style": {
+        "container": "border-t border-slate-200 px-6 py-8 text-center text-sm text-slate-500"
+      },
+      "children": []
+    }
+  ]
+}
