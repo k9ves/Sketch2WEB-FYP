@@ -12,14 +12,14 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T3** Tailwind working. — _Done when:_ a `className="text-red-500"` text shows red.
 - [x] **T4** Create folders: schema, renderer, components, store, editor, codegen, sketch. — _Done when:_ folders exist in `src/`.
 - [x] **T5** Add `CLAUDE.md` and this `TASKS.md` to project root. — _Done when:_ Claude reads and summarizes them.
-- [ ] **T6** Push to GitHub, add Asim and Noor, create `dev` branch. — _Done when:_ teammates can clone.
+- [x] **T6** Push to GitHub and create the `dev` branch. — _Done when:_ the public `dev` branch is pushed; collaborator invites were skipped by the owner.
 
-## M1 — Schema and samples (Week 1-2, with Noor)
+## M1 — Schema and samples (Week 1-2)
 
-- [ ] **T7** Write `src/schema/types.ts` (ComponentNode, ComponentType). — _Done when:_ no TS errors.
+- [x] **T7** Write `src/schema/types.ts` (ComponentNode, ComponentType). — _Done when:_ no TS errors.
 - [ ] **T8** Make `samples/landing.json` (navbar, hero, 3 cards, footer). — _Done when:_ file validates against the types.
 - [ ] **T9** Make `samples/portfolio.json` and `samples/blog.json`. — _Done when:_ 3 samples exist.
-- [ ] **T10** Review schema with Noor, freeze **v1** (add `version` field). — _Done when:_ Noor agrees, tagged `schema-v1` in git.
+- [ ] **T10** Review and freeze schema **v1** (add `version` field). — _Done when:_ schema validation passes, tagged `schema-v1` in git.
 
 ## M2 — Renderer (Week 2-3)
 
