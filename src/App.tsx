@@ -260,16 +260,36 @@ function App() {
       overData?.kind === 'canvas-node' &&
       typeof activeData.nodeId === 'string' &&
       typeof activeData.parentId === 'string' &&
-      activeData.parentId === overData.parentId &&
       typeof overData.nodeId === 'string' &&
       activeData.nodeId !== overData.nodeId
     ) {
-      const parent = findNode(website, activeData.parentId)
-      const index = parent?.children.findIndex(
-        (child) => child.id === overData.nodeId,
-      )
-      if (parent && index !== undefined && index !== -1) {
-        moveNode(activeData.nodeId, activeData.parentId, index)
+      const sourceNode = findNode(website, activeData.nodeId)
+      const sourceParent = findNode(website, activeData.parentId)
+      const targetParentId =
+        activeData.parentId === overData.parentId
+          ? activeData.parentId
+          : typeof overData.containerId === 'string'
+            ? overData.containerId
+            : overData.parentId
+      const targetParent = findNode(website, targetParentId)
+      const targetIndex =
+        activeData.parentId === overData.parentId ||
+        typeof overData.containerId !== 'string'
+          ? targetParent?.children.findIndex(
+              (child) => child.id === overData.nodeId,
+            )
+          : targetParent?.children.length
+
+      if (
+        sourceNode &&
+        sourceParent &&
+        targetParent &&
+        targetIndex !== undefined &&
+        targetIndex !== -1 &&
+        isContainerType(targetParent.type) &&
+        !findNode(sourceNode, targetParentId)
+      ) {
+        moveNode(activeData.nodeId, targetParentId, targetIndex)
       }
       return
     }

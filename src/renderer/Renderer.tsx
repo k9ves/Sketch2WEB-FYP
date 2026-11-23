@@ -9,6 +9,7 @@ import {
   SortableContext,
   useSortable,
 } from '@dnd-kit/sortable'
+import { isContainerType } from '../store/tree'
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
 
@@ -79,9 +80,15 @@ function SortableChild({
     transform,
     transition,
     isDragging,
+    isOver,
   } = useSortable({
     id: `canvas-${node.id}`,
-    data: { kind: 'canvas-node', nodeId: node.id, parentId },
+    data: {
+      kind: 'canvas-node',
+      nodeId: node.id,
+      parentId,
+      containerId: isContainerType(node.type) ? node.id : null,
+    },
   })
   const style: CSSProperties = {
     transform: transform
@@ -95,7 +102,7 @@ function SortableChild({
   return (
     <div
       ref={setNodeRef}
-      className="sw-sortable-item"
+      className={`sw-sortable-item${isOver ? ' is-sort-drop-target' : ''}`}
       style={style}
       {...attributes}
       {...listeners}

@@ -305,6 +305,11 @@
   cursor: grabbing;
 }
 
+.sw-sortable-item.is-sort-drop-target {
+  outline: 2px dashed #6546d7;
+  outline-offset: 3px;
+}
+
 .sw-inline-text {
   cursor: text;
 }
