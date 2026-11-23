@@ -4,6 +4,7 @@ import type { ComponentNode, WebsiteDocument } from '../schema/types'
 import { websiteSamples } from '../samples'
 import {
   addNode as addNodeToTree,
+  findParent,
   findNode,
   moveNode as moveNodeInTree,
   removeNode as removeNodeFromTree,
@@ -21,6 +22,7 @@ interface WebsiteState {
   selectNode: (id: string | null) => void
   updateNode: (id: string, updates: ComponentNodeUpdate) => void
   addNode: (parentId: string, node: ComponentNode, index?: number) => void
+  duplicateNode: (id: string) => void
   removeNode: (id: string) => void
   moveNode: (id: string, newParentId: string, index: number) => void
 }
@@ -37,6 +39,17 @@ function hasUniqueNewIds(
   if (seen.has(node.id) || findNode(website, node.id)) return false
   seen.add(node.id)
   return node.children.every((child) => hasUniqueNewIds(child, website, seen))
+}
+
+function cloneNodeWithNewIds(node: ComponentNode): ComponentNode {
+  return {
+    ...node,
+    id: crypto.randomUUID(),
+    content: { ...node.content },
+    layout: { ...node.layout },
+    style: { ...node.style },
+    children: node.children.map(cloneNodeWithNewIds),
+  }
 }
 
 export const useWebsiteStore = create<WebsiteState>((set) => ({
@@ -91,6 +104,52 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
       }
 
       return { website }
+    }),
+  duplicateNode: (id) =>
+    set((state) => {
+      const node = findNode(state.website, id)
+      if (!node) {
+        throw new Error(`Cannot duplicate component "${id}": node not found.`)
+      }
+      if (node.type === 'website') {
+        throw new Error('Cannot duplicate the website root.')
+      }
+
+      const parent = findParent(state.website, id)
+      if (!parent) {
+        throw new Error(`Cannot duplicate component "${id}": parent not found.`)
+      }
+
+      const index = parent.children.findIndex((child) => child.id === id)
+      if (index === -1) {
+        throw new Error(
+          `Cannot duplicate component "${id}": parent is invalid.`,
+        )
+      }
+
+      const duplicate = cloneNodeWithNewIds(node)
+      if (!isComponentNode(duplicate) || containsWebsiteNode(duplicate)) {
+        throw new Error('Cannot duplicate an invalid component subtree.')
+      }
+      if (!hasUniqueNewIds(duplicate, state.website)) {
+        throw new Error(
+          `Cannot duplicate component "${id}": duplicate node id.`,
+        )
+      }
+
+      const website = addNodeToTree(
+        state.website,
+        parent.id,
+        duplicate,
+        index + 1,
+      )
+      if (!isWebsiteDocument(website)) {
+        throw new Error(
+          'Duplicating a component produced an invalid website document.',
+        )
+      }
+
+      return { website, selectedId: duplicate.id }
     }),
   removeNode: (id) =>
     set((state) => {

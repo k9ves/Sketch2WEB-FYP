@@ -27,6 +27,20 @@ export function findNode(
   return undefined
 }
 
+export function findParent(
+  tree: ComponentNode,
+  id: string,
+): ComponentNode | undefined {
+  for (const child of tree.children) {
+    if (child.id === id) return tree
+
+    const parent = findParent(child, id)
+    if (parent) return parent
+  }
+
+  return undefined
+}
+
 export function updateTree(
   tree: ComponentNode,
   id: string,

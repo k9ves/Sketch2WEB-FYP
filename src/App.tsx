@@ -106,6 +106,7 @@ function App() {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const addNode = useWebsiteStore((state) => state.addNode)
+  const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
@@ -267,6 +268,17 @@ function App() {
         <aside className="editor-panel properties-panel">
           <h2>Properties</h2>
           <p>Select a component on the canvas to view its properties.</p>
+          <button
+            className="toolbar-button duplicate-selected-button"
+            type="button"
+            disabled={selectedId === null}
+            onClick={(event) => {
+              event.stopPropagation()
+              if (selectedId !== null) duplicateNode(selectedId)
+            }}
+          >
+            Duplicate selected
+          </button>
           <button
             className="toolbar-button delete-selected-button"
             type="button"
