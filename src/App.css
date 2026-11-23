@@ -293,6 +293,18 @@
   cursor: pointer;
 }
 
+.sw-sortable-item {
+  min-width: 0;
+}
+
+.sw-sortable-item[aria-roledescription='sortable'] {
+  cursor: grab;
+}
+
+.sw-sortable-item[aria-roledescription='sortable']:active {
+  cursor: grabbing;
+}
+
 .sw-inline-text {
   cursor: text;
 }

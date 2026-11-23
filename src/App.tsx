@@ -41,7 +41,7 @@ function DraggablePaletteItem({
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: `palette-${type}`,
-      data: { componentType: type },
+      data: { kind: 'palette', componentType: type },
     })
   const style: CSSProperties = {
     transform: transform
@@ -182,6 +182,7 @@ function App() {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const addNode = useWebsiteStore((state) => state.addNode)
+  const moveNode = useWebsiteStore((state) => state.moveNode)
   const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
   const updateNode = useWebsiteStore((state) => state.updateNode)
@@ -251,9 +252,34 @@ function App() {
   }
 
   function handleDragEnd(event: DragEndEvent) {
-    if (event.over?.id !== CANVAS_DROP_ID) return
+    const activeData = event.active.data.current
+    const overData = event.over?.data.current
 
-    const type = event.active.data.current?.componentType
+    if (
+      activeData?.kind === 'canvas-node' &&
+      overData?.kind === 'canvas-node' &&
+      typeof activeData.nodeId === 'string' &&
+      typeof activeData.parentId === 'string' &&
+      activeData.parentId === overData.parentId &&
+      typeof overData.nodeId === 'string' &&
+      activeData.nodeId !== overData.nodeId
+    ) {
+      const parent = findNode(website, activeData.parentId)
+      const index = parent?.children.findIndex(
+        (child) => child.id === overData.nodeId,
+      )
+      if (parent && index !== undefined && index !== -1) {
+        moveNode(activeData.nodeId, activeData.parentId, index)
+      }
+      return
+    }
+
+    const droppedOnCanvas =
+      event.over?.id === CANVAS_DROP_ID ||
+      (activeData?.kind === 'palette' && overData?.kind === 'canvas-node')
+    if (!droppedOnCanvas) return
+
+    const type = activeData?.componentType
     if (!isAddableComponentType(type)) return
 
     addNode(targetContainerId ?? website.id, createComponentNode(type))

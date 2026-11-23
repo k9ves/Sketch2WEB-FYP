@@ -4,6 +4,11 @@ import {
   isComponentType,
   type ComponentNode,
 } from '../schema/types'
+import {
+  rectSortingStrategy,
+  SortableContext,
+  useSortable,
+} from '@dnd-kit/sortable'
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
 
@@ -50,7 +55,54 @@ function WarningBox({ message }: { message: string }) {
 }
 
 function renderChildren(node: ComponentNode): ReactNode {
-  return node.children.map((child) => <Renderer key={child.id} node={child} />)
+  const items = node.children.map((child) => `canvas-${child.id}`)
+  return (
+    <SortableContext items={items} strategy={rectSortingStrategy}>
+      {node.children.map((child) => (
+        <SortableChild key={child.id} node={child} parentId={node.id} />
+      ))}
+    </SortableContext>
+  )
+}
+
+function SortableChild({
+  node,
+  parentId,
+}: {
+  node: ComponentNode
+  parentId: string
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: `canvas-${node.id}`,
+    data: { kind: 'canvas-node', nodeId: node.id, parentId },
+  })
+  const style: CSSProperties = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0) scaleX(${transform.scaleX}) scaleY(${transform.scaleY})`
+      : undefined,
+    transition,
+    opacity: isDragging ? 0.45 : undefined,
+    touchAction: 'none',
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      className="sw-sortable-item"
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
+      <Renderer node={node} />
+    </div>
+  )
 }
 
 function layoutStyle(
