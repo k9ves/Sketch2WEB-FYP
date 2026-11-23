@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
+import { componentTypes } from './schema/types'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 
@@ -22,25 +23,57 @@ function App() {
     <main className="builder-shell" onClick={() => selectNode(null)}>
       <header className="builder-toolbar">
         <div>
-          <p className="eyebrow">Sketch2Web · Renderer</p>
-          <h1>Website preview</h1>
+          <p className="eyebrow">Sketch2Web</p>
+          <h1>Website builder</h1>
         </div>
-        <label className="sample-picker">
-          <span>Sample</span>
-          <select
-            value={sampleName}
-            onChange={(event) => changeSample(event.target.value)}
-          >
-            <option value="landing">Landing page</option>
-            <option value="portfolio">Portfolio</option>
-            <option value="blog">Blog</option>
-          </select>
-        </label>
+        <div className="toolbar-controls">
+          <div className="toolbar-actions" aria-label="Editor actions">
+            <button className="toolbar-button" type="button">
+              Preview
+            </button>
+            <button className="toolbar-button" type="button">
+              Code
+            </button>
+            <button className="toolbar-button" type="button">
+              Export
+            </button>
+          </div>
+          <label className="sample-picker">
+            <span>Sample</span>
+            <select
+              value={sampleName}
+              onChange={(event) => changeSample(event.target.value)}
+            >
+              <option value="landing">Landing page</option>
+              <option value="portfolio">Portfolio</option>
+              <option value="blog">Blog</option>
+            </select>
+          </label>
+        </div>
       </header>
       <div className="editor-layout">
         <aside className="editor-panel components-panel">
           <h2>Components</h2>
-          <p>Component tree will appear here.</p>
+          <ul
+            className="component-palette"
+            aria-label="Available component types"
+          >
+            {componentTypes.map((type) => (
+              <li
+                className={
+                  type === 'website'
+                    ? 'component-palette-item is-root-type'
+                    : 'component-palette-item'
+                }
+                key={type}
+              >
+                <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                {type === 'website' && (
+                  <span className="component-palette-note">Root</span>
+                )}
+              </li>
+            ))}
+          </ul>
         </aside>
         <section className="canvas-panel" aria-label="Canvas">
           <h2>Canvas</h2>
