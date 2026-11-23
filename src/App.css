@@ -145,9 +145,41 @@
   font-weight: 600;
 }
 
+.component-palette-item.is-selected {
+  border-color: #6546d7;
+  background: #f1edff;
+}
+
 .component-palette-item.is-root-type {
   color: #77718a;
   background: #f7f6f9;
+}
+
+.component-palette-button {
+  width: 100%;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.component-palette-item:not(.is-root-type):hover {
+  border-color: #bcb5ce;
+  background: #fbfaff;
+}
+
+.component-palette-item.is-selected:hover {
+  border-color: #6546d7;
+  background: #f1edff;
+}
+
+.component-palette-button:focus-visible {
+  outline: 2px solid #6546d7;
+  outline-offset: 2px;
 }
 
 .component-palette-note {
@@ -155,6 +187,21 @@
   font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
+}
+
+.palette-add-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.palette-add-button:disabled {
+  color: #77718a;
+  background: #f7f6f9;
+  cursor: not-allowed;
+}
+
+.component-palette-status {
+  margin-top: 10px !important;
 }
 
 .canvas-panel > h2 {

@@ -44,7 +44,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T23** Three-panel layout: left (components/tree), center (canvas), right (properties). — _Done when:_ panels visible and responsive.
 - [x] **T24** Top toolbar (title, Preview, Code, Export buttons, no logic yet). — _Done when:_ buttons visible.
 - [x] **T25** Left panel: list of addable components (palette). — _Done when:_ list shows all types.
-- [ ] **T26** "Add" button inserts selected palette item into selected container. — _Done when:_ new heading appears.
+- [x] **T26** "Add" button inserts selected palette item into selected container. — _Done when:_ new heading appears.
 - [ ] **T27** Delete selected (Delete key and button). — _Done when:_ component disappears.
 - [ ] **T28** Duplicate selected (new unique IDs). — _Done when:_ copy appears below original.
 - [ ] **T29** Inline text edit (double-click). — _Done when:_ text changes and saves in store.

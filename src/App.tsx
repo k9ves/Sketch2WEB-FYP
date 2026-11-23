@@ -2,15 +2,127 @@ import { useState } from 'react'
 import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
+import type { ComponentNode, ComponentType } from './schema/types'
+import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 
+type AddableComponentType = Exclude<ComponentType, 'website'>
+
+const componentDefaults: Record<
+  AddableComponentType,
+  Pick<ComponentNode, 'content' | 'layout' | 'style' | 'children'>
+> = {
+  navbar: {
+    content: { brand: 'New website', links: 'Home, About, Contact' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  hero: {
+    content: { title: 'New hero', description: 'Add a description' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  section: {
+    content: { title: 'New section', text: '' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  columns: {
+    content: {},
+    layout: { columns: '2', gap: '4' },
+    style: {},
+    children: [],
+  },
+  heading: {
+    content: { text: 'New heading' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  text: {
+    content: { text: 'New text' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  button: {
+    content: { text: 'New button', href: '#top' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  image: {
+    content: { src: '/favicon.svg', alt: 'Placeholder image' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  card: {
+    content: { title: 'New card', text: 'Add a description' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+  footer: {
+    content: { text: 'New footer' },
+    layout: {},
+    style: {},
+    children: [],
+  },
+}
+
+function createComponentNode(type: AddableComponentType): ComponentNode {
+  const defaults = componentDefaults[type]
+  return {
+    id: crypto.randomUUID(),
+    type,
+    content: { ...defaults.content },
+    layout: { ...defaults.layout },
+    style: { ...defaults.style },
+    children: [...defaults.children],
+  }
+}
+
 function App() {
   const [sampleName, setSampleName] = useState('landing')
+  const [selectedPaletteType, setSelectedPaletteType] =
+    useState<AddableComponentType | null>(null)
   const website = useWebsiteStore((state) => state.website)
   const setWebsite = useWebsiteStore((state) => state.setWebsite)
+  const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
+  const addNode = useWebsiteStore((state) => state.addNode)
   const websiteTitle = website.content.title || 'Untitled website'
+  const selectedCanvasNode = selectedId
+    ? findNode(website, selectedId)
+    : undefined
+  const targetContainerId =
+    selectedId === null
+      ? website.id
+      : selectedCanvasNode && isContainerType(selectedCanvasNode.type)
+        ? selectedCanvasNode.id
+        : null
+  const targetDescription =
+    targetContainerId === null
+      ? 'Select a container on the canvas to add components.'
+      : selectedId === null
+        ? 'No container selected. New components go into the website root.'
+        : 'New components go into the selected container.'
+
+  function addSelectedComponent() {
+    if (selectedPaletteType === null) {
+      throw new Error('Select a component type before adding.')
+    }
+    if (targetContainerId === null) {
+      throw new Error('Select a container before adding a component.')
+    }
+
+    addNode(targetContainerId, createComponentNode(selectedPaletteType))
+  }
 
   function changeSample(name: string) {
     const sample = websiteSamples[name]
@@ -63,17 +175,48 @@ function App() {
                 className={
                   type === 'website'
                     ? 'component-palette-item is-root-type'
-                    : 'component-palette-item'
+                    : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
                 }
                 key={type}
               >
-                <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
                 {type === 'website' && (
-                  <span className="component-palette-note">Root</span>
+                  <>
+                    <span>Website</span>
+                    <span className="component-palette-note">Root</span>
+                  </>
+                )}
+                {type !== 'website' && (
+                  <button
+                    className="component-palette-button"
+                    type="button"
+                    aria-pressed={selectedPaletteType === type}
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      setSelectedPaletteType(type)
+                    }}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </button>
                 )}
               </li>
             ))}
           </ul>
+          <button
+            className="toolbar-button palette-add-button"
+            type="button"
+            disabled={
+              selectedPaletteType === null || targetContainerId === null
+            }
+            onClick={(event) => {
+              event.stopPropagation()
+              addSelectedComponent()
+            }}
+          >
+            Add
+          </button>
+          <p className="component-palette-status" aria-live="polite">
+            {targetDescription}
+          </p>
         </aside>
         <section className="canvas-panel" aria-label="Canvas">
           <h2>Canvas</h2>

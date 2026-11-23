@@ -9,6 +9,10 @@ const containerTypes: ReadonlySet<ComponentType> = new Set([
   'footer',
 ])
 
+export function isContainerType(type: ComponentType): boolean {
+  return containerTypes.has(type)
+}
+
 export function findNode(
   tree: ComponentNode,
   id: string,
@@ -50,7 +54,7 @@ export function addNode(
   if (!parent) {
     throw new Error(`Cannot add component: parent "${parentId}" not found.`)
   }
-  if (!containerTypes.has(parent.type)) {
+  if (!isContainerType(parent.type)) {
     throw new Error(`Cannot add children to "${parent.type}" components.`)
   }
 
@@ -124,7 +128,7 @@ export function moveNode(
   if (!newParent) {
     throw new Error(`Cannot move component: parent "${newParentId}" not found.`)
   }
-  if (!containerTypes.has(newParent.type)) {
+  if (!isContainerType(newParent.type)) {
     throw new Error(`Cannot add children to "${newParent.type}" components.`)
   }
   if (findNode(node, newParentId)) {
