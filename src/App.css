@@ -3,7 +3,7 @@
 }
 
 .builder-shell {
-  width: min(1120px, calc(100% - 40px));
+  width: min(1600px, calc(100% - 40px));
   margin: 0 auto;
   padding: 38px 0 64px;
 }
@@ -86,12 +86,12 @@
 
 .editor-layout {
   display: grid;
-  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(
-      210px,
-      250px
+  grid-template-columns: minmax(180px, 200px) minmax(0, 1fr) minmax(
+      190px,
+      220px
     );
   align-items: start;
-  gap: 18px;
+  gap: 16px;
 }
 
 .editor-panel,
