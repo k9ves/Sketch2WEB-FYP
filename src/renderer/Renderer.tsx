@@ -5,6 +5,7 @@ import {
   type ComponentNode,
 } from '../schema/types'
 import { useWebsiteStore } from '../store/websiteStore'
+import InlineText from '../editor/InlineText'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -103,6 +104,7 @@ function layoutStyle(
 function Renderer({ node }: { node: unknown }) {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
+  const updateNode = useWebsiteStore((state) => state.updateNode)
 
   if (!isRecord(node)) {
     return <WarningBox message="Invalid component: expected an object." />
@@ -129,6 +131,14 @@ function Renderer({ node }: { node: unknown }) {
     event.preventDefault()
     selectNode(node.type === 'website' ? null : node.id)
   }
+  const editableContent = (field: string, value: string) => (
+    <InlineText
+      value={value}
+      onSave={(nextValue) =>
+        updateNode(node.id, { content: { [field]: nextValue } })
+      }
+    />
+  )
 
   switch (node.type) {
     case 'website':
@@ -164,7 +174,7 @@ function Renderer({ node }: { node: unknown }) {
           onClick={handleClick}
         >
           <a className="sw-brand" href="#top">
-            {brand}
+            {editableContent('brand', brand)}
           </a>
           <div className="sw-nav-links">
             {links.map((label, index) => {
@@ -172,7 +182,16 @@ function Renderer({ node }: { node: unknown }) {
               const href = `#${label.toLowerCase().replace(/\s+/g, '-')}`
               return (
                 <a key={`${node.id}-link-${index}`} href={safeHref(href)}>
-                  {label}
+                  <InlineText
+                    value={label}
+                    onSave={(nextLabel) => {
+                      const nextLinks = [...links]
+                      nextLinks[index] = nextLabel
+                      updateNode(node.id, {
+                        content: { links: nextLinks.join(', ') },
+                      })
+                    }}
+                  />
                 </a>
               )
             })}
@@ -192,8 +211,14 @@ function Renderer({ node }: { node: unknown }) {
           style={layoutStyle(node.layout, 'flex')}
           onClick={handleClick}
         >
-          {title && <h1 className="sw-hero-heading">{title}</h1>}
-          {content.description && <p>{content.description}</p>}
+          {title && (
+            <h1 className="sw-hero-heading">
+              {editableContent('title', title)}
+            </h1>
+          )}
+          {content.description && (
+            <p>{editableContent('description', content.description)}</p>
+          )}
           {children}
         </header>
       )
@@ -208,8 +233,12 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          {title && <h2>{title}</h2>}
-          {text && <p className="sw-section-description">{text}</p>}
+          {title && <h2>{editableContent('title', title)}</h2>}
+          {text && (
+            <p className="sw-section-description">
+              {editableContent('text', text)}
+            </p>
+          )}
           {children}
         </section>
       )
@@ -239,7 +268,7 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          {text}
+          {editableContent('text', text)}
         </h2>
       ) : (
         <WarningBox message="Heading is missing its text." />
@@ -250,7 +279,7 @@ function Renderer({ node }: { node: unknown }) {
           className={selectableClassName(node, 'text', 'sw-text', selectedId)}
           onClick={handleClick}
         >
-          {text}
+          {editableContent('text', text)}
         </p>
       ) : (
         <WarningBox message="Text component is missing its text." />
@@ -273,7 +302,7 @@ function Renderer({ node }: { node: unknown }) {
           href={href}
           onClick={handleClick}
         >
-          {text}
+          {editableContent('text', text)}
         </a>
       )
     }
@@ -302,9 +331,11 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          <h3>{title}</h3>
-          {text && <p>{text}</p>}
-          {content.description && <p>{content.description}</p>}
+          <h3>{editableContent('title', title)}</h3>
+          {text && <p>{editableContent('text', text)}</p>}
+          {content.description && (
+            <p>{editableContent('description', content.description)}</p>
+          )}
           {children}
         </article>
       )
@@ -319,7 +350,7 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          {text && <p>{text}</p>}
+          {text && <p>{editableContent('text', text)}</p>}
           {children}
         </footer>
       )

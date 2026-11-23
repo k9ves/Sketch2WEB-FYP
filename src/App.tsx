@@ -3,6 +3,7 @@ import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
 import type { ComponentNode, ComponentType } from './schema/types'
+import InlineText from './editor/InlineText'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -108,6 +109,7 @@ function App() {
   const addNode = useWebsiteStore((state) => state.addNode)
   const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
+  const updateNode = useWebsiteStore((state) => state.updateNode)
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
     ? findNode(website, selectedId)
@@ -258,7 +260,14 @@ function App() {
                 <i />
                 <i />
               </span>
-              <span>{websiteTitle}</span>
+              <span>
+                <InlineText
+                  value={websiteTitle}
+                  onSave={(title) =>
+                    updateNode(website.id, { content: { title } })
+                  }
+                />
+              </span>
             </div>
             <div className="preview-page" id="top">
               <Renderer node={website} />

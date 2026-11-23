@@ -47,7 +47,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T26** "Add" button inserts selected palette item into selected container. — _Done when:_ new heading appears.
 - [x] **T27** Delete selected (Delete key and button). — _Done when:_ component disappears.
 - [x] **T28** Duplicate selected (new unique IDs). — _Done when:_ copy appears below original.
-- [ ] **T29** Inline text edit (double-click). — _Done when:_ text changes and saves in store.
+- [x] **T29** Inline text edit (double-click). — _Done when:_ text changes and saves in store.
 - [ ] **T30** Undo / Redo (history stack in store). — _Done when:_ Ctrl+Z / Ctrl+Y work. **(Milestone: Basic editor)**
 
 ## M5 — Drag and drop (Week 5-6)
