@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
@@ -8,6 +8,16 @@ import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 
 type AddableComponentType = Exclude<ComponentType, 'website'>
+
+function isEditableTarget(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable ||
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.tagName === 'SELECT')
+  )
+}
 
 const componentDefaults: Record<
   AddableComponentType,
@@ -96,6 +106,7 @@ function App() {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const addNode = useWebsiteStore((state) => state.addNode)
+  const removeNode = useWebsiteStore((state) => state.removeNode)
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
     ? findNode(website, selectedId)
@@ -112,6 +123,22 @@ function App() {
       : selectedId === null
         ? 'No container selected. New components go into the website root.'
         : 'New components go into the selected container.'
+
+  useEffect(() => {
+    if (selectedId === null) return
+
+    const id = selectedId
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Delete' || isEditableTarget(event.target)) return
+
+      event.preventDefault()
+      removeNode(id)
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [removeNode, selectedId])
 
   function addSelectedComponent() {
     if (selectedPaletteType === null) {
@@ -240,6 +267,17 @@ function App() {
         <aside className="editor-panel properties-panel">
           <h2>Properties</h2>
           <p>Select a component on the canvas to view its properties.</p>
+          <button
+            className="toolbar-button delete-selected-button"
+            type="button"
+            disabled={selectedId === null}
+            onClick={(event) => {
+              event.stopPropagation()
+              if (selectedId !== null) removeNode(selectedId)
+            }}
+          >
+            Delete selected
+          </button>
         </aside>
       </div>
     </main>

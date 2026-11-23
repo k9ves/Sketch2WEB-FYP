@@ -194,7 +194,18 @@
   margin-top: 12px;
 }
 
+.delete-selected-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
 .palette-add-button:disabled {
+  color: #77718a;
+  background: #f7f6f9;
+  cursor: not-allowed;
+}
+
+.delete-selected-button:disabled {
   color: #77718a;
   background: #f7f6f9;
   cursor: not-allowed;
