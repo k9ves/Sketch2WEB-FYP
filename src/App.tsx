@@ -1,4 +1,15 @@
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import type { DragEndEvent } from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
@@ -9,6 +20,69 @@ import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 
 type AddableComponentType = Exclude<ComponentType, 'website'>
+const CANVAS_DROP_ID = 'canvas-dropzone'
+
+interface DraggablePaletteItemProps {
+  type: AddableComponentType
+  selected: boolean
+  onSelect: (type: AddableComponentType) => void
+}
+
+interface CanvasDropTargetProps {
+  websiteTitle: string
+  children: ReactNode
+}
+
+function DraggablePaletteItem({
+  type,
+  selected,
+  onSelect,
+}: DraggablePaletteItemProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `palette-${type}`,
+      data: { componentType: type },
+    })
+  const style: CSSProperties = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    opacity: isDragging ? 0.5 : undefined,
+    touchAction: 'none',
+  }
+
+  return (
+    <button
+      ref={setNodeRef}
+      className="component-palette-button"
+      type="button"
+      style={style}
+      {...attributes}
+      {...listeners}
+      aria-pressed={selected}
+      onClick={(event) => {
+        event.stopPropagation()
+        onSelect(type)
+      }}
+    >
+      {type.charAt(0).toUpperCase() + type.slice(1)}
+    </button>
+  )
+}
+
+function CanvasDropTarget({ websiteTitle, children }: CanvasDropTargetProps) {
+  const { setNodeRef } = useDroppable({ id: CANVAS_DROP_ID })
+
+  return (
+    <section
+      className="preview-frame"
+      aria-label={`${websiteTitle} preview`}
+      ref={setNodeRef}
+    >
+      {children}
+    </section>
+  )
+}
 
 function isEditableTarget(target: EventTarget | null): boolean {
   return (
@@ -128,6 +202,10 @@ function App() {
       : selectedId === null
         ? 'No container selected. New components go into the website root.'
         : 'New components go into the selected container.'
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor),
+  )
 
   useEffect(() => {
     const id = selectedId
@@ -171,6 +249,15 @@ function App() {
     addNode(targetContainerId, createComponentNode(selectedPaletteType))
   }
 
+  function handleDragEnd(event: DragEndEvent) {
+    if (event.over?.id !== CANVAS_DROP_ID) return
+
+    const type = event.active.data.current?.componentType
+    if (!isAddableComponentType(type)) return
+
+    addNode(targetContainerId ?? website.id, createComponentNode(type))
+  }
+
   function changeSample(name: string) {
     const sample = websiteSamples[name]
     if (!sample) throw new Error(`Unknown website sample: ${name}`)
@@ -210,115 +297,115 @@ function App() {
           </label>
         </div>
       </header>
-      <div className="editor-layout">
-        <aside className="editor-panel components-panel">
-          <h2>Components</h2>
-          <ul
-            className="component-palette"
-            aria-label="Available component types"
-          >
-            {componentTypes.map((type) => (
-              <li
-                className={
-                  type === 'website'
-                    ? 'component-palette-item is-root-type'
-                    : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
-                }
-                key={type}
-              >
-                {type === 'website' && (
-                  <>
-                    <span>Website</span>
-                    <span className="component-palette-note">Root</span>
-                  </>
-                )}
-                {type !== 'website' && (
-                  <button
-                    className="component-palette-button"
-                    type="button"
-                    aria-pressed={selectedPaletteType === type}
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      setSelectedPaletteType(type)
-                    }}
-                  >
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-          <button
-            className="toolbar-button palette-add-button"
-            type="button"
-            disabled={
-              selectedPaletteType === null || targetContainerId === null
-            }
-            onClick={(event) => {
-              event.stopPropagation()
-              addSelectedComponent()
-            }}
-          >
-            Add
-          </button>
-          <p className="component-palette-status" aria-live="polite">
-            {targetDescription}
-          </p>
-        </aside>
-        <section className="canvas-panel" aria-label="Canvas">
-          <h2>Canvas</h2>
-          <section
-            className="preview-frame"
-            aria-label={`${websiteTitle} preview`}
-          >
-            <div className="preview-titlebar">
-              <span className="preview-dots" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <span>
-                <InlineText
-                  value={websiteTitle}
-                  onSave={(title) =>
-                    updateNode(website.id, { content: { title } })
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className="editor-layout">
+          <aside className="editor-panel components-panel">
+            <h2>Components</h2>
+            <ul
+              className="component-palette"
+              aria-label="Available component types"
+            >
+              {componentTypes.map((type) => (
+                <li
+                  className={
+                    type === 'website'
+                      ? 'component-palette-item is-root-type'
+                      : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
                   }
-                />
-              </span>
-            </div>
-            <div className="preview-page" id="top">
-              <Renderer node={website} />
-            </div>
+                  key={type}
+                >
+                  {type === 'website' && (
+                    <>
+                      <span>Website</span>
+                      <span className="component-palette-note">Root</span>
+                    </>
+                  )}
+                  {type !== 'website' && (
+                    <DraggablePaletteItem
+                      type={type}
+                      selected={selectedPaletteType === type}
+                      onSelect={setSelectedPaletteType}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="toolbar-button palette-add-button"
+              type="button"
+              disabled={
+                selectedPaletteType === null || targetContainerId === null
+              }
+              onClick={(event) => {
+                event.stopPropagation()
+                addSelectedComponent()
+              }}
+            >
+              Add
+            </button>
+            <p className="component-palette-status" aria-live="polite">
+              {targetDescription}
+            </p>
+          </aside>
+          <section className="canvas-panel" aria-label="Canvas">
+            <h2>Canvas</h2>
+            <CanvasDropTarget websiteTitle={websiteTitle}>
+              <div className="preview-titlebar">
+                <span className="preview-dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span>
+                  <InlineText
+                    value={websiteTitle}
+                    onSave={(title) =>
+                      updateNode(website.id, { content: { title } })
+                    }
+                  />
+                </span>
+              </div>
+              <div className="preview-page" id="top">
+                <Renderer node={website} />
+              </div>
+            </CanvasDropTarget>
           </section>
-        </section>
-        <aside className="editor-panel properties-panel">
-          <h2>Properties</h2>
-          <p>Select a component on the canvas to view its properties.</p>
-          <button
-            className="toolbar-button duplicate-selected-button"
-            type="button"
-            disabled={selectedId === null}
-            onClick={(event) => {
-              event.stopPropagation()
-              if (selectedId !== null) duplicateNode(selectedId)
-            }}
-          >
-            Duplicate selected
-          </button>
-          <button
-            className="toolbar-button delete-selected-button"
-            type="button"
-            disabled={selectedId === null}
-            onClick={(event) => {
-              event.stopPropagation()
-              if (selectedId !== null) removeNode(selectedId)
-            }}
-          >
-            Delete selected
-          </button>
-        </aside>
-      </div>
+          <aside className="editor-panel properties-panel">
+            <h2>Properties</h2>
+            <p>Select a component on the canvas to view its properties.</p>
+            <button
+              className="toolbar-button duplicate-selected-button"
+              type="button"
+              disabled={selectedId === null}
+              onClick={(event) => {
+                event.stopPropagation()
+                if (selectedId !== null) duplicateNode(selectedId)
+              }}
+            >
+              Duplicate selected
+            </button>
+            <button
+              className="toolbar-button delete-selected-button"
+              type="button"
+              disabled={selectedId === null}
+              onClick={(event) => {
+                event.stopPropagation()
+                if (selectedId !== null) removeNode(selectedId)
+              }}
+            >
+              Delete selected
+            </button>
+          </aside>
+        </div>
+      </DndContext>
     </main>
+  )
+}
+
+function isAddableComponentType(value: unknown): value is AddableComponentType {
+  return (
+    typeof value === 'string' &&
+    componentTypes.some((type) => type === value && type !== 'website')
   )
 }
 
