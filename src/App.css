@@ -229,6 +229,13 @@
   box-shadow: 0 18px 55px rgb(42 31 71 / 10%);
 }
 
+.preview-frame.is-drop-target {
+  border-color: #6546d7;
+  box-shadow:
+    0 0 0 3px rgb(101 70 215 / 24%),
+    0 18px 55px rgb(42 31 71 / 10%);
+}
+
 .preview-titlebar {
   display: flex;
   align-items: center;

@@ -53,7 +53,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 ## M5 — Drag and drop (Week 5-6)
 
 - [x] **T31** dnd-kit setup, drag palette item onto canvas. — _Done when:_ drop adds the component.
-- [ ] **T32** Drop zones highlight while dragging. — _Done when:_ visible indicator.
+- [x] **T32** Drop zones highlight while dragging. — _Done when:_ visible indicator.
 - [ ] **T33** Reorder siblings by dragging. — _Done when:_ order changes in store.
 - [ ] **T34** Move component into another container. — _Done when:_ a card moves into another section.
 - [ ] **T35** Drag overlay, cancel with Esc, no crash on bad drop. — _Done when:_ smooth feel. **(Milestone: Drag and drop)**

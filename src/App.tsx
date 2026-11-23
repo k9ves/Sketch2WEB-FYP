@@ -71,12 +71,13 @@ function DraggablePaletteItem({
 }
 
 function CanvasDropTarget({ websiteTitle, children }: CanvasDropTargetProps) {
-  const { setNodeRef } = useDroppable({ id: CANVAS_DROP_ID })
+  const { setNodeRef, isOver } = useDroppable({ id: CANVAS_DROP_ID })
 
   return (
     <section
-      className="preview-frame"
+      className={`preview-frame${isOver ? ' is-drop-target' : ''}`}
       aria-label={`${websiteTitle} preview`}
+      aria-dropeffect="copy"
       ref={setNodeRef}
     >
       {children}
