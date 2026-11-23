@@ -110,6 +110,8 @@ function App() {
   const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
   const updateNode = useWebsiteStore((state) => state.updateNode)
+  const undo = useWebsiteStore((state) => state.undo)
+  const redo = useWebsiteStore((state) => state.redo)
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
     ? findNode(website, selectedId)
@@ -128,12 +130,27 @@ function App() {
         : 'New components go into the selected container.'
 
   useEffect(() => {
-    if (selectedId === null) return
-
     const id = selectedId
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key !== 'Delete' || isEditableTarget(event.target)) return
+      if (isEditableTarget(event.target)) return
+
+      const key = event.key.toLowerCase()
+      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+        if (key === 'z') {
+          event.preventDefault()
+          if (event.shiftKey) redo()
+          else undo()
+          return
+        }
+        if (key === 'y') {
+          event.preventDefault()
+          redo()
+          return
+        }
+      }
+
+      if (event.key !== 'Delete' || id === null) return
 
       event.preventDefault()
       removeNode(id)
@@ -141,7 +158,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [removeNode, selectedId])
+  }, [redo, removeNode, selectedId, undo])
 
   function addSelectedComponent() {
     if (selectedPaletteType === null) {

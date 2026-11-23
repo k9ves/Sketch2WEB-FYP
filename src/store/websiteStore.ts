@@ -15,9 +15,16 @@ type ComponentNodeUpdate = Partial<
   Pick<ComponentNode, 'content' | 'layout' | 'style'>
 >
 
+interface HistoryEntry {
+  website: WebsiteDocument
+  selectedId: string | null
+}
+
 interface WebsiteState {
   website: WebsiteDocument
   selectedId: string | null
+  past: HistoryEntry[]
+  future: HistoryEntry[]
   setWebsite: (website: WebsiteDocument) => void
   selectNode: (id: string | null) => void
   updateNode: (id: string, updates: ComponentNodeUpdate) => void
@@ -25,6 +32,26 @@ interface WebsiteState {
   duplicateNode: (id: string) => void
   removeNode: (id: string) => void
   moveNode: (id: string, newParentId: string, index: number) => void
+  undo: () => void
+  redo: () => void
+}
+
+const HISTORY_LIMIT = 50
+
+function recordChange(
+  state: WebsiteState,
+  website: WebsiteDocument,
+  selectedId: string | null = state.selectedId,
+) {
+  return {
+    website,
+    selectedId,
+    past: [
+      ...state.past.slice(-(HISTORY_LIMIT - 1)),
+      { website: state.website, selectedId: state.selectedId },
+    ],
+    future: [],
+  }
 }
 
 function containsWebsiteNode(node: ComponentNode): boolean {
@@ -55,7 +82,10 @@ function cloneNodeWithNewIds(node: ComponentNode): ComponentNode {
 export const useWebsiteStore = create<WebsiteState>((set) => ({
   website: websiteSamples.landing,
   selectedId: null,
-  setWebsite: (website) => set({ website, selectedId: null }),
+  past: [],
+  future: [],
+  setWebsite: (website) =>
+    set({ website, selectedId: null, past: [], future: [] }),
   selectNode: (selectedId) => set({ selectedId }),
   updateNode: (id, updates) =>
     set((state) => {
@@ -82,7 +112,7 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         )
       }
 
-      return { website }
+      return recordChange(state, website)
     }),
   addNode: (parentId, node, index) =>
     set((state) => {
@@ -103,7 +133,7 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         )
       }
 
-      return { website }
+      return recordChange(state, website)
     }),
   duplicateNode: (id) =>
     set((state) => {
@@ -149,7 +179,7 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         )
       }
 
-      return { website, selectedId: duplicate.id }
+      return recordChange(state, website, duplicate.id)
     }),
   removeNode: (id) =>
     set((state) => {
@@ -172,10 +202,11 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         state.selectedId !== null &&
         findNode(target, state.selectedId) !== undefined
 
-      return {
+      return recordChange(
+        state,
         website,
-        selectedId: clearSelection ? null : state.selectedId,
-      }
+        clearSelection ? null : state.selectedId,
+      )
     }),
   moveNode: (id, newParentId, index) =>
     set((state) => {
@@ -186,6 +217,36 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         )
       }
 
-      return { website }
+      return recordChange(state, website)
+    }),
+  undo: () =>
+    set((state) => {
+      const previous = state.past[state.past.length - 1]
+      if (!previous) return state
+
+      return {
+        website: previous.website,
+        selectedId: previous.selectedId,
+        past: state.past.slice(0, -1),
+        future: [
+          ...state.future.slice(-(HISTORY_LIMIT - 1)),
+          { website: state.website, selectedId: state.selectedId },
+        ],
+      }
+    }),
+  redo: () =>
+    set((state) => {
+      const next = state.future[state.future.length - 1]
+      if (!next) return state
+
+      return {
+        website: next.website,
+        selectedId: next.selectedId,
+        past: [
+          ...state.past.slice(-(HISTORY_LIMIT - 1)),
+          { website: state.website, selectedId: state.selectedId },
+        ],
+        future: state.future.slice(0, -1),
+      }
     }),
 }))
