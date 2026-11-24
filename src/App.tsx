@@ -1,89 +1,15 @@
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useDraggable,
-  useDroppable,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import type { DragEndEvent } from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
-import type { CSSProperties, ReactNode } from 'react'
-import Renderer from './renderer/Renderer'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
-import type { ComponentNode, ComponentType } from './schema/types'
 import InlineText from './editor/InlineText'
+import PaletteItem from './editor/PaletteItem'
+import { createComponentNode } from './editor/componentFactory'
+import type { AddableComponentType } from './editor/componentFactory'
+import FreeformCanvas from './editor/freeform/FreeformCanvas'
+import FreeformDndProvider from './editor/freeform/FreeformDnd'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
-
-type AddableComponentType = Exclude<ComponentType, 'website'>
-const CANVAS_DROP_ID = 'canvas-dropzone'
-
-interface DraggablePaletteItemProps {
-  type: AddableComponentType
-  selected: boolean
-  onSelect: (type: AddableComponentType) => void
-}
-
-interface CanvasDropTargetProps {
-  websiteTitle: string
-  children: ReactNode
-}
-
-function DraggablePaletteItem({
-  type,
-  selected,
-  onSelect,
-}: DraggablePaletteItemProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `palette-${type}`,
-      data: { kind: 'palette', componentType: type },
-    })
-  const style: CSSProperties = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    opacity: isDragging ? 0.5 : undefined,
-    touchAction: 'none',
-  }
-
-  return (
-    <button
-      ref={setNodeRef}
-      className="component-palette-button"
-      type="button"
-      style={style}
-      {...attributes}
-      {...listeners}
-      aria-pressed={selected}
-      onClick={(event) => {
-        event.stopPropagation()
-        onSelect(type)
-      }}
-    >
-      {type.charAt(0).toUpperCase() + type.slice(1)}
-    </button>
-  )
-}
-
-function CanvasDropTarget({ websiteTitle, children }: CanvasDropTargetProps) {
-  const { setNodeRef, isOver } = useDroppable({ id: CANVAS_DROP_ID })
-
-  return (
-    <section
-      className={`preview-frame${isOver ? ' is-drop-target' : ''}`}
-      aria-label={`${websiteTitle} preview`}
-      aria-dropeffect="copy"
-      ref={setNodeRef}
-    >
-      {children}
-    </section>
-  )
-}
 
 function isEditableTarget(target: EventTarget | null): boolean {
   return (
@@ -95,84 +21,6 @@ function isEditableTarget(target: EventTarget | null): boolean {
   )
 }
 
-const componentDefaults: Record<
-  AddableComponentType,
-  Pick<ComponentNode, 'content' | 'layout' | 'style' | 'children'>
-> = {
-  navbar: {
-    content: { brand: 'New website', links: 'Home, About, Contact' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  hero: {
-    content: { title: 'New hero', description: 'Add a description' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  section: {
-    content: { title: 'New section', text: '' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  columns: {
-    content: {},
-    layout: { columns: '2', gap: '4' },
-    style: {},
-    children: [],
-  },
-  heading: {
-    content: { text: 'New heading' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  text: {
-    content: { text: 'New text' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  button: {
-    content: { text: 'New button', href: '#top' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  image: {
-    content: { src: '/favicon.svg', alt: 'Placeholder image' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  card: {
-    content: { title: 'New card', text: 'Add a description' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-  footer: {
-    content: { text: 'New footer' },
-    layout: {},
-    style: {},
-    children: [],
-  },
-}
-
-function createComponentNode(type: AddableComponentType): ComponentNode {
-  const defaults = componentDefaults[type]
-  return {
-    id: crypto.randomUUID(),
-    type,
-    content: { ...defaults.content },
-    layout: { ...defaults.layout },
-    style: { ...defaults.style },
-    children: [...defaults.children],
-  }
-}
-
 function App() {
   const [sampleName, setSampleName] = useState('landing')
   const [selectedPaletteType, setSelectedPaletteType] =
@@ -182,7 +30,6 @@ function App() {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const addNode = useWebsiteStore((state) => state.addNode)
-  const moveNode = useWebsiteStore((state) => state.moveNode)
   const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
   const updateNode = useWebsiteStore((state) => state.updateNode)
@@ -204,10 +51,6 @@ function App() {
       : selectedId === null
         ? 'No container selected. New components go into the website root.'
         : 'New components go into the selected container.'
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(KeyboardSensor),
-  )
 
   useEffect(() => {
     const id = selectedId
@@ -251,60 +94,6 @@ function App() {
     addNode(targetContainerId, createComponentNode(selectedPaletteType))
   }
 
-  function handleDragEnd(event: DragEndEvent) {
-    const activeData = event.active.data.current
-    const overData = event.over?.data.current
-
-    if (
-      activeData?.kind === 'canvas-node' &&
-      overData?.kind === 'canvas-node' &&
-      typeof activeData.nodeId === 'string' &&
-      typeof activeData.parentId === 'string' &&
-      typeof overData.nodeId === 'string' &&
-      activeData.nodeId !== overData.nodeId
-    ) {
-      const sourceNode = findNode(website, activeData.nodeId)
-      const sourceParent = findNode(website, activeData.parentId)
-      const targetParentId =
-        activeData.parentId === overData.parentId
-          ? activeData.parentId
-          : typeof overData.containerId === 'string'
-            ? overData.containerId
-            : overData.parentId
-      const targetParent = findNode(website, targetParentId)
-      const targetIndex =
-        activeData.parentId === overData.parentId ||
-        typeof overData.containerId !== 'string'
-          ? targetParent?.children.findIndex(
-              (child) => child.id === overData.nodeId,
-            )
-          : targetParent?.children.length
-
-      if (
-        sourceNode &&
-        sourceParent &&
-        targetParent &&
-        targetIndex !== undefined &&
-        targetIndex !== -1 &&
-        isContainerType(targetParent.type) &&
-        !findNode(sourceNode, targetParentId)
-      ) {
-        moveNode(activeData.nodeId, targetParentId, targetIndex)
-      }
-      return
-    }
-
-    const droppedOnCanvas =
-      event.over?.id === CANVAS_DROP_ID ||
-      (activeData?.kind === 'palette' && overData?.kind === 'canvas-node')
-    if (!droppedOnCanvas) return
-
-    const type = activeData?.componentType
-    if (!isAddableComponentType(type)) return
-
-    addNode(targetContainerId ?? website.id, createComponentNode(type))
-  }
-
   function changeSample(name: string) {
     const sample = websiteSamples[name]
     if (!sample) throw new Error(`Unknown website sample: ${name}`)
@@ -344,7 +133,7 @@ function App() {
           </label>
         </div>
       </header>
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <FreeformDndProvider>
         <div className="editor-layout">
           <aside className="editor-panel components-panel">
             <h2>Components</h2>
@@ -368,7 +157,7 @@ function App() {
                     </>
                   )}
                   {type !== 'website' && (
-                    <DraggablePaletteItem
+                    <PaletteItem
                       type={type}
                       selected={selectedPaletteType === type}
                       onSelect={setSelectedPaletteType}
@@ -393,10 +182,17 @@ function App() {
             <p className="component-palette-status" aria-live="polite">
               {targetDescription}
             </p>
+            <p className="component-palette-status">
+              Drag items onto the canvas. Hold Alt while dragging to place a
+              component freely.
+            </p>
           </aside>
           <section className="canvas-panel" aria-label="Canvas">
             <h2>Canvas</h2>
-            <CanvasDropTarget websiteTitle={websiteTitle}>
+            <section
+              className="preview-frame"
+              aria-label={`${websiteTitle} preview`}
+            >
               <div className="preview-titlebar">
                 <span className="preview-dots" aria-hidden="true">
                   <i />
@@ -413,9 +209,9 @@ function App() {
                 </span>
               </div>
               <div className="preview-page" id="top">
-                <Renderer node={website} />
+                <FreeformCanvas />
               </div>
-            </CanvasDropTarget>
+            </section>
           </section>
           <aside className="editor-panel properties-panel">
             <h2>Properties</h2>
@@ -444,15 +240,8 @@ function App() {
             </button>
           </aside>
         </div>
-      </DndContext>
+      </FreeformDndProvider>
     </main>
-  )
-}
-
-function isAddableComponentType(value: unknown): value is AddableComponentType {
-  return (
-    typeof value === 'string' &&
-    componentTypes.some((type) => type === value && type !== 'website')
   )
 }
 

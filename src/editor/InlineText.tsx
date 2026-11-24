@@ -4,9 +4,11 @@ import type { FocusEvent, KeyboardEvent, MouseEvent } from 'react'
 interface InlineTextProps {
   value: string
   onSave: (value: string) => void
+  /** Shown (greyed) while the value is empty, so empty text stays editable. */
+  placeholder?: string
 }
 
-function InlineText({ value, onSave }: InlineTextProps) {
+function InlineText({ value, onSave, placeholder }: InlineTextProps) {
   const [editing, setEditing] = useState(false)
   const editorRef = useRef<HTMLSpanElement>(null)
   const originalValue = useRef(value)
@@ -48,7 +50,10 @@ function InlineText({ value, onSave }: InlineTextProps) {
 
   function finishEditing(event: FocusEvent<HTMLSpanElement>) {
     if (!cancelEdit.current) {
-      const nextValue = event.currentTarget.textContent ?? ''
+      // Whitespace-only text counts as empty (the placeholder shows again).
+      const typed = event.currentTarget.textContent ?? ''
+      const nextValue = typed.trim() === '' ? '' : typed
+      if (nextValue === '') event.currentTarget.textContent = ''
       if (nextValue !== originalValue.current) onSave(nextValue)
     }
 
@@ -60,6 +65,7 @@ function InlineText({ value, onSave }: InlineTextProps) {
     <span
       ref={editorRef}
       className="sw-inline-text"
+      data-placeholder={placeholder}
       title={editing ? undefined : 'Double-click to edit'}
       contentEditable={editing}
       suppressContentEditableWarning
@@ -70,6 +76,10 @@ function InlineText({ value, onSave }: InlineTextProps) {
         if (!editing) return
         event.preventDefault()
         event.stopPropagation()
+      }}
+      onPointerDown={(event) => {
+        // While editing, pointer input selects text instead of dragging.
+        if (editing) event.stopPropagation()
       }}
       onDoubleClick={startEditing}
       onKeyDown={handleKeyDown}

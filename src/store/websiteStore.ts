@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { isComponentNode, isWebsiteDocument } from '../schema/types'
 import type { ComponentNode, WebsiteDocument } from '../schema/types'
 import { websiteSamples } from '../samples'
+import { liftContainerText } from './containerText'
 import {
   addNode as addNodeToTree,
   findParent,
@@ -14,6 +15,18 @@ import {
 type ComponentNodeUpdate = Partial<
   Pick<ComponentNode, 'content' | 'layout' | 'style'>
 >
+
+/** Layout keys to merge into nodes, by node id. */
+export type LayoutPatch = Record<string, Record<string, string>>
+
+/** Freeform position of a node inside its parent; null means flow layout. */
+export interface FreeformPosition {
+  x: number
+  y: number
+  width: number
+}
+
+const positionKeys = ['x', 'y', 'width'] as const
 
 interface HistoryEntry {
   website: WebsiteDocument
@@ -32,6 +45,17 @@ interface WebsiteState {
   duplicateNode: (id: string) => void
   removeNode: (id: string) => void
   moveNode: (id: string, newParentId: string, index: number) => void
+  placeNode: (
+    id: string,
+    parentId: string,
+    index: number,
+    position: FreeformPosition | null,
+    otherLayouts?: LayoutPatch,
+  ) => void
+  setLayouts: (
+    layouts: LayoutPatch,
+    options?: { recordHistory?: boolean },
+  ) => void
   undo: () => void
   redo: () => void
 }
@@ -68,6 +92,37 @@ function hasUniqueNewIds(
   return node.children.every((child) => hasUniqueNewIds(child, website, seen))
 }
 
+function withPosition(
+  layout: Record<string, string>,
+  position: FreeformPosition | null,
+): Record<string, string> {
+  const next = { ...layout }
+  positionKeys.forEach((key) => delete next[key])
+  if (position === null) return next
+
+  return {
+    ...next,
+    x: String(Math.round(position.x)),
+    y: String(Math.round(position.y)),
+    width: String(Math.round(position.width)),
+  }
+}
+
+function applyLayoutPatch(
+  tree: ComponentNode,
+  layouts: LayoutPatch,
+): ComponentNode {
+  return Object.entries(layouts).reduce((current, [id, layout]) => {
+    if (!findNode(current, id)) {
+      throw new Error(`Cannot update layout of "${id}": node not found.`)
+    }
+    return updateTree(current, id, (node) => ({
+      ...node,
+      layout: { ...node.layout, ...layout },
+    }))
+  }, tree)
+}
+
 function cloneNodeWithNewIds(node: ComponentNode): ComponentNode {
   return {
     ...node,
@@ -80,12 +135,17 @@ function cloneNodeWithNewIds(node: ComponentNode): ComponentNode {
 }
 
 export const useWebsiteStore = create<WebsiteState>((set) => ({
-  website: websiteSamples.landing,
+  website: liftContainerText(websiteSamples.landing),
   selectedId: null,
   past: [],
   future: [],
   setWebsite: (website) =>
-    set({ website, selectedId: null, past: [], future: [] }),
+    set({
+      website: liftContainerText(website),
+      selectedId: null,
+      past: [],
+      future: [],
+    }),
   selectNode: (selectedId) => set({ selectedId }),
   updateNode: (id, updates) =>
     set((state) => {
@@ -218,6 +278,38 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
       }
 
       return recordChange(state, website)
+    }),
+  placeNode: (id, parentId, index, position, otherLayouts = {}) =>
+    set((state) => {
+      const moved = moveNodeInTree(state.website, id, parentId, index)
+      const placed = updateTree(moved, id, (node) => ({
+        ...node,
+        layout: withPosition(node.layout, position),
+      }))
+      // Same undo step: e.g. old neighbours pinned in place.
+      const website = applyLayoutPatch(placed, otherLayouts)
+      if (!isWebsiteDocument(website)) {
+        throw new Error(
+          'Placing a component produced an invalid website document.',
+        )
+      }
+
+      return recordChange(state, website, id)
+    }),
+  setLayouts: (layouts, options) =>
+    set((state) => {
+      const website = applyLayoutPatch(state.website, layouts)
+      if (!isWebsiteDocument(website)) {
+        throw new Error(
+          'Updating layouts produced an invalid website document.',
+        )
+      }
+
+      // Automatic corrections (e.g. collision fixes) replace the current state
+      // without adding an undo step.
+      return options?.recordHistory === false
+        ? { website }
+        : recordChange(state, website)
     }),
   undo: () =>
     set((state) => {

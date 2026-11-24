@@ -1,17 +1,13 @@
+import { createElement } from 'react'
 import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import {
   isComponentNode,
   isComponentType,
   type ComponentNode,
 } from '../schema/types'
-import {
-  rectSortingStrategy,
-  SortableContext,
-  useSortable,
-} from '@dnd-kit/sortable'
-import { isContainerType } from '../store/tree'
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
+import { useNodeFrame, type NodeFrame } from './nodeFrame'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -47,74 +43,53 @@ function safeHref(value: string): string | undefined {
   return undefined
 }
 
-function WarningBox({ message }: { message: string }) {
+function WarningBox({
+  message,
+  selected = false,
+  onClick,
+}: {
+  message: string
+  selected?: boolean
+  onClick?: (event: MouseEvent<HTMLElement>) => void
+}) {
   return (
-    <div className="sw-warning" role="alert">
+    <div
+      className={[
+        'sw-warning',
+        onClick ? 'sw-component' : '',
+        selected ? 'sw-selected' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      role="alert"
+      onClick={onClick}
+    >
       {message}
     </div>
   )
 }
 
-function renderChildren(node: ComponentNode): ReactNode {
-  const items = node.children.map((child) => `canvas-${child.id}`)
-  return (
-    <SortableContext items={items} strategy={rectSortingStrategy}>
-      {node.children.map((child) => (
-        <SortableChild key={child.id} node={child} parentId={node.id} />
-      ))}
-    </SortableContext>
-  )
+function renderChildren(node: ComponentNode, Frame: NodeFrame): ReactNode {
+  return node.children.map((child) => (
+    <Frame key={child.id} node={child}>
+      <Renderer node={child} />
+    </Frame>
+  ))
 }
 
-function SortableChild({
-  node,
-  parentId,
-}: {
-  node: ComponentNode
-  parentId: string
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-    isOver,
-  } = useSortable({
-    id: `canvas-${node.id}`,
-    data: {
-      kind: 'canvas-node',
-      nodeId: node.id,
-      parentId,
-      containerId: isContainerType(node.type) ? node.id : null,
-    },
-  })
-  const style: CSSProperties = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0) scaleX(${transform.scaleX}) scaleY(${transform.scaleY})`
-      : undefined,
-    transition,
-    opacity: isDragging ? 0.45 : undefined,
-    touchAction: 'none',
-  }
+const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
 
-  return (
-    <div
-      ref={setNodeRef}
-      className={`sw-sortable-item${isOver ? ' is-sort-drop-target' : ''}`}
-      style={style}
-      {...attributes}
-      {...listeners}
-    >
-      <Renderer node={node} />
-    </div>
-  )
+function headingTag(level: string | undefined) {
+  return headingTags[Number(level) - 1] ?? 'h2'
 }
 
 function layoutStyle(
   layout: Record<string, string>,
   defaultDisplay: 'flex' | 'grid' = 'grid',
+  flexDefaults: {
+    direction: 'row' | 'column'
+    align: 'start' | 'center' | 'end' | 'stretch'
+  } = { direction: 'row', align: 'stretch' },
 ): CSSProperties {
   const rawColumns = Number(layout.columns)
   const columns = Number.isFinite(rawColumns)
@@ -146,8 +121,11 @@ function layoutStyle(
 
     return {
       display: 'flex',
-      flexDirection: layout.direction === 'column' ? 'column' : 'row',
-      alignItems: alignItems[layout.align] ?? 'stretch',
+      flexDirection:
+        layout.direction === 'row' || layout.direction === 'column'
+          ? layout.direction
+          : flexDefaults.direction,
+      alignItems: alignItems[layout.align] ?? alignItems[flexDefaults.align],
       justifyContent: justifyContent[layout.justify] ?? 'flex-start',
       gap,
     }
@@ -164,6 +142,7 @@ function Renderer({ node }: { node: unknown }) {
   const selectedId = useWebsiteStore((state) => state.selectedId)
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const updateNode = useWebsiteStore((state) => state.updateNode)
+  const Frame = useNodeFrame()
 
   if (!isRecord(node)) {
     return <WarningBox message="Invalid component: expected an object." />
@@ -182,17 +161,23 @@ function Renderer({ node }: { node: unknown }) {
   }
 
   const content = node.content
-  const children = renderChildren(node)
-  const title = content.title
+  const children = renderChildren(node, Frame)
   const text = content.text
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     event.preventDefault()
     selectNode(node.type === 'website' ? null : node.id)
   }
-  const editableContent = (field: string, value: string) => (
+  // Empty text shows a placeholder instead of a warning, so the component
+  // can still be selected, renamed and deleted.
+  const editableContent = (
+    field: string,
+    value: string | undefined,
+    placeholder?: string,
+  ) => (
     <InlineText
-      value={value}
+      value={value ?? ''}
+      placeholder={placeholder}
       onSave={(nextValue) =>
         updateNode(node.id, { content: { [field]: nextValue } })
       }
@@ -214,13 +199,8 @@ function Renderer({ node }: { node: unknown }) {
           {children}
         </div>
       )
-    case 'navbar': {
-      const brand = content.brand || title
-      if (!brand) return <WarningBox message="Navbar is missing its brand." />
-      const links = content.links
-        ? content.links.split(',').map((label) => label.trim())
-        : []
-
+    case 'navbar':
+      // Brand, links, logo, etc. are child nodes (see store/containerText).
       return (
         <nav
           className={selectableClassName(
@@ -232,32 +212,9 @@ function Renderer({ node }: { node: unknown }) {
           aria-label="Main navigation"
           onClick={handleClick}
         >
-          <a className="sw-brand" href="#top">
-            {editableContent('brand', brand)}
-          </a>
-          <div className="sw-nav-links">
-            {links.map((label, index) => {
-              if (!label) return null
-              const href = `#${label.toLowerCase().replace(/\s+/g, '-')}`
-              return (
-                <a key={`${node.id}-link-${index}`} href={safeHref(href)}>
-                  <InlineText
-                    value={label}
-                    onSave={(nextLabel) => {
-                      const nextLinks = [...links]
-                      nextLinks[index] = nextLabel
-                      updateNode(node.id, {
-                        content: { links: nextLinks.join(', ') },
-                      })
-                    }}
-                  />
-                </a>
-              )
-            })}
-          </div>
+          {children}
         </nav>
       )
-    }
     case 'hero':
       return (
         <header
@@ -267,17 +224,14 @@ function Renderer({ node }: { node: unknown }) {
             'sw-hero',
             selectedId,
           )}
-          style={layoutStyle(node.layout, 'flex')}
+          // Hero content stacks vertically unless layout.direction says
+          // otherwise (matches the .sw-hero design in App.css).
+          style={layoutStyle(node.layout, 'flex', {
+            direction: 'column',
+            align: 'start',
+          })}
           onClick={handleClick}
         >
-          {title && (
-            <h1 className="sw-hero-heading">
-              {editableContent('title', title)}
-            </h1>
-          )}
-          {content.description && (
-            <p>{editableContent('description', content.description)}</p>
-          )}
           {children}
         </header>
       )
@@ -292,12 +246,6 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          {title && <h2>{editableContent('title', title)}</h2>}
-          {text && (
-            <p className="sw-section-description">
-              {editableContent('text', text)}
-            </p>
-          )}
           {children}
         </section>
       )
@@ -316,38 +264,39 @@ function Renderer({ node }: { node: unknown }) {
           {children}
         </div>
       )
-    case 'heading':
-      return text ? (
-        <h2
-          className={selectableClassName(
+    case 'heading': {
+      return createElement(
+        headingTag(content.level),
+        {
+          className: selectableClassName(
             node,
             'text',
             'sw-heading',
             selectedId,
-          )}
-          onClick={handleClick}
-        >
-          {editableContent('text', text)}
-        </h2>
-      ) : (
-        <WarningBox message="Heading is missing its text." />
+          ),
+          onClick: handleClick,
+        },
+        editableContent('text', text, 'Heading'),
       )
+    }
     case 'text':
-      return text ? (
+      return (
         <p
           className={selectableClassName(node, 'text', 'sw-text', selectedId)}
           onClick={handleClick}
         >
-          {editableContent('text', text)}
+          {editableContent('text', text, 'Text')}
         </p>
-      ) : (
-        <WarningBox message="Text component is missing its text." />
       )
     case 'button': {
       const href = content.href ? safeHref(content.href) : undefined
-      if (!text || !href) {
+      if (!href) {
         return (
-          <WarningBox message="Button is missing a label or a safe link." />
+          <WarningBox
+            message="Button is missing a safe link."
+            selected={node.id === selectedId}
+            onClick={handleClick}
+          />
         )
       }
       return (
@@ -361,13 +310,19 @@ function Renderer({ node }: { node: unknown }) {
           href={href}
           onClick={handleClick}
         >
-          {editableContent('text', text)}
+          {editableContent('text', text, 'Button')}
         </a>
       )
     }
     case 'image': {
       if (!content.src || !content.alt) {
-        return <WarningBox message="Image is missing its source or alt text." />
+        return (
+          <WarningBox
+            message="Image is missing its source or alt text."
+            selected={node.id === selectedId}
+            onClick={handleClick}
+          />
+        )
       }
       return (
         <img
@@ -379,7 +334,6 @@ function Renderer({ node }: { node: unknown }) {
       )
     }
     case 'card':
-      if (!title) return <WarningBox message="Card is missing its title." />
       return (
         <article
           className={selectableClassName(
@@ -390,11 +344,6 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          <h3>{editableContent('title', title)}</h3>
-          {text && <p>{editableContent('text', text)}</p>}
-          {content.description && (
-            <p>{editableContent('description', content.description)}</p>
-          )}
           {children}
         </article>
       )
@@ -409,7 +358,6 @@ function Renderer({ node }: { node: unknown }) {
           )}
           onClick={handleClick}
         >
-          {text && <p>{editableContent('text', text)}</p>}
           {children}
         </footer>
       )

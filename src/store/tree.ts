@@ -2,6 +2,7 @@ import type { ComponentNode, ComponentType } from '../schema/types'
 
 const containerTypes: ReadonlySet<ComponentType> = new Set([
   'website',
+  'navbar',
   'hero',
   'section',
   'columns',
