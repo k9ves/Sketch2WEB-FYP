@@ -2,6 +2,7 @@ import type { ComponentType } from '../../schema/types'
 import { findNode } from '../../store/tree'
 import { useWebsiteStore } from '../../store/websiteStore'
 import ContentFields from './ContentFields'
+import StyleFields from './StyleFields'
 
 const typeLabels: Record<ComponentType, string> = {
   website: 'Website',
@@ -50,6 +51,15 @@ function PropertiesPanel() {
           node={node}
           onChange={(key, value) =>
             updateNode(node.id, { content: { [key]: value } })
+          }
+        />
+      </section>
+      <section className="property-group" aria-label="Style">
+        <h3>Style</h3>
+        <StyleFields
+          node={node}
+          onChange={(slot, value) =>
+            updateNode(node.id, { style: { [slot]: value } })
           }
         />
       </section>

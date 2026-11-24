@@ -62,7 +62,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 - [x] **T36** Define the Tree/Property panel and store API responsibilities. — _Done when:_ written in a short doc.
 - [x] **T37** Build the right panel to edit content fields. — _Done when:_ text/src/href editable.
-- [ ] **T38** Edit style: color, font size, padding, background (Tailwind tokens). — _Done when:_ canvas updates live.
+- [x] **T38** Edit style: color, font size, padding, background (Tailwind tokens). — _Done when:_ canvas updates live.
 - [ ] **T39** Edit layout: columns count, gap, alignment. — _Done when:_ grid changes live.
 - [ ] **T40** Hierarchy tree panel with select and expand/collapse. — _Done when:_ clicking tree selects on canvas. **(Milestone: Full visual editor)**
 
