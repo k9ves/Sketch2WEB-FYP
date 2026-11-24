@@ -561,7 +561,6 @@ textarea.property-input {
 
 .preview-page {
   min-height: 620px;
-  padding: 0 7%;
   color-scheme: light;
   color: #252239;
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -665,6 +664,13 @@ textarea.property-input {
 
 .sw-node.is-leaf:not(.is-full-width, .is-positioned) {
   max-width: 100%;
+}
+
+/* Top-level text, images and cards in flow keep the page gutter (see
+   --sw-gutter in the components layer) as margin. */
+.sw-website > .sw-node:not(.is-positioned):is(.is-leaf, :has(> .sw-card)) {
+  margin-inline: var(--sw-gutter);
+  max-width: calc(100% - 2 * var(--sw-gutter));
 }
 
 .sw-node.is-positioned {
@@ -850,6 +856,20 @@ textarea.property-input {
 /* Component look of the rendered website. It sits in Tailwind's components
    layer so style tokens (utilities) chosen in the Properties panel win. */
 @layer components {
+  /* Page side space (gutter). The website spans the full canvas width;
+     top-level blocks keep their content off the edges with their own side
+     padding, so their background still reaches the edges. A Padding token
+     (p-*) replaces it; Vertical padding (py-*) keeps it. */
+  .sw-website {
+    --sw-gutter: clamp(16px, 7cqw, 96px);
+  }
+
+  .sw-website
+    > .sw-node
+    > :is(.sw-navbar, .sw-hero, .sw-section, .sw-footer, .sw-columns) {
+    padding-inline: var(--sw-gutter);
+  }
+
   .sw-navbar {
     display: flex;
     align-items: center;
@@ -1068,9 +1088,5 @@ textarea.property-input {
 
   .editor-panel {
     min-height: 0;
-  }
-
-  .preview-page {
-    padding: 0 22px;
   }
 }

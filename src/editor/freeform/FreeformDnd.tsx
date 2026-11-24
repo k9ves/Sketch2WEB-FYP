@@ -44,6 +44,33 @@ import {
 } from './positionedLayout'
 import type { FreePlan } from './positionedLayout'
 
+/**
+ * Edge zone in px. A normal drop this close to a container's edge goes to
+ * its parent instead (before or after the container), so a component can
+ * always be moved out again, even when children cover their container.
+ */
+const EDGE_ZONE = 12
+
+interface EdgeRect {
+  left: number
+  right: number
+  top: number
+  bottom: number
+  width: number
+  height: number
+}
+
+function isNearEdge(rect: EdgeRect, point: Point): boolean {
+  // Small containers keep most of their area for dropping inside.
+  const zone = Math.min(EDGE_ZONE, rect.width / 4, rect.height / 4)
+  return (
+    point.x - rect.left < zone ||
+    rect.right - point.x < zone ||
+    point.y - rect.top < zone ||
+    rect.bottom - point.y < zone
+  )
+}
+
 export interface PaletteDragData {
   kind: 'palette'
   componentType: AddableComponentType
@@ -155,6 +182,8 @@ function FreeformDndProvider({ children }: { children: ReactNode }) {
   )
 
   // Deepest container under the pointer wins; the dragged subtree is skipped.
+  // Near that container's edge (normal drag only), its parent wins: one
+  // level out per edge, so the component lands right before or after it.
   const collisionDetection = useCallback<CollisionDetection>(
     ({
       droppableContainers,
@@ -191,7 +220,26 @@ function FreeformDndProvider({ children }: { children: ReactNode }) {
         })
       }
 
-      return hits.sort((a, b) => a.area - b.area).map((hit) => hit.collision)
+      const sorted = hits
+        .sort((a, b) => a.area - b.area)
+        .map((hit) => hit.collision)
+      const inner = sorted[0]
+      const innerRect = inner ? droppableRects.get(inner.id) : undefined
+      // Alt places freely, where a spot by the edge can be meant.
+      if (
+        !altRef.current &&
+        inner &&
+        innerRect &&
+        isNearEdge(innerRect, point)
+      ) {
+        const { website } = useWebsiteStore.getState()
+        const parent = findParent(website, String(inner.id))
+        const outer = parent && sorted.find((hit) => hit.id === parent.id)
+        if (outer) {
+          return [outer, ...sorted.filter((hit) => hit !== outer)]
+        }
+      }
+      return sorted
     },
     [],
   )

@@ -379,7 +379,7 @@
       "content": {},
       "layout": {},
       "style": {
-        "container": "bg-slate-50 p-12 rounded-2xl"
+        "container": "bg-slate-50 py-16"
       },
       "children": [
         {
@@ -717,7 +717,7 @@
       "content": {},
       "layout": {},
       "style": {
-        "container": "bg-slate-900 p-16 rounded-2xl"
+        "container": "bg-slate-900 py-20"
       },
       "children": [
         {

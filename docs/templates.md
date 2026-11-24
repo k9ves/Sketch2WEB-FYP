@@ -51,10 +51,14 @@ uses the same function, so a template with issues is never offered.
 - **Buttons in a navbar** take the navbar's text color (`.sw-navbar a`
   inherits it). A filled button there needs a text color token, e.g.
   `bg-slate-900 text-white`.
-- **Sections with a background** (`p-12 rounded-2xl` plus a `bg-*` token)
-  have no gap between them. Keep a plain section between two coloured ones.
-- **The website background** colours the page inside its side padding only,
-  so keep it `bg-white` and colour sections instead.
+- **The website spans the full canvas width.** Top-level navbar, hero,
+  section, footer and columns get a side space of their own
+  (`--sw-gutter`, about 7% of the width), so their background reaches the
+  edges.
+- **Coloured bands:** give a top-level section a `bg-*` token and use
+  **Vertical padding** (`py-*`) for space. A Padding token (`p-*`) also
+  replaces the side space, so the text would no longer line up with the
+  rest of the page.
 - Check every template on Desktop, Tablet and Mobile in the editor, and in
   Preview.
 

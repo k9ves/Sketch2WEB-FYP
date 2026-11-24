@@ -468,7 +468,7 @@
       "content": {},
       "layout": {},
       "style": {
-        "container": "bg-amber-50 p-12 rounded-2xl"
+        "container": "bg-amber-50 py-16"
       },
       "children": [
         {

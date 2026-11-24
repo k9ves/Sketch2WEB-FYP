@@ -195,6 +195,9 @@ an input, through `isEditableTarget` in `App.tsx`, so panel inputs are safe.
      `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-full`
    - Shadow (container, button, image): `shadow-none`, `shadow-sm`,
      `shadow-md`, `shadow-lg`, `shadow-xl`
+   - Vertical padding (container): `py-0`, `py-4`, `py-8`, `py-12`,
+     `py-16`, `py-20`, `py-24`. Unlike Padding (`p-*`), it keeps the page
+     side space (`--sw-gutter`).
 
    No text-align group: text components hug their text, so alignment shows
    no effect. Centering uses the hero/columns layout (Align) instead.

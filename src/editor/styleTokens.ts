@@ -81,6 +81,19 @@ export const styleGroups = {
       { token: 'bg-rose-600', label: 'Rose', swatch: '#ec003f' },
     ],
   },
+  paddingY: {
+    label: 'Vertical padding',
+    kind: 'scale',
+    tokens: [
+      { token: 'py-0', label: 'None (0px)' },
+      { token: 'py-4', label: 'S (16px)' },
+      { token: 'py-8', label: 'M (32px)' },
+      { token: 'py-12', label: 'L (48px)' },
+      { token: 'py-16', label: 'XL (64px)' },
+      { token: 'py-20', label: '2XL (80px)' },
+      { token: 'py-24', label: '3XL (96px)' },
+    ],
+  },
   fontWeight: {
     label: 'Font weight',
     kind: 'scale',
@@ -137,7 +150,14 @@ export const styleSlotByType: Record<ComponentType, string> = {
 /** Style groups the panel offers, per slot. */
 export const styleGroupsBySlot: Record<string, readonly StyleGroup[]> = {
   background: ['background'],
-  container: ['background', 'textColor', 'padding', 'radius', 'shadow'],
+  container: [
+    'background',
+    'textColor',
+    'padding',
+    'paddingY',
+    'radius',
+    'shadow',
+  ],
   text: ['textColor', 'fontSize', 'fontWeight'],
   button: [
     'background',
