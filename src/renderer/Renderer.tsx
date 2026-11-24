@@ -8,6 +8,7 @@ import {
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
 import { useNodeFrame, type NodeFrame } from './nodeFrame'
+import { safeHref } from './safeHref'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -30,17 +31,6 @@ function selectableClassName(
   ]
     .filter(Boolean)
     .join(' ')
-}
-
-function safeHref(value: string): string | undefined {
-  const href = value.trim()
-  if (
-    /^(https?:|mailto:|tel:|#|\/)/i.test(href) ||
-    !/^[a-z][a-z\d+.-]*:/i.test(href)
-  ) {
-    return href
-  }
-  return undefined
 }
 
 function WarningBox({
