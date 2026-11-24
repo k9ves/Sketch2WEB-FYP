@@ -10,6 +10,7 @@ import FreeformDndProvider from './editor/freeform/FreeformDnd'
 import PropertiesPanel from './editor/properties/PropertiesPanel'
 import TreePanel from './editor/tree/TreePanel'
 import ThemePicker from './editor/ThemePicker'
+import StartScreen from './editor/StartScreen'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -26,6 +27,8 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 type SidebarTab = 'components' | 'layers'
 
+type Screen = 'start' | 'editor'
+
 type Device = 'desktop' | 'tablet' | 'mobile'
 
 /** Canvas width per device; null fills the canvas panel. */
@@ -37,6 +40,7 @@ const devices: readonly { id: Device; label: string; width: number | null }[] =
   ]
 
 function App() {
+  const [screen, setScreen] = useState<Screen>('start')
   const [sampleName, setSampleName] = useState('landing')
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [isPreview, setIsPreview] = useState(false)
@@ -77,7 +81,8 @@ function App() {
     const id = selectedId
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (isEditableTarget(event.target)) return
+      // The start screen hides the website; shortcuts must not change it.
+      if (screen !== 'editor' || isEditableTarget(event.target)) return
 
       // Preview only listens for Esc (back to editing); no edit shortcuts.
       if (isPreview) {
@@ -108,7 +113,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPreview, redo, removeNode, selectedId, undo])
+  }, [isPreview, redo, removeNode, screen, selectedId, undo])
 
   function togglePreview() {
     // Leaving the selection on would show outlines and handles again
@@ -139,6 +144,11 @@ function App() {
     if (!sample) throw new Error(`Unknown website sample: ${name}`)
     setSampleName(name)
     setWebsite(sample)
+  }
+
+  if (screen === 'start') {
+    // The template gallery (T46) will sit between these two screens.
+    return <StartScreen onChooseTemplate={() => setScreen('editor')} />
   }
 
   return (
