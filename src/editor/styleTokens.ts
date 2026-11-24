@@ -27,12 +27,16 @@ export const styleGroups = {
       { token: 'text-indigo-600', label: 'Indigo', swatch: '#4f39f6' },
       { token: 'text-emerald-600', label: 'Emerald', swatch: '#009966' },
       { token: 'text-rose-600', label: 'Rose', swatch: '#ec003f' },
+      { token: 'text-slate-400', label: 'Muted', swatch: '#90a1b9' },
+      { token: 'text-amber-600', label: 'Amber', swatch: '#e17100' },
+      { token: 'text-sky-600', label: 'Sky', swatch: '#0084d1' },
     ],
   },
   fontSize: {
     label: 'Font size',
     kind: 'scale',
     tokens: [
+      { token: 'text-xs', label: 'XS (12px)' },
       { token: 'text-sm', label: 'Small (14px)' },
       { token: 'text-base', label: 'Base (16px)' },
       { token: 'text-lg', label: 'Large (18px)' },
@@ -41,6 +45,7 @@ export const styleGroups = {
       { token: 'text-3xl', label: '3XL (30px)' },
       { token: 'text-4xl', label: '4XL (36px)' },
       { token: 'text-5xl', label: '5XL (48px)' },
+      { token: 'text-6xl', label: '6XL (60px)' },
     ],
   },
   padding: {
@@ -68,6 +73,46 @@ export const styleGroups = {
       { token: 'bg-indigo-600', label: 'Indigo', swatch: '#4f39f6' },
       { token: 'bg-emerald-50', label: 'Mint', swatch: '#ecfdf5' },
       { token: 'bg-rose-50', label: 'Blush', swatch: '#fff1f2' },
+      { token: 'bg-slate-800', label: 'Charcoal', swatch: '#1d293d' },
+      { token: 'bg-amber-50', label: 'Cream', swatch: '#fffbeb' },
+      { token: 'bg-amber-500', label: 'Amber', swatch: '#fe9a00' },
+      { token: 'bg-sky-50', label: 'Sky mist', swatch: '#f0f9ff' },
+      { token: 'bg-emerald-600', label: 'Emerald', swatch: '#009966' },
+      { token: 'bg-rose-600', label: 'Rose', swatch: '#ec003f' },
+    ],
+  },
+  fontWeight: {
+    label: 'Font weight',
+    kind: 'scale',
+    tokens: [
+      { token: 'font-normal', label: 'Normal (400)' },
+      { token: 'font-medium', label: 'Medium (500)' },
+      { token: 'font-semibold', label: 'Semibold (600)' },
+      { token: 'font-bold', label: 'Bold (700)' },
+      { token: 'font-extrabold', label: 'Extra bold (800)' },
+    ],
+  },
+  radius: {
+    label: 'Rounded corners',
+    kind: 'scale',
+    tokens: [
+      { token: 'rounded-none', label: 'None' },
+      { token: 'rounded-md', label: 'S (6px)' },
+      { token: 'rounded-lg', label: 'M (8px)' },
+      { token: 'rounded-xl', label: 'L (12px)' },
+      { token: 'rounded-2xl', label: 'XL (16px)' },
+      { token: 'rounded-full', label: 'Pill / circle' },
+    ],
+  },
+  shadow: {
+    label: 'Shadow',
+    kind: 'scale',
+    tokens: [
+      { token: 'shadow-none', label: 'None' },
+      { token: 'shadow-sm', label: 'S' },
+      { token: 'shadow-md', label: 'M' },
+      { token: 'shadow-lg', label: 'L' },
+      { token: 'shadow-xl', label: 'XL' },
     ],
   },
 } as const satisfies Record<string, StyleGroupDefinition>
@@ -92,10 +137,18 @@ export const styleSlotByType: Record<ComponentType, string> = {
 /** Style groups the panel offers, per slot. */
 export const styleGroupsBySlot: Record<string, readonly StyleGroup[]> = {
   background: ['background'],
-  container: ['background', 'textColor', 'padding'],
-  text: ['textColor', 'fontSize'],
-  button: ['background', 'textColor', 'fontSize', 'padding'],
-  image: ['background', 'padding'],
+  container: ['background', 'textColor', 'padding', 'radius', 'shadow'],
+  text: ['textColor', 'fontSize', 'fontWeight'],
+  button: [
+    'background',
+    'textColor',
+    'fontSize',
+    'fontWeight',
+    'padding',
+    'radius',
+    'shadow',
+  ],
+  image: ['background', 'padding', 'radius', 'shadow'],
 }
 
 function groupTokens(group: StyleGroup): readonly string[] {

@@ -96,6 +96,17 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [ ] **T57** Allow editing code (keep as separate "custom code" copy, document limits). — _Done when:_ edits persist in session.
 - [ ] **T58** Export as ZIP (full runnable project). — _Done when:_ ZIP downloads and runs. **(Milestone: Preview, code and export complete)**
 
+**Remember for M9–M10 (export notes):**
+
+- **Responsive columns:** the canvas stacks columns below 640px through `@container sw-page` (`App.css`). Generated code must give the same result with Tailwind classes, e.g. `grid-cols-1 sm:grid-cols-3`.
+- **The export is frontend only.** Users connect a backend themselves, so make that easy:
+  - Add `.env.example` with `VITE_API_URL=` and an empty `src/api.ts` starter (a `fetch` helper reading `import.meta.env.VITE_API_URL`).
+  - Add a `README.md` to the export: how to connect their own API (env, CORS, deploy frontend and backend separately), or a service such as Supabase/Firebase (data, login), Formspree (forms) or Stripe Payment Links.
+  - Warn in the README: `VITE_*` variables are public in the browser. Secret keys belong in the backend only.
+  - Give components clear ids/class names so developers find their place in the exported code.
+- **Export is one-way.** Code with added logic (fetch, state, login) cannot be imported back into the editor. Document this limit in T57.
+- **Forms (later):** an "action URL" field (e.g. Formspree) would let forms submit without any backend.
+
 ## M11 — Sketch input (Week 12-16)
 
 - [ ] **T59** Collect 20-30 sample sketches (photos of hand-drawn UIs). — _Done when:_ folder with images.

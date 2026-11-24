@@ -184,6 +184,21 @@ an input, through `isEditableTarget` in `App.tsx`, so panel inputs are safe.
    - Padding: `p-0`, `p-2`, `p-4`, `p-6`, `p-8`, `p-12`, `p-16`
    - Background: `bg-white`, `bg-slate-50`, `bg-slate-100`, `bg-slate-900`,
      `bg-indigo-50`, `bg-indigo-600`, `bg-emerald-50`, `bg-rose-50`
+
+   **Extended for the templates (T44):** text colors `text-slate-400`,
+   `text-amber-600`, `text-sky-600`; font sizes `text-xs`, `text-6xl`;
+   backgrounds `bg-slate-800`, `bg-amber-50`, `bg-amber-500`, `bg-sky-50`,
+   `bg-emerald-600`, `bg-rose-600`; and three new groups:
+   - Font weight (text, button): `font-normal`, `font-medium`,
+     `font-semibold`, `font-bold`, `font-extrabold`
+   - Rounded corners (container, button, image): `rounded-none`,
+     `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-full`
+   - Shadow (container, button, image): `shadow-none`, `shadow-sm`,
+     `shadow-md`, `shadow-lg`, `shadow-xl`
+
+   No text-align group: text components hug their text, so alignment shows
+   no effect. Centering uses the hero/columns layout (Align) instead.
+
 2. **Layer move.** The `sw-*` component rules in `App.css` move into
    `@layer components` as the first step of T38. The editor chrome rules
    (panels, toolbar) can stay un-layered.
