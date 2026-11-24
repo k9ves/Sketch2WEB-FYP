@@ -210,6 +210,24 @@
   }
 }
 
+.start-open {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.start-message,
+.project-message {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.project-message {
+  margin: -14px 8px 14px;
+}
+
 /* Template gallery (T46) */
 .gallery-screen {
   width: min(1200px, calc(100% - 40px));

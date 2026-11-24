@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
+import type { WebsiteDocument } from './schema/types'
 import InlineText from './editor/InlineText'
 import PaletteItem from './editor/PaletteItem'
 import { createComponentNode } from './editor/componentFactory'
@@ -12,7 +13,8 @@ import TreePanel from './editor/tree/TreePanel'
 import ThemePicker from './editor/ThemePicker'
 import StartScreen from './editor/StartScreen'
 import TemplateGallery from './editor/TemplateGallery'
-import type { WebsiteTemplate } from './templates'
+import { downloadProject, readProjectFile } from './editor/projectActions'
+import { PROJECT_FILE_ACCEPT, projectFileName } from './store/projectFile'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -43,6 +45,8 @@ const devices: readonly { id: Device; label: string; width: number | null }[] =
 
 function App() {
   const [screen, setScreen] = useState<Screen>('start')
+  const [projectMessage, setProjectMessage] = useState<string | null>(null)
+  const projectInputRef = useRef<HTMLInputElement>(null)
   const [sampleName, setSampleName] = useState('landing')
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [isPreview, setIsPreview] = useState(false)
@@ -148,28 +152,84 @@ function App() {
     setWebsite(sample)
   }
 
-  function openTemplate(template: WebsiteTemplate) {
-    setWebsite(template.website)
+  function showInEditor(next: WebsiteDocument) {
+    setWebsite(next)
     // The sample picker shows "Template" until a sample is chosen.
     setSampleName('')
+    setIsPreview(false)
+    setDevice('desktop')
     setScreen('editor')
   }
 
+  function chooseProjectFile() {
+    setProjectMessage(null)
+    projectInputRef.current?.click()
+  }
+
+  async function openProjectFile(file: File) {
+    const result = await readProjectFile(file)
+    if (!result.ok) {
+      setProjectMessage(result.message)
+      return
+    }
+    if (
+      screen === 'editor' &&
+      !window.confirm(
+        'Open this project? It replaces the website you are editing now. Save that one first if you want to keep it.',
+      )
+    ) {
+      return
+    }
+    setProjectMessage(`Opened ${file.name}.`)
+    showInEditor(result.website)
+  }
+
+  function saveProject() {
+    downloadProject(website)
+    setProjectMessage(`Saved as ${projectFileName(website)}.`)
+  }
+
+  // One hidden file picker, used by the start screen and the editor.
+  const projectInput = (
+    <input
+      ref={projectInputRef}
+      type="file"
+      accept={PROJECT_FILE_ACCEPT}
+      hidden
+      onChange={(event) => {
+        const file = event.target.files?.[0]
+        // Reset, so choosing the same file again still triggers a change.
+        event.target.value = ''
+        if (file) void openProjectFile(file)
+      }}
+    />
+  )
+
   if (screen === 'start') {
-    return <StartScreen onChooseTemplate={() => setScreen('gallery')} />
+    return (
+      <>
+        {projectInput}
+        <StartScreen
+          onChooseTemplate={() => setScreen('gallery')}
+          onOpenProject={chooseProjectFile}
+          message={projectMessage}
+        />
+      </>
+    )
   }
 
   if (screen === 'gallery') {
     return (
       <TemplateGallery
         onBack={() => setScreen('start')}
-        onSelect={openTemplate}
+        onSelect={(template) => showInEditor(template.website)}
       />
     )
   }
 
   return (
     <main className="builder-shell" onClick={() => selectNode(null)}>
+      {projectInput}
       <header className="builder-toolbar">
         <div>
           <p className="eyebrow">Sketch2Web</p>
@@ -177,6 +237,28 @@ function App() {
         </div>
         <div className="toolbar-controls">
           <div className="toolbar-actions" aria-label="Editor actions">
+            <button
+              className="toolbar-button"
+              type="button"
+              title="Open a saved project (.json)"
+              onClick={(event) => {
+                event.stopPropagation()
+                chooseProjectFile()
+              }}
+            >
+              Open
+            </button>
+            <button
+              className="toolbar-button"
+              type="button"
+              title="Download this website as a project file (.json)"
+              onClick={(event) => {
+                event.stopPropagation()
+                saveProject()
+              }}
+            >
+              Save
+            </button>
             <button
               className={`toolbar-button${isPreview ? ' is-active' : ''}`}
               type="button"
@@ -215,6 +297,11 @@ function App() {
           <ThemePicker />
         </div>
       </header>
+      {projectMessage !== null && (
+        <p className="project-message" role="status">
+          {projectMessage}
+        </p>
+      )}
       <FreeformDndProvider>
         <div className={`editor-layout${isPreview ? ' is-preview' : ''}`}>
           {!isPreview && (

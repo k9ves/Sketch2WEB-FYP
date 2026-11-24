@@ -2,6 +2,9 @@ import ThemePicker from './ThemePicker'
 
 interface StartScreenProps {
   onChooseTemplate: () => void
+  onOpenProject: () => void
+  /** Result of opening a project, e.g. why a file was refused. */
+  message: string | null
 }
 
 function TemplateIcon() {
@@ -25,7 +28,11 @@ function SketchIcon() {
 }
 
 /** First screen: choose how to start a website (docs: TASKS T45). */
-function StartScreen({ onChooseTemplate }: StartScreenProps) {
+function StartScreen({
+  onChooseTemplate,
+  onOpenProject,
+  message,
+}: StartScreenProps) {
   return (
     <main className="start-screen">
       <header className="start-header">
@@ -59,6 +66,20 @@ function StartScreen({ onChooseTemplate }: StartScreenProps) {
             Upload a photo of a hand-drawn layout and turn it into a website.
           </span>
         </button>
+      </div>
+      <div className="start-open">
+        <button
+          className="toolbar-button"
+          type="button"
+          onClick={onOpenProject}
+        >
+          Open a saved project (.json)
+        </button>
+        {message !== null && (
+          <p className="start-message" role="status">
+            {message}
+          </p>
+        )}
       </div>
     </main>
   )
