@@ -1,9 +1,9 @@
 import { useDndContext, useDroppable } from '@dnd-kit/core'
 import { useCallback, useLayoutEffect, useRef } from 'react'
 import Renderer from '../../renderer/Renderer'
-import { NodeFrameContext } from '../../renderer/nodeFrame'
+import { EditableContext, NodeFrameContext } from '../../renderer/nodeFrame'
 import { useWebsiteStore } from '../../store/websiteStore'
-import { CanvasNodeFrame } from './CanvasNodeFrame'
+import { CanvasNodeFrame, PreviewNodeFrame } from './CanvasNodeFrame'
 import { readLength } from './canvasLayout'
 import {
   collectCollisionFixes,
@@ -14,15 +14,23 @@ import { shrinkWrapText } from './shrinkWrap'
 
 const MAX_FIX_STREAK = 5
 
+interface FreeformCanvasProps {
+  /** Shows the page as the finished website: no selecting or editing. */
+  preview?: boolean
+}
+
 /** Hybrid canvas: flow layout plus Alt-placed absolute components. */
-function FreeformCanvas() {
+function FreeformCanvas({ preview = false }: FreeformCanvasProps) {
   const website = useWebsiteStore((state) => state.website)
   const setLayouts = useWebsiteStore((state) => state.setLayouts)
   const { active } = useDndContext()
   const isDragging = active !== null
   const rootRef = useRef<HTMLDivElement | null>(null)
   const fixStreak = useRef(0)
-  const { setNodeRef, isOver } = useDroppable({ id: website.id })
+  const { setNodeRef, isOver } = useDroppable({
+    id: website.id,
+    disabled: preview,
+  })
   const setRef = useCallback(
     (element: HTMLDivElement | null) => {
       rootRef.current = element
@@ -46,7 +54,7 @@ function FreeformCanvas() {
         shrinkWrapText(root)
         containPositionedChildren(root)
         const fixes = collectCollisionFixes(useWebsiteStore.getState().website)
-        if (Object.keys(fixes).length === 0) {
+        if (preview || Object.keys(fixes).length === 0) {
           fixStreak.current = 0
           return
         }
@@ -77,15 +85,19 @@ function FreeformCanvas() {
   })
 
   return (
-    <NodeFrameContext.Provider value={CanvasNodeFrame}>
-      <div
-        ref={setRef}
-        className={`sw-canvas-root${isOver ? ' is-drop-target' : ''}`}
-        data-sw-node={website.id}
-        data-sw-min-height={readLength(website.layout.height) ?? undefined}
-      >
-        <Renderer node={website} />
-      </div>
+    <NodeFrameContext.Provider
+      value={preview ? PreviewNodeFrame : CanvasNodeFrame}
+    >
+      <EditableContext.Provider value={!preview}>
+        <div
+          ref={setRef}
+          className={`sw-canvas-root${isOver ? ' is-drop-target' : ''}${preview ? ' is-preview' : ''}`}
+          data-sw-node={website.id}
+          data-sw-min-height={readLength(website.layout.height) ?? undefined}
+        >
+          <Renderer node={website} />
+        </div>
+      </EditableContext.Provider>
     </NodeFrameContext.Provider>
   )
 }

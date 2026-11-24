@@ -20,3 +20,13 @@ export const NodeFrameContext = createContext<NodeFrame>(PassthroughFrame)
 export function useNodeFrame(): NodeFrame {
   return useContext(NodeFrameContext)
 }
+
+/**
+ * Whether rendered components can be selected and edited inline. Preview
+ * mode turns this off, so the page behaves like the finished website.
+ */
+export const EditableContext = createContext(true)
+
+export function useEditable(): boolean {
+  return useContext(EditableContext)
+}

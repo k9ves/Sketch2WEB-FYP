@@ -28,6 +28,7 @@ type SidebarTab = 'components' | 'layers'
 function App() {
   const [sampleName, setSampleName] = useState('landing')
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
+  const [isPreview, setIsPreview] = useState(false)
   const [selectedPaletteType, setSelectedPaletteType] =
     useState<AddableComponentType | null>(null)
   const website = useWebsiteStore((state) => state.website)
@@ -62,6 +63,12 @@ function App() {
     function handleKeyDown(event: KeyboardEvent) {
       if (isEditableTarget(event.target)) return
 
+      // Preview only listens for Esc (back to editing); no edit shortcuts.
+      if (isPreview) {
+        if (event.key === 'Escape') setIsPreview(false)
+        return
+      }
+
       const key = event.key.toLowerCase()
       if ((event.ctrlKey || event.metaKey) && !event.altKey) {
         if (key === 'z') {
@@ -85,7 +92,14 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [redo, removeNode, selectedId, undo])
+  }, [isPreview, redo, removeNode, selectedId, undo])
+
+  function togglePreview() {
+    // Leaving the selection on would show outlines and handles again
+    // when going back to editing; start from a clean state both ways.
+    selectNode(null)
+    setIsPreview((current) => !current)
+  }
 
   function addSelectedComponent() {
     if (selectedPaletteType === null) {
@@ -114,8 +128,17 @@ function App() {
         </div>
         <div className="toolbar-controls">
           <div className="toolbar-actions" aria-label="Editor actions">
-            <button className="toolbar-button" type="button">
-              Preview
+            <button
+              className={`toolbar-button${isPreview ? ' is-active' : ''}`}
+              type="button"
+              aria-pressed={isPreview}
+              title={isPreview ? 'Back to editing (Esc)' : 'Preview website'}
+              onClick={(event) => {
+                event.stopPropagation()
+                togglePreview()
+              }}
+            >
+              {isPreview ? 'Edit' : 'Preview'}
             </button>
             <button className="toolbar-button" type="button">
               Code
@@ -138,95 +161,97 @@ function App() {
         </div>
       </header>
       <FreeformDndProvider>
-        <div className="editor-layout">
-          <aside className="editor-panel components-panel">
-            <div
-              className="sidebar-tabs"
-              role="tablist"
-              aria-label="Left panel"
-            >
-              <button
-                className={`sidebar-tab${sidebarTab === 'components' ? ' is-active' : ''}`}
-                type="button"
-                role="tab"
-                aria-selected={sidebarTab === 'components'}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  setSidebarTab('components')
-                }}
+        <div className={`editor-layout${isPreview ? ' is-preview' : ''}`}>
+          {!isPreview && (
+            <aside className="editor-panel components-panel">
+              <div
+                className="sidebar-tabs"
+                role="tablist"
+                aria-label="Left panel"
               >
-                Components
-              </button>
-              <button
-                className={`sidebar-tab${sidebarTab === 'layers' ? ' is-active' : ''}`}
-                type="button"
-                role="tab"
-                aria-selected={sidebarTab === 'layers'}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  setSidebarTab('layers')
-                }}
-              >
-                Layers
-              </button>
-            </div>
-            {sidebarTab === 'layers' && <TreePanel />}
-            {sidebarTab === 'components' && (
-              <>
-                <ul
-                  className="component-palette"
-                  aria-label="Available component types"
-                >
-                  {componentTypes.map((type) => (
-                    <li
-                      className={
-                        type === 'website'
-                          ? 'component-palette-item is-root-type'
-                          : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
-                      }
-                      key={type}
-                    >
-                      {type === 'website' && (
-                        <>
-                          <span>Website</span>
-                          <span className="component-palette-note">Root</span>
-                        </>
-                      )}
-                      {type !== 'website' && (
-                        <PaletteItem
-                          type={type}
-                          selected={selectedPaletteType === type}
-                          onSelect={setSelectedPaletteType}
-                        />
-                      )}
-                    </li>
-                  ))}
-                </ul>
                 <button
-                  className="toolbar-button palette-add-button"
+                  className={`sidebar-tab${sidebarTab === 'components' ? ' is-active' : ''}`}
                   type="button"
-                  disabled={
-                    selectedPaletteType === null || targetContainerId === null
-                  }
+                  role="tab"
+                  aria-selected={sidebarTab === 'components'}
                   onClick={(event) => {
                     event.stopPropagation()
-                    addSelectedComponent()
+                    setSidebarTab('components')
                   }}
                 >
-                  Add
+                  Components
                 </button>
-                <p className="component-palette-status" aria-live="polite">
-                  {targetDescription}
-                </p>
-                <p className="component-palette-status">
-                  Drag items onto the canvas. Hold Alt while dragging to place a
-                  component freely.
-                </p>
-              </>
-            )}
-          </aside>
+                <button
+                  className={`sidebar-tab${sidebarTab === 'layers' ? ' is-active' : ''}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={sidebarTab === 'layers'}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    setSidebarTab('layers')
+                  }}
+                >
+                  Layers
+                </button>
+              </div>
+              {sidebarTab === 'layers' && <TreePanel />}
+              {sidebarTab === 'components' && (
+                <>
+                  <ul
+                    className="component-palette"
+                    aria-label="Available component types"
+                  >
+                    {componentTypes.map((type) => (
+                      <li
+                        className={
+                          type === 'website'
+                            ? 'component-palette-item is-root-type'
+                            : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
+                        }
+                        key={type}
+                      >
+                        {type === 'website' && (
+                          <>
+                            <span>Website</span>
+                            <span className="component-palette-note">Root</span>
+                          </>
+                        )}
+                        {type !== 'website' && (
+                          <PaletteItem
+                            type={type}
+                            selected={selectedPaletteType === type}
+                            onSelect={setSelectedPaletteType}
+                          />
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    className="toolbar-button palette-add-button"
+                    type="button"
+                    disabled={
+                      selectedPaletteType === null || targetContainerId === null
+                    }
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      addSelectedComponent()
+                    }}
+                  >
+                    Add
+                  </button>
+                  <p className="component-palette-status" aria-live="polite">
+                    {targetDescription}
+                  </p>
+                  <p className="component-palette-status">
+                    Drag items onto the canvas. Hold Alt while dragging to place
+                    a component freely.
+                  </p>
+                </>
+              )}
+            </aside>
+          )}
           <section className="canvas-panel" aria-label="Canvas">
-            <h2>Canvas</h2>
+            <h2>{isPreview ? 'Preview' : 'Canvas'}</h2>
             <section
               className="preview-frame"
               aria-label={`${websiteTitle} preview`}
@@ -238,20 +263,24 @@ function App() {
                   <i />
                 </span>
                 <span>
-                  <InlineText
-                    value={websiteTitle}
-                    onSave={(title) =>
-                      updateNode(website.id, { content: { title } })
-                    }
-                  />
+                  {isPreview ? (
+                    websiteTitle
+                  ) : (
+                    <InlineText
+                      value={websiteTitle}
+                      onSave={(title) =>
+                        updateNode(website.id, { content: { title } })
+                      }
+                    />
+                  )}
                 </span>
               </div>
               <div className="preview-page" id="top">
-                <FreeformCanvas />
+                <FreeformCanvas preview={isPreview} />
               </div>
             </section>
           </section>
-          <PropertiesPanel />
+          {!isPreview && <PropertiesPanel />}
         </div>
       </FreeformDndProvider>
     </main>

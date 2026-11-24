@@ -548,6 +548,27 @@ textarea.property-input {
   outline-offset: 2px;
 }
 
+/* Preview mode: only the canvas, behaving like the finished website. */
+.editor-layout.is-preview {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'canvas';
+}
+
+.sw-canvas-root.is-preview :is(.sw-node, .sw-component) {
+  cursor: auto;
+}
+
+.sw-canvas-root.is-preview a {
+  cursor: pointer;
+}
+
+.toolbar-button.is-active,
+.toolbar-button.is-active:hover {
+  border-color: #6546d7;
+  background: #6546d7;
+  color: #fff;
+}
+
 /* Hybrid freeform canvas */
 .sw-canvas-root {
   display: flow-root;

@@ -111,6 +111,18 @@ export function CanvasNodeFrame({ node, children }: NodeFrameProps) {
   )
 }
 
+/**
+ * Preview wrapper: same layout and node id (the layout pass measures it),
+ * but no dragging, dropping, selection or resize handles.
+ */
+export function PreviewNodeFrame({ node, children }: NodeFrameProps) {
+  return (
+    <div {...frameAttributes(node)} data-sw-node={node.id}>
+      {children}
+    </div>
+  )
+}
+
 /** Same layout without drag/drop, for the drag overlay. */
 export function StaticNodeFrame({ node, children }: NodeFrameProps) {
   return <div {...frameAttributes(node)}>{children}</div>

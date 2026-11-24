@@ -7,7 +7,7 @@ import {
 } from '../schema/types'
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
-import { useNodeFrame, type NodeFrame } from './nodeFrame'
+import { useEditable, useNodeFrame, type NodeFrame } from './nodeFrame'
 import {
   columnsLayoutDefaults,
   heroLayoutDefaults,
@@ -84,6 +84,7 @@ function Renderer({ node }: { node: unknown }) {
   const selectNode = useWebsiteStore((state) => state.selectNode)
   const updateNode = useWebsiteStore((state) => state.updateNode)
   const Frame = useNodeFrame()
+  const editable = useEditable()
 
   if (!isRecord(node)) {
     return <WarningBox message="Invalid component: expected an object." />
@@ -105,8 +106,10 @@ function Renderer({ node }: { node: unknown }) {
   const children = renderChildren(node, Frame)
   const text = content.text
   const handleClick = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
+    // Links never navigate away from the builder, also not in preview.
     event.preventDefault()
+    if (!editable) return
+    event.stopPropagation()
     selectNode(node.type === 'website' ? null : node.id)
   }
   // Empty text shows a placeholder instead of a warning, so the component
@@ -115,15 +118,18 @@ function Renderer({ node }: { node: unknown }) {
     field: string,
     value: string | undefined,
     placeholder?: string,
-  ) => (
-    <InlineText
-      value={value ?? ''}
-      placeholder={placeholder}
-      onSave={(nextValue) =>
-        updateNode(node.id, { content: { [field]: nextValue } })
-      }
-    />
-  )
+  ) =>
+    editable ? (
+      <InlineText
+        value={value ?? ''}
+        placeholder={placeholder}
+        onSave={(nextValue) =>
+          updateNode(node.id, { content: { [field]: nextValue } })
+        }
+      />
+    ) : (
+      (value ?? '')
+    )
 
   switch (node.type) {
     case 'website':
