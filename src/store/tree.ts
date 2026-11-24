@@ -42,6 +42,24 @@ export function findParent(
   return undefined
 }
 
+/**
+ * Nodes from the root down to the node with `id` (both included), or
+ * undefined when the id is not in the tree.
+ */
+export function findPath(
+  tree: ComponentNode,
+  id: string,
+): ComponentNode[] | undefined {
+  if (tree.id === id) return [tree]
+
+  for (const child of tree.children) {
+    const path = findPath(child, id)
+    if (path) return [tree, ...path]
+  }
+
+  return undefined
+}
+
 export function updateTree(
   tree: ComponentNode,
   id: string,

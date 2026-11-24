@@ -8,6 +8,7 @@ import type { AddableComponentType } from './editor/componentFactory'
 import FreeformCanvas from './editor/freeform/FreeformCanvas'
 import FreeformDndProvider from './editor/freeform/FreeformDnd'
 import PropertiesPanel from './editor/properties/PropertiesPanel'
+import TreePanel from './editor/tree/TreePanel'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -22,8 +23,11 @@ function isEditableTarget(target: EventTarget | null): boolean {
   )
 }
 
+type SidebarTab = 'components' | 'layers'
+
 function App() {
   const [sampleName, setSampleName] = useState('landing')
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [selectedPaletteType, setSelectedPaletteType] =
     useState<AddableComponentType | null>(null)
   const website = useWebsiteStore((state) => state.website)
@@ -136,56 +140,90 @@ function App() {
       <FreeformDndProvider>
         <div className="editor-layout">
           <aside className="editor-panel components-panel">
-            <h2>Components</h2>
-            <ul
-              className="component-palette"
-              aria-label="Available component types"
+            <div
+              className="sidebar-tabs"
+              role="tablist"
+              aria-label="Left panel"
             >
-              {componentTypes.map((type) => (
-                <li
-                  className={
-                    type === 'website'
-                      ? 'component-palette-item is-root-type'
-                      : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
-                  }
-                  key={type}
+              <button
+                className={`sidebar-tab${sidebarTab === 'components' ? ' is-active' : ''}`}
+                type="button"
+                role="tab"
+                aria-selected={sidebarTab === 'components'}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setSidebarTab('components')
+                }}
+              >
+                Components
+              </button>
+              <button
+                className={`sidebar-tab${sidebarTab === 'layers' ? ' is-active' : ''}`}
+                type="button"
+                role="tab"
+                aria-selected={sidebarTab === 'layers'}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setSidebarTab('layers')
+                }}
+              >
+                Layers
+              </button>
+            </div>
+            {sidebarTab === 'layers' && <TreePanel />}
+            {sidebarTab === 'components' && (
+              <>
+                <ul
+                  className="component-palette"
+                  aria-label="Available component types"
                 >
-                  {type === 'website' && (
-                    <>
-                      <span>Website</span>
-                      <span className="component-palette-note">Root</span>
-                    </>
-                  )}
-                  {type !== 'website' && (
-                    <PaletteItem
-                      type={type}
-                      selected={selectedPaletteType === type}
-                      onSelect={setSelectedPaletteType}
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
-            <button
-              className="toolbar-button palette-add-button"
-              type="button"
-              disabled={
-                selectedPaletteType === null || targetContainerId === null
-              }
-              onClick={(event) => {
-                event.stopPropagation()
-                addSelectedComponent()
-              }}
-            >
-              Add
-            </button>
-            <p className="component-palette-status" aria-live="polite">
-              {targetDescription}
-            </p>
-            <p className="component-palette-status">
-              Drag items onto the canvas. Hold Alt while dragging to place a
-              component freely.
-            </p>
+                  {componentTypes.map((type) => (
+                    <li
+                      className={
+                        type === 'website'
+                          ? 'component-palette-item is-root-type'
+                          : `component-palette-item${selectedPaletteType === type ? ' is-selected' : ''}`
+                      }
+                      key={type}
+                    >
+                      {type === 'website' && (
+                        <>
+                          <span>Website</span>
+                          <span className="component-palette-note">Root</span>
+                        </>
+                      )}
+                      {type !== 'website' && (
+                        <PaletteItem
+                          type={type}
+                          selected={selectedPaletteType === type}
+                          onSelect={setSelectedPaletteType}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="toolbar-button palette-add-button"
+                  type="button"
+                  disabled={
+                    selectedPaletteType === null || targetContainerId === null
+                  }
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    addSelectedComponent()
+                  }}
+                >
+                  Add
+                </button>
+                <p className="component-palette-status" aria-live="polite">
+                  {targetDescription}
+                </p>
+                <p className="component-palette-status">
+                  Drag items onto the canvas. Hold Alt while dragging to place a
+                  component freely.
+                </p>
+              </>
+            )}
           </aside>
           <section className="canvas-panel" aria-label="Canvas">
             <h2>Canvas</h2>

@@ -1,24 +1,11 @@
-import type { ComponentNode, ComponentType } from '../../schema/types'
+import type { ComponentNode } from '../../schema/types'
 import { findNode, findParent } from '../../store/tree'
 import { readNodeBox, readNodeSize } from '../freeform/canvasLayout'
+import { typeLabels } from '../typeLabels'
 import LayoutFields from './LayoutFields'
 import { useWebsiteStore } from '../../store/websiteStore'
 import ContentFields from './ContentFields'
 import StyleFields from './StyleFields'
-
-const typeLabels: Record<ComponentType, string> = {
-  website: 'Website',
-  navbar: 'Navbar',
-  hero: 'Hero',
-  section: 'Section',
-  columns: 'Columns',
-  heading: 'Heading',
-  text: 'Text',
-  button: 'Link / button',
-  image: 'Image',
-  card: 'Card',
-  footer: 'Footer',
-}
 
 /** Nearest ancestor (below the website) with a free position, if any. */
 function findFreeAncestor(

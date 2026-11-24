@@ -64,7 +64,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T37** Build the right panel to edit content fields. — _Done when:_ text/src/href editable.
 - [x] **T38** Edit style: color, font size, padding, background (Tailwind tokens). — _Done when:_ canvas updates live.
 - [x] **T39** Edit layout: columns count, gap, alignment. — _Done when:_ grid changes live.
-- [ ] **T40** Hierarchy tree panel with select and expand/collapse. — _Done when:_ clicking tree selects on canvas. **(Milestone: Full visual editor)**
+- [x] **T40** Hierarchy tree panel with select and expand/collapse. — _Done when:_ clicking tree selects on canvas. **(Milestone: Full visual editor)**
 
 ## M7 — Preview and responsive (Week 7)
 
