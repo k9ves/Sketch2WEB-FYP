@@ -5,6 +5,19 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sketch2Web</title>
+    <script>
+      // Set the editor theme before the first paint (see src/theme.ts).
+      try {
+        var choice = localStorage.getItem('sketch2web-theme')
+        var dark =
+          choice === 'dark' ||
+          (choice !== 'light' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      } catch (error) {
+        document.documentElement.dataset.theme = 'light'
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,5 +1,56 @@
 @import 'tailwindcss';
 
+/* Editor colours. `data-theme` on <html> is set by src/theme.ts (and by the
+   inline script in index.html before the first paint). The website on the
+   canvas keeps its own colours in both themes. */
+:root {
+  color-scheme: light;
+  --app-bg: #f7f6fb;
+  --text: #252239;
+  --text-strong: #302b42;
+  --text-label: #555064;
+  --text-muted: #77718a;
+  --surface: #fff;
+  --surface-muted: #fbfaff;
+  --surface-subtle: #f4f2f8;
+  --surface-disabled: #f7f6f9;
+  --segment-bg: #ece9f3;
+  --segment-active: #fff;
+  --border: #dedbe7;
+  --border-soft: #e6e3ec;
+  --border-hover: #bcb5ce;
+  --divider: #eeecf2;
+  --accent: #6546d7;
+  --accent-soft: #f1edff;
+  --warning: #b45309;
+  --warning-soft: #fef3c7;
+  --dots: #d7d3de;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --app-bg: #14121c;
+  --text: #e8e6f0;
+  --text-strong: #eceaf4;
+  --text-label: #b4afc4;
+  --text-muted: #9c97ad;
+  --surface: #1d1a27;
+  --surface-muted: #232030;
+  --surface-subtle: #2a2638;
+  --surface-disabled: #211e2c;
+  --segment-bg: #2a2638;
+  --segment-active: #3a3549;
+  --border: #3a3549;
+  --border-soft: #2f2b3d;
+  --border-hover: #544d68;
+  --divider: #2f2b3d;
+  --accent: #7c62ee;
+  --accent-soft: #2e2650;
+  --warning: #f59e0b;
+  --warning-soft: #3b2a0c;
+  --dots: #4a4459;
+}
+
 :root {
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
@@ -7,8 +58,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
-  color: #252239;
-  background: #f7f6fb;
+  color: var(--text);
+  background: var(--app-bg);
 }
 
 * {

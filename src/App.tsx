@@ -9,6 +9,7 @@ import FreeformCanvas from './editor/freeform/FreeformCanvas'
 import FreeformDndProvider from './editor/freeform/FreeformDnd'
 import PropertiesPanel from './editor/properties/PropertiesPanel'
 import TreePanel from './editor/tree/TreePanel'
+import ThemePicker from './editor/ThemePicker'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -179,6 +180,7 @@ function App() {
               <option value="blog">Blog</option>
             </select>
           </label>
+          <ThemePicker />
         </div>
       </header>
       <FreeformDndProvider>
