@@ -113,7 +113,9 @@ when it was dropped into another container.
 - A node in flow inside a free container shows a hint with a button that
   selects that container.
 
-Resizing is out of scope.
+**Resizing** (handles on the selected component) stores `boxWidth` /
+`boxHeight` in px; height is a minimum, so text never clips. The panel
+shows the size and offers **Reset size**, which clears both keys.
 
 ## 3. Tree panel (T40)
 

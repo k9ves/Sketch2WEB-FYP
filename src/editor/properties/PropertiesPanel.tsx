@@ -1,6 +1,6 @@
 import type { ComponentNode, ComponentType } from '../../schema/types'
 import { findNode, findParent } from '../../store/tree'
-import { readNodeBox } from '../freeform/canvasLayout'
+import { readNodeBox, readNodeSize } from '../freeform/canvasLayout'
 import LayoutFields from './LayoutFields'
 import { useWebsiteStore } from '../../store/websiteStore'
 import ContentFields from './ContentFields'
@@ -49,6 +49,7 @@ function PropertiesPanel() {
   const node = (selectedId && findNode(website, selectedId)) || website
   const isRoot = node.id === website.id
   const box = readNodeBox(node)
+  const size = readNodeSize(node)
   const freeChildren = node.children.filter(
     (child) => readNodeBox(child) !== null,
   ).length
@@ -110,6 +111,32 @@ function PropertiesPanel() {
               >
                 Return all to flow
               </button>
+            </div>
+          )}
+          {!isRoot && (
+            <div className="property-position">
+              <span>
+                Size:{' '}
+                {size.width === null && size.height === null
+                  ? 'Auto'
+                  : `${size.width === null ? 'auto' : Math.round(size.width)} × ${
+                      size.height === null ? 'auto' : Math.round(size.height)
+                    }`}
+              </span>
+              {(size.width !== null || size.height !== null) && (
+                <button
+                  className="toolbar-button"
+                  type="button"
+                  // An empty value reads as "not set" (see readNodeSize).
+                  onClick={() =>
+                    updateNode(node.id, {
+                      layout: { boxWidth: '', boxHeight: '' },
+                    })
+                  }
+                >
+                  Reset size
+                </button>
+              )}
             </div>
           )}
           {!isRoot && (

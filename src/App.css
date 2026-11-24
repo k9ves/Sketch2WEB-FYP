@@ -458,7 +458,7 @@ textarea.property-input {
 }
 
 .sw-canvas-root > *,
-.sw-node.is-container > * {
+.sw-node.is-container > :not(.sw-resize-handle) {
   position: relative;
 }
 
@@ -496,7 +496,7 @@ textarea.property-input {
 /* In a column, containers take the full width: one whose children are all
    placed freely has no content width of its own and would collapse. In a
    column, stretch only changes the width, never the height. */
-:is(.sw-hero, .sw-columns).is-column > .sw-node.is-container {
+:is(.sw-hero, .sw-columns).is-column > .sw-node.is-container:not(.has-width) {
   align-self: stretch;
 }
 
@@ -508,7 +508,94 @@ textarea.property-input {
   opacity: 0.35;
 }
 
-.sw-node.is-drop-target > *,
+/* Size set by resizing (layout.boxWidth / boxHeight). The wrapper gets the
+   width; the component fills it. Height is a minimum, so text never clips. */
+.sw-node.is-leaf.has-width > :not(.sw-resize-handle) {
+  width: 100%;
+}
+
+.sw-node.is-leaf.has-height > :not(.sw-resize-handle) {
+  min-height: var(--sw-box-height);
+}
+
+/* An image fills its box exactly (its ratio is kept while resizing). */
+.sw-node.is-leaf.has-width > img,
+.sw-node.is-leaf.has-height > img {
+  object-fit: cover;
+}
+
+.sw-node.is-leaf.has-height > img {
+  height: var(--sw-box-height);
+  min-height: 0;
+}
+
+/* Resize handles of the selected component. */
+.sw-node.is-selected:not(.is-positioned) {
+  position: relative;
+}
+
+/* More specific than `.sw-node.is-container > *` (position: relative), which
+   would put the handles in the flow and make the container taller. */
+.sw-node > span.sw-resize-handle {
+  position: absolute;
+  z-index: 30;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid #3b82f6;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 20%);
+  touch-action: none;
+}
+
+/* Centred on the selection outline (2px outside the component). */
+.sw-resize-handle.is-n,
+.sw-resize-handle.is-ne,
+.sw-resize-handle.is-nw {
+  top: -8px;
+}
+
+.sw-resize-handle.is-s,
+.sw-resize-handle.is-se,
+.sw-resize-handle.is-sw {
+  bottom: -8px;
+}
+
+.sw-resize-handle.is-e,
+.sw-resize-handle.is-ne,
+.sw-resize-handle.is-se {
+  right: -8px;
+}
+
+.sw-resize-handle.is-w,
+.sw-resize-handle.is-nw,
+.sw-resize-handle.is-sw {
+  left: -8px;
+}
+
+.sw-resize-handle.is-n,
+.sw-resize-handle.is-s {
+  left: calc(50% - 5px);
+  cursor: ns-resize;
+}
+
+.sw-resize-handle.is-e,
+.sw-resize-handle.is-w {
+  top: calc(50% - 5px);
+  cursor: ew-resize;
+}
+
+.sw-resize-handle.is-ne,
+.sw-resize-handle.is-sw {
+  cursor: nesw-resize;
+}
+
+.sw-resize-handle.is-nw,
+.sw-resize-handle.is-se {
+  cursor: nwse-resize;
+}
+
+.sw-node.is-drop-target > :not(.sw-resize-handle),
 .sw-canvas-root.is-drop-target > * {
   outline: 2px dashed #6546d7;
   outline-offset: 2px;

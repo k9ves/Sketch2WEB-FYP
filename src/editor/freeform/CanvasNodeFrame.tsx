@@ -4,7 +4,9 @@ import type { CSSProperties } from 'react'
 import type { NodeFrameProps } from '../../renderer/nodeFrame'
 import type { ComponentNode } from '../../schema/types'
 import { isContainerType } from '../../store/tree'
-import { readLength, readNodeBox } from './canvasLayout'
+import { useWebsiteStore } from '../../store/websiteStore'
+import ResizeHandles from './ResizeHandles'
+import { readLength, readNodeBox, readNodeSize } from './canvasLayout'
 
 export interface CanvasNodeDragData {
   kind: 'node'
@@ -15,37 +17,54 @@ export interface CanvasNodeDragData {
 function frameAttributes(node: ComponentNode, extraClasses: string[] = []) {
   const box = readNodeBox(node)
   const container = isContainerType(node.type)
+  const size = readNodeSize(node)
   const className = [
     'sw-node',
     container ? 'is-container' : 'is-leaf',
     box ? 'is-positioned' : '',
+    size.width !== null ? 'has-width' : '',
+    size.height !== null ? 'has-height' : '',
     ...extraClasses,
   ]
     .filter(Boolean)
     .join(' ')
 
-  // Leaves hug their content (their stored width is only the wrap limit);
-  // positioned containers keep their stored width. Nothing gets wider than
-  // its container (e.g. when a scrollbar appears and the canvas gets
-  // narrower).
-  const style: CSSProperties | undefined = box
-    ? container
-      ? { left: box.x, top: box.y, width: box.width, maxWidth: '100%' }
-      : { left: box.x, top: box.y, maxWidth: `min(${box.width}px, 100%)` }
-    : undefined
+  // A size set by resizing wins. Otherwise leaves hug their content (their
+  // stored width is only the wrap limit) and positioned containers keep
+  // their stored width. Nothing gets wider than its container (e.g. when a
+  // scrollbar appears and the canvas gets narrower).
+  const style: CSSProperties & { '--sw-box-height'?: string } = {}
+  if (box) {
+    style.left = box.x
+    style.top = box.y
+  }
+  if (size.width !== null) {
+    style.width = size.width
+    style.maxWidth = '100%'
+  } else if (box && container) {
+    style.width = box.width
+    style.maxWidth = '100%'
+  } else if (box) {
+    style.maxWidth = `min(${box.width}px, 100%)`
+  }
+  if (size.height !== null) {
+    style['--sw-box-height'] = `${size.height}px`
+  }
 
+  const storedHeight = readLength(node.layout.height)
   return {
     className,
-    style,
+    style: Object.keys(style).length > 0 ? style : undefined,
     'data-sw-positioned': box ? 'true' : undefined,
     // Right edge it is meant to reach; the container keeps this much width
     // (see containPositionedChildren), whatever it is drawn at right now.
-    'data-sw-right': box ? box.x + box.width : undefined,
+    'data-sw-right': box ? box.x + (size.width ?? box.width) : undefined,
     // Neighbour pinned automatically by an Alt move (see positionedLayout).
     'data-sw-pinned': box && node.layout.pinned === 'true' ? 'true' : undefined,
-    // Minimum height kept for containers whose content was pinned in place.
+    // Minimum height of a container: kept when its content was pinned in
+    // place, or set by resizing.
     'data-sw-min-height': container
-      ? (readLength(node.layout.height) ?? undefined)
+      ? Math.max(storedHeight ?? 0, size.height ?? 0) || undefined
       : undefined,
   }
 }
@@ -72,6 +91,7 @@ export function CanvasNodeFrame({ node, children }: NodeFrameProps) {
     },
     [setDragRef, setDropRef],
   )
+  const selected = useWebsiteStore((state) => state.selectedId === node.id)
 
   return (
     <div
@@ -79,12 +99,14 @@ export function CanvasNodeFrame({ node, children }: NodeFrameProps) {
       {...frameAttributes(node, [
         isDragging ? 'is-dragging' : '',
         isOver ? 'is-drop-target' : '',
+        selected ? 'is-selected' : '',
       ])}
       data-sw-node={node.id}
       {...attributes}
       {...listeners}
     >
       {children}
+      {selected && !isDragging && <ResizeHandles node={node} />}
     </div>
   )
 }

@@ -9,6 +9,7 @@ import {
   collectCollisionFixes,
   containPositionedChildren,
 } from './positionedLayout'
+import { RESIZING_FLAG } from './ResizeHandles'
 import { shrinkWrapText } from './shrinkWrap'
 
 const MAX_FIX_STREAK = 5
@@ -37,6 +38,8 @@ function FreeformCanvas() {
     if (!root || isDragging) return
 
     const arrange = () => {
+      // A resize shows its preview straight in the DOM; wait until it ends.
+      if (document.body.dataset[RESIZING_FLAG]) return
       // A layout bug must never take the whole editor (and the user's work)
       // down; report it and keep the canvas as it is.
       try {

@@ -30,6 +30,20 @@ export function readNodeBox(node: ComponentNode): NodeBox | null {
   return { x, y, width, height: readLength(node.layout.height) }
 }
 
+/**
+ * Size set by resizing (`boxWidth` / `boxHeight`, px), or null per axis when
+ * the component sizes itself. Height is a minimum, so content never clips.
+ */
+export function readNodeSize(node: ComponentNode): {
+  width: number | null
+  height: number | null
+} {
+  return {
+    width: readLength(node.layout.boxWidth),
+    height: readLength(node.layout.boxHeight),
+  }
+}
+
 export function boxLayout(
   box: Partial<NodeBox> & Pick<NodeBox, 'x' | 'y'>,
 ): Record<string, string> {

@@ -4,7 +4,10 @@
 // longest line is measured here and set as the element's width.
 
 const TEXT_ELEMENTS =
-  '.sw-node.is-leaf:not(.is-full-width) > :is(.sw-heading, .sw-text, .sw-button)'
+  '.sw-node.is-leaf:not(.is-full-width, .has-width) > :is(.sw-heading, .sw-text, .sw-button)'
+
+// A width set by resizing wins; such text fills its box (see App.css).
+const SIZED_ELEMENTS = '.sw-node.is-leaf.has-width > :not(.sw-resize-handle)'
 
 /** Width of the widest rendered line of the element's text, or null. */
 function longestLineWidth(element: HTMLElement): number | null {
@@ -39,6 +42,9 @@ export function shrinkWrapText(root: HTMLElement): void {
   // Measure everything at its natural width first, then apply, so one
   // element's change cannot affect another element's measurement.
   all.forEach((element) => (element.style.width = ''))
+  root
+    .querySelectorAll<HTMLElement>(SIZED_ELEMENTS)
+    .forEach((element) => (element.style.width = ''))
   const widths = elements.map(longestLineWidth)
   elements.forEach((element, index) => {
     const width = widths[index]
