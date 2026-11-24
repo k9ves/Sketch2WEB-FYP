@@ -521,6 +521,9 @@ textarea.property-input {
 }
 
 .preview-frame {
+  /* Width of the website being shown (device switch); see @container
+     sw-page in the components layer. */
+  container: sw-page / inline-size;
   margin: 0 auto;
   transition: max-width 200ms ease;
   overflow: hidden;
@@ -999,7 +1002,12 @@ textarea.property-input {
     font-size: 13px;
   }
 
-  @media (max-width: 680px) {
+  /* Mobile layout of the website. It follows the canvas width (the device
+     switch), not the browser window, through the `sw-page` container on
+     .preview-frame. 639px = below Tailwind's `sm` breakpoint, so generated
+     code can use `grid-cols-1 sm:grid-cols-N` for the same result. Columns
+     keep their count from an inline style, hence !important. */
+  @container sw-page (max-width: 639px) {
     .sw-navbar {
       gap: 12px;
     }

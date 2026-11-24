@@ -70,7 +70,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 - [x] **T41** Preview mode (no outlines, no editing). — _Done when:_ toggle works.
 - [x] **T42** Device switch: desktop / tablet / mobile width. — _Done when:_ canvas width changes.
-- [ ] **T43** Responsive classes in renderer (`md:`, `lg:` support). — _Done when:_ columns stack on mobile.
+- [x] **T43** Responsive classes in renderer (`md:`, `lg:` support). — _Done when:_ columns stack on mobile.
 
 ## M8 — Template input (Week 8)
 
