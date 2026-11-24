@@ -1,5 +1,7 @@
-import type { ComponentType } from '../../schema/types'
-import { findNode } from '../../store/tree'
+import type { ComponentNode, ComponentType } from '../../schema/types'
+import { findNode, findParent } from '../../store/tree'
+import { readNodeBox } from '../freeform/canvasLayout'
+import LayoutFields from './LayoutFields'
 import { useWebsiteStore } from '../../store/websiteStore'
 import ContentFields from './ContentFields'
 import StyleFields from './StyleFields'
@@ -18,6 +20,19 @@ const typeLabels: Record<ComponentType, string> = {
   footer: 'Footer',
 }
 
+/** Nearest ancestor (below the website) with a free position, if any. */
+function findFreeAncestor(
+  website: ComponentNode,
+  id: string,
+): ComponentNode | undefined {
+  let parent = findParent(website, id)
+  while (parent && parent.id !== website.id) {
+    if (readNodeBox(parent) !== null) return parent
+    parent = findParent(website, parent.id)
+  }
+  return undefined
+}
+
 /** Right panel: edits the selected node, or the website when none is. */
 function PropertiesPanel() {
   const website = useWebsiteStore((state) => state.website)
@@ -25,9 +40,19 @@ function PropertiesPanel() {
   const updateNode = useWebsiteStore((state) => state.updateNode)
   const duplicateNode = useWebsiteStore((state) => state.duplicateNode)
   const removeNode = useWebsiteStore((state) => state.removeNode)
+  const selectNode = useWebsiteStore((state) => state.selectNode)
+  const returnToFlow = useWebsiteStore((state) => state.returnToFlow)
+  const returnChildrenToFlow = useWebsiteStore(
+    (state) => state.returnChildrenToFlow,
+  )
 
   const node = (selectedId && findNode(website, selectedId)) || website
   const isRoot = node.id === website.id
+  const box = readNodeBox(node)
+  const freeChildren = node.children.filter(
+    (child) => readNodeBox(child) !== null,
+  ).length
+  const freeAncestor = box ? undefined : findFreeAncestor(website, node.id)
 
   return (
     <aside
@@ -63,6 +88,61 @@ function PropertiesPanel() {
           }
         />
       </section>
+      {(!isRoot || freeChildren > 0) && (
+        <section className="property-group" aria-label="Layout">
+          <h3>Layout</h3>
+          <LayoutFields
+            node={node}
+            onChange={(key, value) =>
+              updateNode(node.id, { layout: { [key]: value } })
+            }
+          />
+          {freeChildren > 0 && (
+            <div className="property-free-children">
+              <p className="property-note">
+                {freeChildren} of {node.children.length} components inside have
+                a free position, so layout settings do not move them.
+              </p>
+              <button
+                className="toolbar-button"
+                type="button"
+                onClick={() => returnChildrenToFlow(node.id)}
+              >
+                Return all to flow
+              </button>
+            </div>
+          )}
+          {!isRoot && (
+            <div className="property-position">
+              <span>{box ? 'Free position' : 'In flow'}</span>
+              {box && (
+                <button
+                  className="toolbar-button"
+                  type="button"
+                  onClick={() => returnToFlow(node.id)}
+                >
+                  Return to flow
+                </button>
+              )}
+            </div>
+          )}
+          {freeAncestor && (
+            <div className="property-free-children">
+              <p className="property-note">
+                It sits inside a {typeLabels[freeAncestor.type].toLowerCase()}{' '}
+                that has a free position.
+              </p>
+              <button
+                className="toolbar-button"
+                type="button"
+                onClick={() => selectNode(freeAncestor.id)}
+              >
+                Select {typeLabels[freeAncestor.type].toLowerCase()}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
       {!isRoot && (
         <div className="property-actions">
           <button

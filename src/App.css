@@ -314,6 +314,33 @@ textarea.property-input {
   font-size: 12px;
 }
 
+.property-position {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  color: #302b42;
+  font-size: 13px;
+}
+
+.property-position .toolbar-button {
+  min-height: 32px;
+}
+
+.editor-panel .property-note {
+  margin-bottom: 12px;
+}
+
+.property-free-children {
+  display: grid;
+  margin-bottom: 12px;
+}
+
+.property-free-children .property-note {
+  margin-bottom: 8px;
+}
+
 .property-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -458,6 +485,23 @@ textarea.property-input {
    each card keeps its own height, and no invisible area blocks placement. */
 .sw-node {
   align-self: start;
+}
+
+/* Hero and columns choose their children's alignment (Properties panel,
+   renderer/layout.ts). Containers keep the full cell width in a grid. */
+:is(.sw-hero, .sw-columns) > .sw-node {
+  align-self: var(--sw-align, start);
+}
+
+/* In a column, containers take the full width: one whose children are all
+   placed freely has no content width of its own and would collapse. In a
+   column, stretch only changes the width, never the height. */
+:is(.sw-hero, .sw-columns).is-column > .sw-node.is-container {
+  align-self: stretch;
+}
+
+.sw-columns > .sw-node.is-leaf {
+  justify-self: var(--sw-justify, auto);
 }
 
 .sw-node.is-dragging {

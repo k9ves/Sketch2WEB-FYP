@@ -1,5 +1,5 @@
 import { createElement } from 'react'
-import type { CSSProperties, MouseEvent, ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import {
   isComponentNode,
   isComponentType,
@@ -8,6 +8,12 @@ import {
 import { useWebsiteStore } from '../store/websiteStore'
 import InlineText from '../editor/InlineText'
 import { useNodeFrame, type NodeFrame } from './nodeFrame'
+import {
+  columnsLayoutDefaults,
+  heroLayoutDefaults,
+  isColumnFlow,
+  layoutStyle,
+} from './layout'
 import { safeHref } from './safeHref'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -71,61 +77,6 @@ const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
 
 function headingTag(level: string | undefined) {
   return headingTags[Number(level) - 1] ?? 'h2'
-}
-
-function layoutStyle(
-  layout: Record<string, string>,
-  defaultDisplay: 'flex' | 'grid' = 'grid',
-  flexDefaults: {
-    direction: 'row' | 'column'
-    align: 'start' | 'center' | 'end' | 'stretch'
-  } = { direction: 'row', align: 'stretch' },
-): CSSProperties {
-  const rawColumns = Number(layout.columns)
-  const columns = Number.isFinite(rawColumns)
-    ? Math.min(6, Math.max(1, Math.floor(rawColumns)))
-    : 2
-  const rawGap = Number(layout.gap)
-  const gap = Number.isFinite(rawGap)
-    ? `${Math.min(32, Math.max(0, rawGap)) * 0.25}rem`
-    : layout.gap || '1rem'
-
-  if (
-    layout.display === 'flex' ||
-    (layout.display !== 'grid' && defaultDisplay === 'flex')
-  ) {
-    const alignItems: Record<string, CSSProperties['alignItems']> = {
-      start: 'flex-start',
-      center: 'center',
-      end: 'flex-end',
-      stretch: 'stretch',
-    }
-    const justifyContent: Record<string, CSSProperties['justifyContent']> = {
-      start: 'flex-start',
-      center: 'center',
-      end: 'flex-end',
-      between: 'space-between',
-      around: 'space-around',
-      evenly: 'space-evenly',
-    }
-
-    return {
-      display: 'flex',
-      flexDirection:
-        layout.direction === 'row' || layout.direction === 'column'
-          ? layout.direction
-          : flexDefaults.direction,
-      alignItems: alignItems[layout.align] ?? alignItems[flexDefaults.align],
-      justifyContent: justifyContent[layout.justify] ?? 'flex-start',
-      gap,
-    }
-  }
-
-  return {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    gap,
-  }
 }
 
 function Renderer({ node }: { node: unknown }) {
@@ -211,15 +162,14 @@ function Renderer({ node }: { node: unknown }) {
           className={selectableClassName(
             node,
             'container',
-            'sw-hero',
+            isColumnFlow(node.layout, heroLayoutDefaults)
+              ? 'sw-hero is-column'
+              : 'sw-hero',
             selectedId,
           )}
           // Hero content stacks vertically unless layout.direction says
           // otherwise (matches the .sw-hero design in App.css).
-          style={layoutStyle(node.layout, 'flex', {
-            direction: 'column',
-            align: 'start',
-          })}
+          style={layoutStyle(node.layout, heroLayoutDefaults)}
           onClick={handleClick}
         >
           {children}
@@ -245,10 +195,14 @@ function Renderer({ node }: { node: unknown }) {
           className={selectableClassName(
             node,
             'container',
-            `sw-columns${node.layout.display === 'flex' ? ' is-flex' : ''}`,
+            `sw-columns${node.layout.display === 'flex' ? ' is-flex' : ''}${
+              isColumnFlow(node.layout, columnsLayoutDefaults)
+                ? ' is-column'
+                : ''
+            }`,
             selectedId,
           )}
-          style={layoutStyle(node.layout)}
+          style={layoutStyle(node.layout, columnsLayoutDefaults)}
           onClick={handleClick}
         >
           {children}

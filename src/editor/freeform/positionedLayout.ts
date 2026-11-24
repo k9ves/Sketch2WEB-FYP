@@ -4,7 +4,7 @@
 import type { ComponentNode } from '../../schema/types'
 import type { FreeformPosition, LayoutPatch } from '../../store/websiteStore'
 import { isContainerType } from '../../store/tree'
-import { readNodeBox } from './canvasLayout'
+import { readLength, readNodeBox } from './canvasLayout'
 import {
   containerContentElement,
   nodeElement,
@@ -33,18 +33,27 @@ const GROWS_DOWNWARD = true
  * wrapper can be stretched far beyond its content (e.g. by a flex row), and
  * that invisible area must stay free for placement.
  */
-function readVisibleFrame(
+export function readVisibleFrame(
   containerId: string,
   excludeNodeId: string | null,
-): ContainerFrame | null {
+):
+  | (ContainerFrame & { flowObstacles: Rect[]; earlierObstacles: Rect[] })
+  | null {
   const frame = readContainerFrame(containerId, excludeNodeId, GROWS_DOWNWARD)
   const content = containerContentElement(containerId)
-  if (!frame || !content) return frame
+  if (!frame) return null
+  if (!content) return { ...frame, flowObstacles: [], earlierObstacles: [] }
 
   const obstacles: Rect[] = []
+  // Children still in flow; they always take the top of the container.
+  const flowObstacles: Rect[] = []
+  // Siblings that come before the excluded node in flow order.
+  const earlierObstacles: Rect[] = []
+  let beforeExcluded = true
   for (const child of Array.from(content.children)) {
     if (!(child instanceof HTMLElement)) continue
     if (excludeNodeId !== null && child.dataset.swNode === excludeNodeId) {
+      beforeExcluded = false
       continue
     }
 
@@ -55,15 +64,19 @@ function readVisibleFrame(
         : child
     const rect = visible.getBoundingClientRect()
     if (rect.width === 0 && rect.height === 0) continue
-    obstacles.push({
+    const obstacle = {
       x: rect.left - frame.origin.x,
       y: rect.top - frame.origin.y,
       width: rect.width,
       height: rect.height,
-    })
+    }
+    obstacles.push(obstacle)
+    if (child.dataset.swPositioned !== 'true') flowObstacles.push(obstacle)
+    if (excludeNodeId !== null && beforeExcluded)
+      earlierObstacles.push(obstacle)
   }
 
-  return { ...frame, obstacles }
+  return { ...frame, obstacles, flowObstacles, earlierObstacles }
 }
 
 /**
@@ -88,10 +101,19 @@ export function freezeFlowSiblings(
 
     // Exact (sub-pixel) values, so nothing shifts even by a pixel.
     const rect = child.getBoundingClientRect()
+    const x = px(rect.left - frame.origin.x)
+    const y = px(rect.top - frame.origin.y)
     patch[id] = {
-      x: px(rect.left - frame.origin.x),
-      y: px(rect.top - frame.origin.y),
+      x,
+      y,
       width: String(Math.ceil(rect.width)),
+      // Where it was pinned. Pushes are always worked out from here, so the
+      // result depends only on the current layout, never on history.
+      pinX: x,
+      pinY: y,
+      // Marks a neighbour pinned automatically (not placed by the user), so
+      // "Return to flow" can bring it back together with the moved node.
+      pinned: 'true',
     }
   }
 
@@ -158,6 +180,8 @@ export function containPositionedChildren(root: HTMLElement): void {
     if (!(content instanceof HTMLElement)) continue
 
     content.style.minHeight = ''
+    const isWrapper = frame.classList.contains('sw-node')
+    if (isWrapper) frame.style.minWidth = ''
     const storedHeight = Number(frame.dataset.swMinHeight) || 0
     const positioned = Array.from(content.children).filter(
       (child): child is HTMLElement =>
@@ -166,6 +190,25 @@ export function containPositionedChildren(root: HTMLElement): void {
     if (positioned.length === 0 && storedHeight === 0) continue
 
     const style = getComputedStyle(content)
+    // Positioned children add nothing to the container's own width, so a
+    // container that sizes to its content (e.g. in a hero column) would
+    // collapse. Keep it as wide as they reach, but never wider than its
+    // parent.
+    if (isWrapper && positioned.length > 0) {
+      // Use the stored extent, not the drawn one: a child capped at 100% would
+      // shrink with the container and the two would collapse together.
+      const right =
+        Math.max(
+          ...positioned.map(
+            (child) =>
+              Number(child.dataset.swRight) ||
+              child.offsetLeft + child.offsetWidth,
+          ),
+        ) +
+        parseFloat(style.borderLeftWidth) +
+        parseFloat(style.borderRightWidth)
+      frame.style.minWidth = `min(${Math.ceil(right)}px, 100%)`
+    }
     const bottom =
       positioned.length === 0
         ? 0
@@ -192,6 +235,32 @@ export function collectCollisionFixes(website: ComponentNode): LayoutPatch {
   return findCollisionFixes(website)
 }
 
+/** True when the rectangles really overlap (touching is fine). */
+function overlaps(a: Rect, b: Rect): boolean {
+  const e = 0.5
+  return (
+    a.x < b.x + b.width - e &&
+    b.x < a.x + a.width - e &&
+    a.y < b.y + b.height - e &&
+    b.y < a.y + a.height - e
+  )
+}
+
+/**
+ * New top for `rect` below every obstacle it overlaps, or null when it
+ * overlaps nothing. Repeats because moving down can reach another obstacle.
+ */
+function pushedDown(rect: Rect, obstacles: readonly Rect[]): number | null {
+  let y = rect.y
+  for (let i = 0; i <= obstacles.length; i += 1) {
+    const hits = obstacles.filter((o) => overlaps({ ...rect, y }, o))
+    if (hits.length === 0)
+      return y === rect.y ? null : Math.round(y * 100) / 100
+    y = Math.max(...hits.map((o) => o.y + o.height))
+  }
+  return Math.round(y * 100) / 100
+}
+
 function findCollisionFixes(website: ComponentNode): LayoutPatch {
   const patch: LayoutPatch = {}
 
@@ -211,6 +280,39 @@ function findCollisionFixes(website: ComponentNode): LayoutPatch {
         y: rect.top - frame.origin.y,
         width: rect.width,
         height: rect.height,
+      }
+
+      // A pinned neighbour keeps its flow spot; flow had no gap rule, so it
+      // only reacts to a real overlap (e.g. the component above it grew) and
+      // then moves straight down, as flow layout would push it.
+      if (child.layout.pinned === 'true') {
+        // Start from where it was pinned (it goes back up when the space
+        // above frees again, as in flow).
+        const home = {
+          ...current,
+          x: readLength(child.layout.pinX) ?? box.x,
+          y: readLength(child.layout.pinY) ?? box.y,
+        }
+        // A narrower container pulls it back inside, like flow would.
+        const maxX = Math.max(0, frame.bounds.width - current.width)
+        const x = Math.round(Math.min(Math.max(home.x, 0), maxX) * 100) / 100
+        // Pushed only by what comes before it in flow: content still in
+        // flow, earlier siblings, or anything starting above it. It never
+        // jumps over a component that was below it.
+        const pushers = frame.obstacles.filter(
+          (o) =>
+            o.y < home.y - 0.5 ||
+            frame.flowObstacles.includes(o) ||
+            frame.earlierObstacles.includes(o),
+        )
+        const y = pushedDown({ ...home, x }, pushers) ?? home.y
+        if (Math.abs(x - current.x) < 0.5 && Math.abs(y - current.y) < 0.5) {
+          continue
+        }
+        patch[child.id] = { x: String(x), y: String(y) }
+        element.style.left = `${x}px`
+        element.style.top = `${y}px`
+        continue
       }
       const outside =
         current.x < -0.5 ||

@@ -37,17 +37,23 @@ function FreeformCanvas() {
     if (!root || isDragging) return
 
     const arrange = () => {
-      shrinkWrapText(root)
-      containPositionedChildren(root)
-      const fixes = collectCollisionFixes(useWebsiteStore.getState().website)
-      if (Object.keys(fixes).length === 0) {
-        fixStreak.current = 0
-        return
+      // A layout bug must never take the whole editor (and the user's work)
+      // down; report it and keep the canvas as it is.
+      try {
+        shrinkWrapText(root)
+        containPositionedChildren(root)
+        const fixes = collectCollisionFixes(useWebsiteStore.getState().website)
+        if (Object.keys(fixes).length === 0) {
+          fixStreak.current = 0
+          return
+        }
+        // Guard against two fixes undoing each other forever.
+        if (fixStreak.current >= MAX_FIX_STREAK) return
+        fixStreak.current += 1
+        setLayouts(fixes, { recordHistory: false })
+      } catch (error) {
+        console.error('Canvas layout pass failed:', error)
       }
-      // Guard against two fixes undoing each other forever.
-      if (fixStreak.current >= MAX_FIX_STREAK) return
-      fixStreak.current += 1
-      setLayouts(fixes, { recordHistory: false })
     }
     arrange()
 

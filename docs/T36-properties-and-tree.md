@@ -77,21 +77,43 @@ browser:
 
 ### Layout (T39)
 
-Read by `layoutStyle()` in `Renderer.tsx`:
+Read by `resolveLayout()` and `layoutStyle()` in `src/renderer/layout.ts`.
+The panel uses the same resolver, so it always shows the value the canvas
+renders (e.g. 2 columns when `columns` is not set).
 
 | Key         | Values                                                            | Types         |
 | ----------- | ----------------------------------------------------------------- | ------------- |
 | `display`   | `grid` \| `flex`                                                  | columns       |
-| `columns`   | 1–6                                                               | columns       |
-| `gap`       | 0–32 (× 0.25rem)                                                  | columns, hero |
+| `columns`   | 1–6 (default 2)                                                   | columns       |
+| `gap`       | 0–32 (× 0.25rem, default 4)                                       | columns, hero |
 | `direction` | `row` \| `column` (hero default: `column`)                        | columns, hero |
-| `align`     | `start` \| `center` \| `end` \| `stretch`                         | columns, hero |
+| `align`     | `start` \| `center` \| `end`                                      | columns, hero |
 | `justify`   | `start` \| `center` \| `end` \| `between` \| `around` \| `evenly` | columns, hero |
 
+`stretch` is not offered: stretched wrappers caused hidden drop blockers, so
+an old `stretch` value is read as `start`. In a grid, `justify` aligns leaf
+components inside their cell; containers keep the full cell width.
+
 Freeform keys (`x`, `y`, `width`, `height`) belong to the canvas. The panel
-shows them read-only ("Free position" or "In flow") and offers one action,
-**Return to flow**: `placeNode(id, parentId, index, null)`. Resizing is out of
-scope.
+shows "Free position" or "In flow" and offers two actions:
+
+An Alt move pins the old neighbours in place and marks them
+`pinned: 'true'`. `children` keeps the original flow order the whole time.
+The moved node remembers its flow place in `flowParent` / `flowIndex`, even
+when it was dropped into another container.
+
+- **Return to flow** on a positioned node: `returnToFlow(id)`. The node goes
+  back to its `flowParent` at `flowIndex`, and its `pinned` neighbours
+  return to their original places. Nodes the user placed with Alt stay free.
+- **Return all to flow** on a container (or the website root) with
+  positioned children: `returnChildrenToFlow(id)`. Children from another
+  container go home first; the rest return in the original order.
+- Both are one undo step and drop the container's pinned `height` once no
+  child is positioned.
+- A node in flow inside a free container shows a hint with a button that
+  selects that container.
+
+Resizing is out of scope.
 
 ## 3. Tree panel (T40)
 
@@ -120,17 +142,18 @@ Existing actions, used as they are:
 | `addNode`, `moveNode`, `setLayouts`          | canvas only                              |
 | `undo`, `redo`                               | Ctrl+Z / Ctrl+Y                          |
 
-Changes needed:
+Changes made:
 
-1. **Removing a key.** `updateNode` can only merge, so a field cannot go back
-   to its default. An empty string is not safe either: `columns: ''` becomes
-   1 column. Add an optional `remove` list:
-   `updateNode(id, { layout: {...}, remove: { layout: ['direction'] } })`.
-   This is backward compatible.
-2. **One undo step per edit.** Text inputs keep a local draft and call
+1. **No `remove` option was needed.** Style "Default" choices write the slot
+   without the token (an empty slot renders nothing), and layout controls
+   always write a real value shown by `resolveLayout`.
+2. **`returnToFlow(id)`** and **`returnChildrenToFlow(containerId)`** clear
+   `x`, `y`, `width`, `pinned`, `flowParent` and `flowIndex` (see Layout
+   in §2).
+3. **One undo step per edit.** Text inputs keep a local draft and call
    `updateNode` on blur or Enter (the same as inline editing), not on every
    keystroke. Selects, toggles and token pickers commit right away.
-3. **`findPath(tree, id)`** in `tree.ts` for the tree panel (pure, tested).
+4. **`findPath(tree, id)`** in `tree.ts` for the tree panel (pure, tested).
 
 Keyboard: shortcuts (Delete, Ctrl+Z) are already ignored while focus is in
 an input, through `isEditableTarget` in `App.tsx`, so panel inputs are safe.
@@ -141,8 +164,11 @@ an input, through `isEditableTarget` in `App.tsx`, so panel inputs are safe.
   `StyleFields`, `LayoutFields`
 - `src/editor/styleTokens.ts`: token lists and `setStyleToken`
 - `src/editor/tree/TreePanel.tsx`
-- Small edits: `websiteStore.ts` (`remove`), `tree.ts` (`findPath`),
-  `App.tsx` (panel slots), `App.css` (`@layer components`)
+- `src/renderer/layout.ts` and `src/renderer/safeHref.ts`: shared by the
+  renderer and the panel
+- Small edits: `websiteStore.ts` (`returnToFlow`, `returnChildrenToFlow`),
+  `positionedLayout.ts` (`pinned`), `tree.ts` (`findPath`), `App.tsx`
+  (panel slots), `App.css` (`@layer components`)
 
 ## 6. Decisions
 

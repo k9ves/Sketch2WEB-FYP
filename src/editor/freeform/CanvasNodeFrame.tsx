@@ -14,28 +14,37 @@ export interface CanvasNodeDragData {
 /** Shared wrapper attributes: flow layout, or absolute when positioned. */
 function frameAttributes(node: ComponentNode, extraClasses: string[] = []) {
   const box = readNodeBox(node)
-  const fullWidth = isContainerType(node.type)
+  const container = isContainerType(node.type)
   const className = [
     'sw-node',
-    isContainerType(node.type) ? 'is-container' : 'is-leaf',
+    container ? 'is-container' : 'is-leaf',
     box ? 'is-positioned' : '',
     ...extraClasses,
   ]
     .filter(Boolean)
     .join(' ')
-  // Leaves hug their content; their stored width is only the wrap limit.
+
+  // Leaves hug their content (their stored width is only the wrap limit);
+  // positioned containers keep their stored width. Nothing gets wider than
+  // its container (e.g. when a scrollbar appears and the canvas gets
+  // narrower).
   const style: CSSProperties | undefined = box
-    ? fullWidth
-      ? { left: box.x, top: box.y, width: box.width }
-      : { left: box.x, top: box.y, maxWidth: box.width }
+    ? container
+      ? { left: box.x, top: box.y, width: box.width, maxWidth: '100%' }
+      : { left: box.x, top: box.y, maxWidth: `min(${box.width}px, 100%)` }
     : undefined
 
   return {
     className,
     style,
     'data-sw-positioned': box ? 'true' : undefined,
+    // Right edge it is meant to reach; the container keeps this much width
+    // (see containPositionedChildren), whatever it is drawn at right now.
+    'data-sw-right': box ? box.x + box.width : undefined,
+    // Neighbour pinned automatically by an Alt move (see positionedLayout).
+    'data-sw-pinned': box && node.layout.pinned === 'true' ? 'true' : undefined,
     // Minimum height kept for containers whose content was pinned in place.
-    'data-sw-min-height': isContainerType(node.type)
+    'data-sw-min-height': container
       ? (readLength(node.layout.height) ?? undefined)
       : undefined,
   }

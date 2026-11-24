@@ -405,11 +405,25 @@ function FreeformDndProvider({ children }: { children: ReactNode }) {
     const index = parent.id === container.id ? currentIndex : others.length
     // Leaving the flow would close the gap and shift the old neighbours, so
     // pin them where they are (measured before anything changes).
-    const pinned =
-      current.node.layout.x === undefined
-        ? freezeFlowSiblings(parent.id, nodeId)
-        : {}
-    placeNode(nodeId, container.id, index, drop.position, pinned)
+    const leavesFlow = current.node.layout.x === undefined
+    const pinned = leavesFlow ? freezeFlowSiblings(parent.id, nodeId) : {}
+    // Remember where the node sat in flow, so "Return to flow" can put it
+    // back there even after it moved to another container.
+    // A pinned neighbour still sits at its flow index, so the same applies.
+    const { flowParent, flowIndex, pinned: wasPinned } = current.node.layout
+    const home =
+      leavesFlow || wasPinned === 'true'
+        ? { flowParent: parent.id, flowIndex: String(currentIndex) }
+        : flowParent !== undefined && flowIndex !== undefined
+          ? { flowParent, flowIndex }
+          : undefined
+    placeNode(
+      nodeId,
+      container.id,
+      index,
+      drop.position,
+      home ? { ...pinned, [nodeId]: home } : pinned,
+    )
   }
 
   return (

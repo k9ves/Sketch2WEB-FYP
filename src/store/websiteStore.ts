@@ -6,6 +6,7 @@ import { liftContainerText } from './containerText'
 import {
   addNode as addNodeToTree,
   findParent,
+  isContainerType,
   findNode,
   moveNode as moveNodeInTree,
   removeNode as removeNodeFromTree,
@@ -26,7 +27,19 @@ export interface FreeformPosition {
   width: number
 }
 
-const positionKeys = ['x', 'y', 'width'] as const
+// `pinned` marks a neighbour pinned automatically by an Alt move.
+// `flowParent` / `flowIndex` remember where a freely placed node sat in flow.
+// Any explicit placement or return to flow clears them.
+const positionKeys = [
+  'x',
+  'y',
+  'width',
+  'pinned',
+  'pinX',
+  'pinY',
+  'flowParent',
+  'flowIndex',
+] as const
 
 interface HistoryEntry {
   website: WebsiteDocument
@@ -56,6 +69,10 @@ interface WebsiteState {
     layouts: LayoutPatch,
     options?: { recordHistory?: boolean },
   ) => void
+  /** Puts a node, and neighbours pinned with it, back into flow. */
+  returnToFlow: (id: string) => void
+  /** Puts every child of a container back into flow layout (one undo step). */
+  returnChildrenToFlow: (containerId: string) => void
   undo: () => void
   redo: () => void
 }
@@ -121,6 +138,86 @@ function applyLayoutPatch(
       layout: { ...node.layout, ...layout },
     }))
   }, tree)
+}
+
+/**
+ * Puts the matching children of a container back into flow. They keep their
+ * place in `children`, which is still the original flow order. The
+ * container's pinned height goes once no child is positioned.
+ */
+function returnToFlowIn(
+  website: WebsiteDocument,
+  containerId: string,
+  matches: (child: ComponentNode) => boolean,
+): WebsiteDocument {
+  const container = findNode(website, containerId)
+  if (!container) throw new Error(`Cannot find container "${containerId}".`)
+
+  const children = container.children.map((child) =>
+    matches(child)
+      ? { ...child, layout: withPosition(child.layout, null) }
+      : child,
+  )
+  const layout = { ...container.layout }
+  if (children.every((child) => child.layout.x === undefined)) {
+    delete layout.height
+  }
+
+  const next = updateTree(website, containerId, (node) => ({
+    ...node,
+    layout,
+    children,
+  }))
+  if (!isWebsiteDocument(next)) {
+    throw new Error(
+      'Returning components to flow produced an invalid website document.',
+    )
+  }
+  return next
+}
+
+/**
+ * Returns a node to flow at the container and index it had before it was
+ * placed freely (`flowParent` / `flowIndex`), when that container is still
+ * valid; otherwise in its current container. Neighbours pinned by the same
+ * Alt move come back too, so the flow looks as it did before. Nodes the user
+ * placed stay where they are.
+ */
+function sendHome(website: WebsiteDocument, id: string): WebsiteDocument {
+  const node = findNode(website, id)
+  const parent = findParent(website, id)
+  if (!node || !parent) {
+    throw new Error(`Cannot return "${id}" to flow: node not found.`)
+  }
+
+  const home =
+    node.layout.flowParent !== undefined
+      ? findNode(website, node.layout.flowParent)
+      : undefined
+  let tree: ComponentNode = website
+  let containerId = parent.id
+  if (
+    home !== undefined &&
+    isContainerType(home.type) &&
+    findNode(node, home.id) === undefined
+  ) {
+    const others = home.children.filter((child) => child.id !== id)
+    const wanted = Number(node.layout.flowIndex)
+    const index = Number.isInteger(wanted)
+      ? Math.min(Math.max(0, wanted), others.length)
+      : others.length
+    tree = moveNodeInTree(tree, id, home.id, index)
+    containerId = home.id
+  }
+  if (!isWebsiteDocument(tree)) {
+    throw new Error('Returning to flow produced an invalid website document.')
+  }
+
+  return returnToFlowIn(
+    tree,
+    containerId,
+    (child) => child.id === id || child.layout.pinned === 'true',
+  )
 }
 
 function cloneNodeWithNewIds(node: ComponentNode): ComponentNode {
@@ -311,6 +408,29 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
         ? { website }
         : recordChange(state, website)
     }),
+  returnToFlow: (id) =>
+    set((state) => {
+      return recordChange(state, sendHome(state.website, id), id)
+    }),
+  returnChildrenToFlow: (containerId) =>
+    set((state) => {
+      const container = findNode(state.website, containerId)
+      if (!container) {
+        throw new Error(`Cannot find container "${containerId}".`)
+      }
+      // Children that came from another container go back there first.
+      const visitors = container.children.filter(
+        (child) =>
+          child.layout.flowParent !== undefined &&
+          child.layout.flowParent !== containerId,
+      )
+      const tree = visitors.reduce<WebsiteDocument>(
+        (current, child) => sendHome(current, child.id),
+        state.website,
+      )
+      const website = returnToFlowIn(tree, containerId, () => true)
+      return recordChange(state, website)
+    }),
   undo: () =>
     set((state) => {
       const previous = state.past[state.past.length - 1]
@@ -342,3 +462,9 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
       }
     }),
 }))
+
+// Development only: a hot update of this module would create a second store
+// while some components keep the old one, so reload the page instead.
+if (import.meta.hot) {
+  import.meta.hot.accept(() => window.location.reload())
+}
