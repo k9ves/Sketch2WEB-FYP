@@ -11,6 +11,8 @@ import PropertiesPanel from './editor/properties/PropertiesPanel'
 import TreePanel from './editor/tree/TreePanel'
 import ThemePicker from './editor/ThemePicker'
 import StartScreen from './editor/StartScreen'
+import TemplateGallery from './editor/TemplateGallery'
+import type { WebsiteTemplate } from './templates'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
@@ -27,7 +29,7 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 type SidebarTab = 'components' | 'layers'
 
-type Screen = 'start' | 'editor'
+type Screen = 'start' | 'gallery' | 'editor'
 
 type Device = 'desktop' | 'tablet' | 'mobile'
 
@@ -146,9 +148,24 @@ function App() {
     setWebsite(sample)
   }
 
+  function openTemplate(template: WebsiteTemplate) {
+    setWebsite(template.website)
+    // The sample picker shows "Template" until a sample is chosen.
+    setSampleName('')
+    setScreen('editor')
+  }
+
   if (screen === 'start') {
-    // The template gallery (T46) will sit between these two screens.
-    return <StartScreen onChooseTemplate={() => setScreen('editor')} />
+    return <StartScreen onChooseTemplate={() => setScreen('gallery')} />
+  }
+
+  if (screen === 'gallery') {
+    return (
+      <TemplateGallery
+        onBack={() => setScreen('start')}
+        onSelect={openTemplate}
+      />
+    )
   }
 
   return (
@@ -185,6 +202,11 @@ function App() {
               value={sampleName}
               onChange={(event) => changeSample(event.target.value)}
             >
+              {sampleName === '' && (
+                <option value="" disabled>
+                  Template
+                </option>
+              )}
               <option value="landing">Landing page</option>
               <option value="portfolio">Portfolio</option>
               <option value="blog">Blog</option>

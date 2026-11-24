@@ -76,7 +76,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 - [x] **T44** Templates folder (5 templates as JSON). — _Done when:_ 5 valid files.
 - [x] **T45** Start screen: choose Template / Sketch. — _Done when:_ 2 cards shown (Sketch disabled for now).
-- [ ] **T46** Template gallery with preview thumbnails. — _Done when:_ click opens template in editor.
+- [x] **T46** Template gallery with preview thumbnails. — _Done when:_ click opens template in editor.
 - [ ] **T47** Save/load project as JSON (download and upload). — _Done when:_ reload restores same website. **(Milestone: First end-to-end, Template → Editor)**
 
 ## M9 — Code generator (Week 8-11)
