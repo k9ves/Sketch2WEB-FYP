@@ -68,14 +68,14 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 ## M7 — Preview and responsive (Week 7)
 
-- [ ] **T41** Preview mode (no outlines, no editing). — _Done when:_ toggle works.
+- [x] **T41** Preview mode (no outlines, no editing). — _Done when:_ toggle works.
 - [ ] **T42** Device switch: desktop / tablet / mobile width. — _Done when:_ canvas width changes.
 - [ ] **T43** Responsive classes in renderer (`md:`, `lg:` support). — _Done when:_ columns stack on mobile.
 
 ## M8 — Template input (Week 8)
 
 - [ ] **T44** Templates folder (5 templates as JSON). — _Done when:_ 5 valid files.
-- [ ] **T45** Start screen: choose Template / Sketch / Prompt. — _Done when:_ 3 cards shown (Sketch and Prompt disabled for now).
+- [ ] **T45** Start screen: choose Template / Sketch. — _Done when:_ 2 cards shown (Sketch disabled for now).
 - [ ] **T46** Template gallery with preview thumbnails. — _Done when:_ click opens template in editor.
 - [ ] **T47** Save/load project as JSON (download and upload). — _Done when:_ reload restores same website. **(Milestone: First end-to-end, Template → Editor)**
 
@@ -105,13 +105,13 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [ ] **T63** Layout ordering (top-to-bottom, columns by x-position). — _Done when:_ order matches sketch.
 - [ ] **T64** Show result in editor, allow fixing wrong detections. — _Done when:_ full flow Sketch → Editor works. **(Milestone: Sketch input)**
 
-## M12 — AI integration hooks (Week 14-18)
+## M12 — AI Component Recommendation System (Week 14-18)
 
-- [ ] **T65** Define the API contract: request/response JSON. — _Done when:_ written and reviewed.
-- [ ] **T66** Prompt box UI, calls a mock endpoint returning sample JSON. — _Done when:_ prompt gives a website.
-- [ ] **T67** Validate AI JSON against schema, show friendly error if invalid. — _Done when:_ bad JSON never crashes.
-- [ ] **T68** Component-level AI edit: select component → instruction box → replace only that node. — _Done when:_ other components unchanged.
-- [ ] **T69** Connect to the selected real model API. — _Done when:_ real prompt works.
+- [ ] **T65** Define the recommendation criteria and API contract (request/response JSON). — _Done when:_ the system's inputs, outputs, and recommendation rules are documented and reviewed.
+- [ ] **T66** Prepare a component recommendation dataset or knowledge base using the available component library. — _Done when:_ components have clear names, categories, descriptions, and suitable-use information.
+- [ ] **T67** Build the recommendation logic to analyze the selected component or current website section and suggest relevant components. — _Done when:_ the system returns suitable component recommendations for sample cases.
+- [ ] **T68** Create the recommendation panel in the editor and allow users to add a suggested component to the canvas. — _Done when:_ selecting a recommendation inserts the correct component into the website.
+- [ ] **T69** Test and refine recommendation relevance, schema validation, and error handling. — _Done when:_ recommendations are relevant, valid, and failures do not crash the editor. **(Milestone: AI component recommendation complete)**
 
 ## M13 — Polish, testing, docs (Week 19-24)
 

@@ -1,9 +1,10 @@
 # Sketch2Web
 
 Sketch2Web is a React + TypeScript visual website builder. Users will start from
-a template, a hand-drawn sketch, or a natural-language prompt. All inputs must
-be represented by the shared component tree; AI integrations return structured
-component data, never raw HTML or CSS.
+a template or a hand-drawn sketch. All inputs must be represented by the shared
+component tree. An AI component recommendation system suggests components for
+the selected component or section; it returns structured component data, never
+raw HTML or CSS.
 
 ## Project conventions
 
