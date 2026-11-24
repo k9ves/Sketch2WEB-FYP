@@ -1,0 +1,584 @@
+{
+  "id": "blog-website",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "The Daily Draft — Blog"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white"
+  },
+  "children": [
+    {
+      "id": "blog-navbar",
+      "type": "navbar",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "blog-brand",
+          "type": "button",
+          "content": {
+            "text": "The Daily Draft",
+            "href": "#top"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-brand"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-nav-articles",
+          "type": "button",
+          "content": {
+            "text": "Articles",
+            "href": "#latest"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-nav-topics",
+          "type": "button",
+          "content": {
+            "text": "Topics",
+            "href": "#topics"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-nav-newsletter",
+          "type": "button",
+          "content": {
+            "text": "Newsletter",
+            "href": "#newsletter"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "blog-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "gap": "5"
+      },
+      "style": {},
+      "children": [
+        {
+          "id": "blog-hero-eyebrow",
+          "type": "text",
+          "content": {
+            "text": "Featured story"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-amber-600 text-sm font-semibold"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-hero-title",
+          "type": "heading",
+          "content": {
+            "text": "How small daily habits build big careers",
+            "level": "1"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-title text-5xl"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-hero-text",
+          "type": "text",
+          "content": {
+            "text": "What we learned from twenty developers who grew from interns to team leads, one tiny habit at a time."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-description"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-hero-cta",
+          "type": "button",
+          "content": {
+            "text": "Read the story",
+            "href": "#latest"
+          },
+          "layout": {},
+          "style": {
+            "button": "rounded-lg"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-hero-image",
+          "type": "image",
+          "content": {
+            "src": "/templates/blog/featured.svg",
+            "alt": "A laptop and coffee on a wooden desk"
+          },
+          "layout": {},
+          "style": {
+            "image": "rounded-2xl shadow-lg"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "blog-latest",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "blog-latest-title",
+          "type": "heading",
+          "content": {
+            "text": "Latest articles",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-latest-text",
+          "type": "text",
+          "content": {
+            "text": "Fresh ideas on design, code and working better."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-latest-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "blog-post-focus",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "blog-post-focus-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/blog/post-focus.svg",
+                    "alt": "Cover for Deep work in a noisy office"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-focus-tag",
+                  "type": "text",
+                  "content": {
+                    "text": "Productivity"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs font-semibold text-indigo-600"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-focus-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Deep work in a noisy office",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-focus-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Simple rules that protect your best hours."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-focus-meta",
+                  "type": "text",
+                  "content": {
+                    "text": "6 min read · Nov 2026"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs text-slate-600"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "blog-post-css",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "blog-post-css-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/blog/post-css.svg",
+                    "alt": "Cover for Modern CSS layouts in 10 minutes"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-css-tag",
+                  "type": "text",
+                  "content": {
+                    "text": "Frontend"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs font-semibold text-indigo-600"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-css-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Modern CSS layouts in 10 minutes",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-css-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Grid and flexbox explained with one example."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-css-meta",
+                  "type": "text",
+                  "content": {
+                    "text": "9 min read · Nov 2026"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs text-slate-600"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "blog-post-review",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "blog-post-review-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/blog/post-review.svg",
+                    "alt": "Cover for Code reviews people actually like"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-review-tag",
+                  "type": "text",
+                  "content": {
+                    "text": "Teamwork"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs font-semibold text-indigo-600"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-review-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Code reviews people actually like",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-review-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Kind, short and useful feedback in practice."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "blog-post-review-meta",
+                  "type": "text",
+                  "content": {
+                    "text": "5 min read · Oct 2026"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-xs text-slate-600"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blog-topics",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "blog-topics-title",
+          "type": "heading",
+          "content": {
+            "text": "Browse topics",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-topics-list",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "gap": "3"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "blog-topic-design",
+              "type": "button",
+              "content": {
+                "text": "Design",
+                "href": "#design"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-full font-medium"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-topic-frontend",
+              "type": "button",
+              "content": {
+                "text": "Frontend",
+                "href": "#frontend"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-full font-medium"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-topic-career",
+              "type": "button",
+              "content": {
+                "text": "Career",
+                "href": "#career"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-full font-medium"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-topic-teamwork",
+              "type": "button",
+              "content": {
+                "text": "Teamwork",
+                "href": "#teamwork"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-full font-medium"
+              },
+              "children": []
+            },
+            {
+              "id": "blog-topic-tools",
+              "type": "button",
+              "content": {
+                "text": "Tools",
+                "href": "#tools"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-full font-medium"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blog-newsletter",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-indigo-50 p-12 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "blog-newsletter-title",
+          "type": "heading",
+          "content": {
+            "text": "Get one good article every week",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-newsletter-text",
+          "type": "text",
+          "content": {
+            "text": "No spam, no noise. Just our best writing, every Friday."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "blog-newsletter-cta",
+          "type": "button",
+          "content": {
+            "text": "Subscribe for free",
+            "href": "#subscribe"
+          },
+          "layout": {},
+          "style": {
+            "button": "rounded-lg shadow-md"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "blog-footer",
+      "type": "footer",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "blog-footer-text",
+          "type": "text",
+          "content": {
+            "text": "© 2026 The Daily Draft. Written by people who love to learn."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-footer-text"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

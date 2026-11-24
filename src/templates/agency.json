@@ -1,0 +1,781 @@
+{
+  "id": "agency-website",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Brightline Studio — Creative agency"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white"
+  },
+  "children": [
+    {
+      "id": "agency-navbar",
+      "type": "navbar",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "agency-brand",
+          "type": "button",
+          "content": {
+            "text": "Brightline Studio",
+            "href": "#top"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-brand"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-nav-services",
+          "type": "button",
+          "content": {
+            "text": "Services",
+            "href": "#services"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-nav-team",
+          "type": "button",
+          "content": {
+            "text": "Team",
+            "href": "#team"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-nav-clients",
+          "type": "button",
+          "content": {
+            "text": "Clients",
+            "href": "#clients"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-nav-contact",
+          "type": "button",
+          "content": {
+            "text": "Start a project",
+            "href": "#contact"
+          },
+          "layout": {},
+          "style": {
+            "button": "bg-slate-900 text-white rounded-lg"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "agency-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "gap": "6"
+      },
+      "style": {},
+      "children": [
+        {
+          "id": "agency-hero-eyebrow",
+          "type": "text",
+          "content": {
+            "text": "Brand · Web · Growth"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-emerald-600 text-sm font-semibold"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-hero-title",
+          "type": "heading",
+          "content": {
+            "text": "We build brands people remember",
+            "level": "1"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-title"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-hero-text",
+          "type": "text",
+          "content": {
+            "text": "A small senior team that turns your idea into a sharp brand, a fast website and a plan to grow."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-description"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-hero-actions",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "gap": "3"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "agency-hero-primary",
+              "type": "button",
+              "content": {
+                "text": "Start a project",
+                "href": "#contact"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-900 rounded-lg"
+              },
+              "children": []
+            },
+            {
+              "id": "agency-hero-secondary",
+              "type": "button",
+              "content": {
+                "text": "See our services",
+                "href": "#services"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-lg"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "agency-hero-image",
+          "type": "image",
+          "content": {
+            "src": "/templates/agency/hero.svg",
+            "alt": "Colourful abstract shapes"
+          },
+          "layout": {},
+          "style": {
+            "image": "rounded-2xl"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "agency-services",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "agency-services-title",
+          "type": "heading",
+          "content": {
+            "text": "What we do",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-services-text",
+          "type": "text",
+          "content": {
+            "text": "Everything you need to launch and grow, under one roof."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-services-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "agency-service-brand",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "agency-service-brand-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/icon-brand.svg",
+                    "alt": "Brand identity icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "agency-service-brand-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Brand identity",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-service-brand-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Names, logos and a visual language that fits your story."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-service-web",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "agency-service-web-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/icon-web.svg",
+                    "alt": "Websites icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "agency-service-web-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Websites",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-service-web-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Fast, accessible websites that are easy to update."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-service-growth",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "agency-service-growth-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/icon-growth.svg",
+                    "alt": "Growth icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "agency-service-growth-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Growth",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-service-growth-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Campaigns and content that bring the right people in."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agency-clients",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-slate-900 p-12 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "agency-clients-title",
+          "type": "heading",
+          "content": {
+            "text": "What clients say",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title text-white"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-clients-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "2",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "agency-quote-1",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-slate-800 rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-quote-1-text",
+                  "type": "text",
+                  "content": {
+                    "text": "“Brightline gave us a brand we are proud of and a website that finally converts.”"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg text-white"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-quote-1-name",
+                  "type": "text",
+                  "content": {
+                    "text": "Sara Ahmed, Founder of Leafy"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text text-slate-400 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-quote-2",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-slate-800 rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-quote-2-text",
+                  "type": "text",
+                  "content": {
+                    "text": "“Clear process, honest advice and beautiful work, delivered on time.”"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg text-white"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-quote-2-name",
+                  "type": "text",
+                  "content": {
+                    "text": "James Wong, CEO of Harbor"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text text-slate-400 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agency-team",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "agency-team-title",
+          "type": "heading",
+          "content": {
+            "text": "Meet the team",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-team-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "4",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "agency-team-ali",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-team-ali-photo",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/team-ali.svg",
+                    "alt": "Illustrated portrait of Ali Raza"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-full"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-ali-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Ali Raza",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-ali-role",
+                  "type": "text",
+                  "content": {
+                    "text": "Creative director"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-team-noor",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-team-noor-photo",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/team-noor.svg",
+                    "alt": "Illustrated portrait of Noor Fatima"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-full"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-noor-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Noor Fatima",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-noor-role",
+                  "type": "text",
+                  "content": {
+                    "text": "Lead designer"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-team-daniel",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-team-daniel-photo",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/team-daniel.svg",
+                    "alt": "Illustrated portrait of Daniel Park"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-full"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-daniel-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Daniel Park",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-daniel-role",
+                  "type": "text",
+                  "content": {
+                    "text": "Web developer"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "agency-team-hira",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "agency-team-hira-photo",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/agency/team-hira.svg",
+                    "alt": "Illustrated portrait of Hira Malik"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-full"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-hira-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Hira Malik",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "agency-team-hira-role",
+                  "type": "text",
+                  "content": {
+                    "text": "Growth strategist"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agency-contact",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-emerald-600 p-12 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "agency-contact-title",
+          "type": "heading",
+          "content": {
+            "text": "Have a project in mind?",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title text-white"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-contact-text",
+          "type": "text",
+          "content": {
+            "text": "Tell us about it. We reply within one working day."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description text-white"
+          },
+          "children": []
+        },
+        {
+          "id": "agency-contact-cta",
+          "type": "button",
+          "content": {
+            "text": "Email the studio",
+            "href": "mailto:studio@example.com"
+          },
+          "layout": {},
+          "style": {
+            "button": "bg-white text-slate-900 rounded-lg font-bold"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "agency-footer",
+      "type": "footer",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "agency-footer-text",
+          "type": "text",
+          "content": {
+            "text": "© 2026 Brightline Studio. All rights reserved."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-footer-text"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,690 @@
+{
+  "id": "portfolio-website",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Sana Rahim — Product designer"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white"
+  },
+  "children": [
+    {
+      "id": "portfolio-navbar",
+      "type": "navbar",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "portfolio-brand",
+          "type": "button",
+          "content": {
+            "text": "Sana Rahim",
+            "href": "#top"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-brand"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-nav-work",
+          "type": "button",
+          "content": {
+            "text": "Work",
+            "href": "#work"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-nav-about",
+          "type": "button",
+          "content": {
+            "text": "About",
+            "href": "#about"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-nav-contact",
+          "type": "button",
+          "content": {
+            "text": "Contact",
+            "href": "#contact"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "portfolio-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "portfolio-hero-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "2",
+            "gap": "10",
+            "align": "center",
+            "justify": "center"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "portfolio-hero-intro",
+              "type": "section",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "p-0"
+              },
+              "children": [
+                {
+                  "id": "portfolio-hero-eyebrow",
+                  "type": "text",
+                  "content": {
+                    "text": "Product designer · Lahore"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-indigo-600 text-sm font-semibold"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-hero-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "I design simple apps people enjoy using",
+                    "level": "1"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-hero-title text-5xl"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-hero-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Seven years of turning messy problems into clear, friendly interfaces for startups and global brands."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-hero-description"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-hero-cta",
+                  "type": "button",
+                  "content": {
+                    "text": "See my work",
+                    "href": "#work"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "rounded-lg shadow-md"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-hero-photo",
+              "type": "image",
+              "content": {
+                "src": "/templates/portfolio/portrait.svg",
+                "alt": "Illustrated portrait of Sana"
+              },
+              "layout": {},
+              "style": {
+                "image": "rounded-full shadow-lg"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portfolio-work",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "portfolio-work-title",
+          "type": "heading",
+          "content": {
+            "text": "Selected work",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-work-text",
+          "type": "text",
+          "content": {
+            "text": "A few projects I am proud of."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-work-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "2",
+            "gap": "8"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "portfolio-work-banking",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "portfolio-work-banking-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/portfolio/project-banking.svg",
+                    "alt": "Pocket banking app preview"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-banking-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Pocket banking app",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-banking-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Redesigned onboarding and payments, raising sign-up completion by 38%."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-banking-link",
+                  "type": "button",
+                  "content": {
+                    "text": "View case study →",
+                    "href": "#contact"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "sw-nav-link text-indigo-600 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-work-health",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "portfolio-work-health-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/portfolio/project-health.svg",
+                    "alt": "Clinic booking website preview"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-health-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Clinic booking website",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-health-text",
+                  "type": "text",
+                  "content": {
+                    "text": "A calm booking flow that cut support calls in half."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-health-link",
+                  "type": "button",
+                  "content": {
+                    "text": "View case study →",
+                    "href": "#contact"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "sw-nav-link text-indigo-600 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-work-travel",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "portfolio-work-travel-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/portfolio/project-travel.svg",
+                    "alt": "Travel planner preview"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-travel-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Travel planner",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-travel-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Trip planning for groups, with shared lists and budgets."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-travel-link",
+                  "type": "button",
+                  "content": {
+                    "text": "View case study →",
+                    "href": "#contact"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "sw-nav-link text-indigo-600 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-work-saas",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "portfolio-work-saas-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/portfolio/project-saas.svg",
+                    "alt": "Analytics dashboard preview"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-saas-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Analytics dashboard",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-saas-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Complex data made readable for non-technical teams."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-work-saas-link",
+                  "type": "button",
+                  "content": {
+                    "text": "View case study →",
+                    "href": "#contact"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "sw-nav-link text-indigo-600 font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portfolio-about",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-amber-50 p-12 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "portfolio-about-title",
+          "type": "heading",
+          "content": {
+            "text": "About me",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-about-text",
+          "type": "text",
+          "content": {
+            "text": "I work closely with engineers and founders, from first sketch to shipped product. Outside work I teach design basics to students and sketch street food."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-stats",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "portfolio-stat-years",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "portfolio-stat-years-value",
+                  "type": "heading",
+                  "content": {
+                    "text": "7+",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-stat-years-label",
+                  "type": "text",
+                  "content": {
+                    "text": "Years of experience"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-stat-projects",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "portfolio-stat-projects-value",
+                  "type": "heading",
+                  "content": {
+                    "text": "40",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-stat-projects-label",
+                  "type": "text",
+                  "content": {
+                    "text": "Products shipped"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "portfolio-stat-clients",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-none"
+              },
+              "children": [
+                {
+                  "id": "portfolio-stat-clients-value",
+                  "type": "heading",
+                  "content": {
+                    "text": "25",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "portfolio-stat-clients-label",
+                  "type": "text",
+                  "content": {
+                    "text": "Happy clients"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portfolio-contact",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "portfolio-contact-title",
+          "type": "heading",
+          "content": {
+            "text": "Let’s work together",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-contact-text",
+          "type": "text",
+          "content": {
+            "text": "Have a project in mind? I usually reply within a day."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "portfolio-contact-cta",
+          "type": "button",
+          "content": {
+            "text": "hello@example.com",
+            "href": "mailto:hello@example.com"
+          },
+          "layout": {},
+          "style": {
+            "button": "rounded-lg"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "portfolio-footer",
+      "type": "footer",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "portfolio-footer-text",
+          "type": "text",
+          "content": {
+            "text": "© 2026 Sana Rahim. Designed with Sketch2Web."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-footer-text"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

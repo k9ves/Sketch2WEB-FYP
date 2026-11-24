@@ -1,0 +1,785 @@
+{
+  "id": "saas-website",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Flowbase — Startup landing page"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white"
+  },
+  "children": [
+    {
+      "id": "saas-navbar",
+      "type": "navbar",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "saas-brand",
+          "type": "button",
+          "content": {
+            "text": "Flowbase",
+            "href": "#top"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-brand"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-nav-features",
+          "type": "button",
+          "content": {
+            "text": "Features",
+            "href": "#features"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-nav-pricing",
+          "type": "button",
+          "content": {
+            "text": "Pricing",
+            "href": "#pricing"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-nav-faq",
+          "type": "button",
+          "content": {
+            "text": "Customers",
+            "href": "#customers"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-nav-cta",
+          "type": "button",
+          "content": {
+            "text": "Get started",
+            "href": "#signup"
+          },
+          "layout": {},
+          "style": {
+            "button": "text-white rounded-lg"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "saas-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "align": "center",
+        "gap": "6"
+      },
+      "style": {},
+      "children": [
+        {
+          "id": "saas-hero-eyebrow",
+          "type": "text",
+          "content": {
+            "text": "New: automated workflows"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-indigo-600 text-sm font-semibold"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-hero-title",
+          "type": "heading",
+          "content": {
+            "text": "Ship your product faster with less busywork",
+            "level": "1"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-title"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-hero-text",
+          "type": "text",
+          "content": {
+            "text": "Flowbase brings tasks, docs and releases into one calm workspace, so your team spends time building instead of chasing updates."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-description"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-hero-actions",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "gap": "3",
+            "justify": "center"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "saas-hero-primary",
+              "type": "button",
+              "content": {
+                "text": "Start free trial",
+                "href": "#signup"
+              },
+              "layout": {},
+              "style": {
+                "button": "rounded-lg shadow-md"
+              },
+              "children": []
+            },
+            {
+              "id": "saas-hero-secondary",
+              "type": "button",
+              "content": {
+                "text": "Book a demo",
+                "href": "#demo"
+              },
+              "layout": {},
+              "style": {
+                "button": "bg-slate-100 text-slate-900 rounded-lg"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "saas-hero-image",
+          "type": "image",
+          "content": {
+            "src": "/templates/saas/dashboard.svg",
+            "alt": "Flowbase dashboard with charts and tasks"
+          },
+          "layout": {},
+          "style": {
+            "image": "rounded-2xl shadow-xl"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "saas-features",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "saas-features-title",
+          "type": "heading",
+          "content": {
+            "text": "Everything your team needs",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-features-text",
+          "type": "text",
+          "content": {
+            "text": "Plan, build and launch in one place. No more switching between ten tools."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-features-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "saas-feature-speed",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-feature-speed-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/saas/icon-speed.svg",
+                    "alt": "Fast by default icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-speed-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Fast by default",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-speed-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Pages load in a blink and updates sync in real time across the whole team."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "saas-feature-secure",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-feature-secure-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/saas/icon-secure.svg",
+                    "alt": "Secure and private icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-secure-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Secure and private",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-secure-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Role-based access, audit logs and encrypted data keep your work safe."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "saas-feature-insights",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-feature-insights-icon",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/saas/icon-insights.svg",
+                    "alt": "Clear insights icon"
+                  },
+                  "layout": {},
+                  "style": {},
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-insights-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Clear insights",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-feature-insights-text",
+                  "type": "text",
+                  "content": {
+                    "text": "See progress at a glance with dashboards that build themselves."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saas-pricing",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-slate-50 p-12 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "saas-pricing-title",
+          "type": "heading",
+          "content": {
+            "text": "Simple, honest pricing",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-pricing-text",
+          "type": "text",
+          "content": {
+            "text": "Start free and upgrade when your team grows. Cancel any time."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-pricing-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "saas-plan-starter",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-plan-starter-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Starter",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-starter-price",
+                  "type": "heading",
+                  "content": {
+                    "text": "$0",
+                    "level": "4"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-starter-text",
+                  "type": "text",
+                  "content": {
+                    "text": "For side projects and small teams getting started."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-starter-cta",
+                  "type": "button",
+                  "content": {
+                    "text": "Start free",
+                    "href": "#signup"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "rounded-lg"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "saas-plan-pro",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-indigo-600 rounded-2xl shadow-xl"
+              },
+              "children": [
+                {
+                  "id": "saas-plan-pro-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Pro",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title text-white"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-pro-price",
+                  "type": "heading",
+                  "content": {
+                    "text": "$19",
+                    "level": "4"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-white"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-pro-text",
+                  "type": "text",
+                  "content": {
+                    "text": "For growing teams that need automation and reports."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text text-white"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-pro-cta",
+                  "type": "button",
+                  "content": {
+                    "text": "Try Pro",
+                    "href": "#signup"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "bg-white text-indigo-600 rounded-lg"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "saas-plan-team",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-2xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-plan-team-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Business",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-team-price",
+                  "type": "heading",
+                  "content": {
+                    "text": "$49",
+                    "level": "4"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-4xl font-extrabold text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-team-text",
+                  "type": "text",
+                  "content": {
+                    "text": "For companies with advanced security needs."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-plan-team-cta",
+                  "type": "button",
+                  "content": {
+                    "text": "Contact sales",
+                    "href": "#signup"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "rounded-lg"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saas-customers",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "saas-customers-title",
+          "type": "heading",
+          "content": {
+            "text": "Loved by busy teams",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-customers-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "2",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "saas-quote-1",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-quote-1-text",
+                  "type": "text",
+                  "content": {
+                    "text": "“We replaced four tools with Flowbase and our releases went from monthly to weekly.”"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-quote-1-name",
+                  "type": "text",
+                  "content": {
+                    "text": "Maya Chen, Head of Product"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "saas-quote-2",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "saas-quote-2-text",
+                  "type": "text",
+                  "content": {
+                    "text": "“Setup took one afternoon. The automations alone save us hours every week.”"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg text-slate-900"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "saas-quote-2-name",
+                  "type": "text",
+                  "content": {
+                    "text": "Omar Siddiqui, CTO"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saas-cta",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {
+        "container": "bg-slate-900 p-16 rounded-2xl"
+      },
+      "children": [
+        {
+          "id": "saas-cta-title",
+          "type": "heading",
+          "content": {
+            "text": "Ready to move faster?",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title text-white"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-cta-text",
+          "type": "text",
+          "content": {
+            "text": "Join thousands of teams who plan and ship with Flowbase."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description text-slate-400"
+          },
+          "children": []
+        },
+        {
+          "id": "saas-cta-button",
+          "type": "button",
+          "content": {
+            "text": "Start your free trial",
+            "href": "#signup"
+          },
+          "layout": {},
+          "style": {
+            "button": "bg-amber-500 text-slate-900 rounded-lg font-bold"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "saas-footer",
+      "type": "footer",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "saas-footer-text",
+          "type": "text",
+          "content": {
+            "text": "© 2026 Flowbase. All rights reserved."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-footer-text"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

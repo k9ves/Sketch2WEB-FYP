@@ -4,6 +4,7 @@ import {
   alignValues,
   columnsLayoutDefaults,
   heroLayoutDefaults,
+  gapSteps,
   justifyValues,
   resolveLayout,
 } from '../../renderer/layout'
@@ -24,7 +25,6 @@ const columnOptions: Option[] = ['1', '2', '3', '4', '5', '6'].map((n) => ({
   label: n,
 }))
 
-const gapSteps = [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16]
 const gapOptions: Option[] = gapSteps.map((step) => ({
   value: String(step),
   label: `${step * 4}px`,

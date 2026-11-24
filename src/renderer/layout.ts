@@ -14,6 +14,9 @@ export const justifyValues = [
   'evenly',
 ] as const
 
+/** Gap steps (× 0.25rem) the Properties panel offers. */
+export const gapSteps = [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16] as const
+
 export type LayoutAlign = (typeof alignValues)[number]
 export type LayoutJustify = (typeof justifyValues)[number]
 

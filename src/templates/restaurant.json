@@ -1,0 +1,619 @@
+{
+  "id": "restaurant-website",
+  "type": "website",
+  "version": 1,
+  "content": {
+    "title": "Saffron Table — Restaurant"
+  },
+  "layout": {},
+  "style": {
+    "background": "bg-white"
+  },
+  "children": [
+    {
+      "id": "restaurant-navbar",
+      "type": "navbar",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "restaurant-brand",
+          "type": "button",
+          "content": {
+            "text": "Saffron Table",
+            "href": "#top"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-brand"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-nav-menu",
+          "type": "button",
+          "content": {
+            "text": "Menu",
+            "href": "#menu"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-nav-gallery",
+          "type": "button",
+          "content": {
+            "text": "Gallery",
+            "href": "#gallery"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-nav-visit",
+          "type": "button",
+          "content": {
+            "text": "Visit",
+            "href": "#visit"
+          },
+          "layout": {},
+          "style": {
+            "button": "sw-nav-link"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-nav-book",
+          "type": "button",
+          "content": {
+            "text": "Book a table",
+            "href": "#visit"
+          },
+          "layout": {},
+          "style": {
+            "button": "bg-amber-500 text-slate-900 rounded-full font-semibold"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "restaurant-hero",
+      "type": "hero",
+      "content": {},
+      "layout": {
+        "align": "center",
+        "gap": "5"
+      },
+      "style": {
+        "container": "bg-slate-900 p-16 rounded-2xl shadow-lg"
+      },
+      "children": [
+        {
+          "id": "restaurant-hero-eyebrow",
+          "type": "text",
+          "content": {
+            "text": "Open daily · 12 pm to 11 pm"
+          },
+          "layout": {},
+          "style": {
+            "text": "text-amber-600 text-sm font-semibold"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-hero-title",
+          "type": "heading",
+          "content": {
+            "text": "Slow-cooked flavours, served warm",
+            "level": "1"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-title text-white"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-hero-text",
+          "type": "text",
+          "content": {
+            "text": "Family recipes, fresh spices and a table waiting for you. Come hungry, leave happy."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-hero-description text-slate-400"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-hero-cta",
+          "type": "button",
+          "content": {
+            "text": "Reserve your table",
+            "href": "#visit"
+          },
+          "layout": {},
+          "style": {
+            "button": "bg-amber-500 text-slate-900 rounded-full font-bold"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "restaurant-menu",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "restaurant-menu-title",
+          "type": "heading",
+          "content": {
+            "text": "Chef’s favourites",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-menu-text",
+          "type": "text",
+          "content": {
+            "text": "A few dishes our guests order again and again."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-description"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-menu-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "restaurant-menu-biryani",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "restaurant-menu-biryani-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/restaurant/dish-biryani.svg",
+                    "alt": "Plate of Saffron biryani"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-biryani-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Saffron biryani",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-biryani-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Fragrant rice, tender chicken and our house spice mix."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-biryani-price",
+                  "type": "text",
+                  "content": {
+                    "text": "$14"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg font-bold text-amber-600"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "restaurant-menu-salad",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "restaurant-menu-salad-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/restaurant/dish-salad.svg",
+                    "alt": "Plate of Garden bowl"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-salad-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Garden bowl",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-salad-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Crisp greens, chickpeas, mint yogurt and toasted seeds."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-salad-price",
+                  "type": "text",
+                  "content": {
+                    "text": "$10"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg font-bold text-amber-600"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "restaurant-menu-kebab",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "restaurant-menu-kebab-image",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/restaurant/dish-kebab.svg",
+                    "alt": "Plate of Charcoal kebabs"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-kebab-name",
+                  "type": "heading",
+                  "content": {
+                    "text": "Charcoal kebabs",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-kebab-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Hand-pressed kebabs with fresh naan and chutney."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-menu-kebab-price",
+                  "type": "text",
+                  "content": {
+                    "text": "$16"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "text-lg font-bold text-amber-600"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restaurant-gallery",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "restaurant-gallery-title",
+          "type": "heading",
+          "content": {
+            "text": "Inside Saffron Table",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-gallery-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "3",
+            "gap": "4"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "restaurant-gallery-1",
+              "type": "image",
+              "content": {
+                "src": "/templates/restaurant/interior-1.svg",
+                "alt": "Warm dining room with hanging lamps"
+              },
+              "layout": {},
+              "style": {
+                "image": "rounded-xl"
+              },
+              "children": []
+            },
+            {
+              "id": "restaurant-gallery-2",
+              "type": "image",
+              "content": {
+                "src": "/templates/restaurant/interior-2.svg",
+                "alt": "Table set for dinner"
+              },
+              "layout": {},
+              "style": {
+                "image": "rounded-xl"
+              },
+              "children": []
+            },
+            {
+              "id": "restaurant-gallery-3",
+              "type": "image",
+              "content": {
+                "src": "/templates/restaurant/interior-3.svg",
+                "alt": "Evening lights over the tables"
+              },
+              "layout": {},
+              "style": {
+                "image": "rounded-xl"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restaurant-visit",
+      "type": "section",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "restaurant-visit-title",
+          "type": "heading",
+          "content": {
+            "text": "Visit us",
+            "level": "2"
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-section-title"
+          },
+          "children": []
+        },
+        {
+          "id": "restaurant-visit-grid",
+          "type": "columns",
+          "content": {},
+          "layout": {
+            "columns": "2",
+            "gap": "6"
+          },
+          "style": {},
+          "children": [
+            {
+              "id": "restaurant-visit-hours",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "restaurant-visit-hours-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "Opening hours",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-visit-hours-week",
+                  "type": "text",
+                  "content": {
+                    "text": "Monday to Friday: 12 pm – 11 pm"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-visit-hours-weekend",
+                  "type": "text",
+                  "content": {
+                    "text": "Saturday and Sunday: 11 am – midnight"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-visit-call",
+                  "type": "button",
+                  "content": {
+                    "text": "Call to book",
+                    "href": "tel:+10000000000"
+                  },
+                  "layout": {},
+                  "style": {
+                    "button": "bg-amber-500 text-slate-900 rounded-full font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "restaurant-visit-place",
+              "type": "card",
+              "content": {},
+              "layout": {},
+              "style": {
+                "container": "bg-white rounded-xl shadow-sm"
+              },
+              "children": [
+                {
+                  "id": "restaurant-visit-map",
+                  "type": "image",
+                  "content": {
+                    "src": "/templates/restaurant/map.svg",
+                    "alt": "Map showing the restaurant location"
+                  },
+                  "layout": {},
+                  "style": {
+                    "image": "rounded-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-visit-place-title",
+                  "type": "heading",
+                  "content": {
+                    "text": "24 Garden Street",
+                    "level": "3"
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-title"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "restaurant-visit-place-text",
+                  "type": "text",
+                  "content": {
+                    "text": "Free parking behind the building."
+                  },
+                  "layout": {},
+                  "style": {
+                    "text": "sw-card-text"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restaurant-footer",
+      "type": "footer",
+      "content": {},
+      "layout": {},
+      "style": {},
+      "children": [
+        {
+          "id": "restaurant-footer-text",
+          "type": "text",
+          "content": {
+            "text": "© 2026 Saffron Table. Made with love and spices."
+          },
+          "layout": {},
+          "style": {
+            "text": "sw-footer-text"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}
