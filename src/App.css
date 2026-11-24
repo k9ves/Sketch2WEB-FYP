@@ -461,7 +461,64 @@ textarea.property-input {
   padding: 0 2px;
 }
 
+.canvas-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.canvas-header h2 {
+  margin: 0;
+  color: #302b42;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.device-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 9px;
+  background: #ece9f3;
+}
+
+.device-button {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #77718a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.device-button.is-active {
+  background: #fff;
+  color: #302b42;
+  box-shadow: 0 1px 3px rgb(42 31 71 / 12%);
+}
+
+.device-button:focus-visible {
+  outline: 2px solid #6546d7;
+  outline-offset: 1px;
+}
+
+.canvas-note {
+  margin: 0 0 10px;
+  padding: 0 2px;
+  color: #b45309;
+  font-size: 12px;
+}
+
 .preview-frame {
+  margin: 0 auto;
+  transition: max-width 200ms ease;
   overflow: hidden;
   border: 1px solid #e6e3ec;
   border-radius: 14px;

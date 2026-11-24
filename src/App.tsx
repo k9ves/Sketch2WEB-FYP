@@ -25,10 +25,25 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 type SidebarTab = 'components' | 'layers'
 
+type Device = 'desktop' | 'tablet' | 'mobile'
+
+/** Canvas width per device; null fills the canvas panel. */
+const devices: readonly { id: Device; label: string; width: number | null }[] =
+  [
+    { id: 'desktop', label: 'Desktop', width: null },
+    { id: 'tablet', label: 'Tablet', width: 768 },
+    { id: 'mobile', label: 'Mobile', width: 375 },
+  ]
+
 function App() {
   const [sampleName, setSampleName] = useState('landing')
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [isPreview, setIsPreview] = useState(false)
+  const [device, setDevice] = useState<Device>('desktop')
+  // Free positions are stored for the desktop width only, so narrower
+  // devices are view-only: editing there would move them for desktop too.
+  const isCanvasReadOnly = isPreview || device !== 'desktop'
+  const deviceWidth = devices.find((option) => option.id === device)?.width
   const [selectedPaletteType, setSelectedPaletteType] =
     useState<AddableComponentType | null>(null)
   const website = useWebsiteStore((state) => state.website)
@@ -99,6 +114,12 @@ function App() {
     // when going back to editing; start from a clean state both ways.
     selectNode(null)
     setIsPreview((current) => !current)
+  }
+
+  function changeDevice(next: Device) {
+    // A selection has no outline on a read-only canvas; drop it.
+    if (next !== 'desktop') selectNode(null)
+    setDevice(next)
   }
 
   function addSelectedComponent() {
@@ -251,10 +272,44 @@ function App() {
             </aside>
           )}
           <section className="canvas-panel" aria-label="Canvas">
-            <h2>{isPreview ? 'Preview' : 'Canvas'}</h2>
+            <div className="canvas-header">
+              <h2>{isPreview ? 'Preview' : 'Canvas'}</h2>
+              <div
+                className="device-switch"
+                role="group"
+                aria-label="Device width"
+              >
+                {devices.map((option) => (
+                  <button
+                    key={option.id}
+                    className={`device-button${device === option.id ? ' is-active' : ''}`}
+                    type="button"
+                    aria-pressed={device === option.id}
+                    title={
+                      option.width === null
+                        ? option.label
+                        : `${option.label} (${option.width}px)`
+                    }
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      changeDevice(option.id)
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {!isPreview && device !== 'desktop' && (
+              <p className="canvas-note" role="status">
+                Tablet and mobile views are read-only. Switch to Desktop to
+                edit.
+              </p>
+            )}
             <section
               className="preview-frame"
               aria-label={`${websiteTitle} preview`}
+              style={deviceWidth ? { maxWidth: `${deviceWidth}px` } : undefined}
             >
               <div className="preview-titlebar">
                 <span className="preview-dots" aria-hidden="true">
@@ -263,7 +318,7 @@ function App() {
                   <i />
                 </span>
                 <span>
-                  {isPreview ? (
+                  {isCanvasReadOnly ? (
                     websiteTitle
                   ) : (
                     <InlineText
@@ -276,7 +331,7 @@ function App() {
                 </span>
               </div>
               <div className="preview-page" id="top">
-                <FreeformCanvas preview={isPreview} />
+                <FreeformCanvas preview={isCanvasReadOnly} />
               </div>
             </section>
           </section>

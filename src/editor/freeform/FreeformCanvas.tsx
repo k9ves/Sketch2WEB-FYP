@@ -53,8 +53,15 @@ function FreeformCanvas({ preview = false }: FreeformCanvasProps) {
       try {
         shrinkWrapText(root)
         containPositionedChildren(root)
+        // A read-only canvas (preview, or a narrower device) only shows the
+        // page. Collision fixes would move components (in the DOM and the
+        // store) to fit that width and break the desktop layout.
+        if (preview) {
+          fixStreak.current = 0
+          return
+        }
         const fixes = collectCollisionFixes(useWebsiteStore.getState().website)
-        if (preview || Object.keys(fixes).length === 0) {
+        if (Object.keys(fixes).length === 0) {
           fixStreak.current = 0
           return
         }
