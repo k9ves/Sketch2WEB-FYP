@@ -363,6 +363,135 @@
   object-fit: contain;
 }
 
+/* The overlay is sized to the photo, so box shares map to the photo. */
+.sketch-figure {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+}
+
+.sketch-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sketch-box {
+  position: absolute;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+}
+
+/* Containers are dashed, so the elements inside them stay visible. */
+.sketch-box:is(
+  .sketch-box-navbar,
+  .sketch-box-hero,
+  .sketch-box-section,
+  .sketch-box-card,
+  .sketch-box-footer
+) {
+  border-style: dashed;
+  background: transparent;
+}
+
+.sketch-box-label {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  padding: 0 5px;
+  border-radius: 3px 0 4px;
+  color: #fff;
+  background: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.sketch-detect {
+  display: grid;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 24px;
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.sketch-detect h2 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 18px;
+}
+
+.sketch-steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 22px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.sketch-steps li {
+  padding-left: 4px;
+}
+
+.sketch-steps .sketch-problem {
+  margin-left: 10px;
+}
+
+.sketch-steps a {
+  color: var(--accent);
+}
+
+.sketch-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--surface-subtle);
+  font:
+    13px / 1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  resize: vertical;
+}
+
+.sketch-textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.sketch-detect > .toolbar-button {
+  justify-self: start;
+}
+
+.sketch-result p {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.sketch-element-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sketch-element-list li {
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--surface-muted);
+  font-size: 13px;
+}
+
 .sketch-problem {
   margin: 14px 0 0;
   color: var(--warning);

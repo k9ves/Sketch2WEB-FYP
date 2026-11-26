@@ -97,6 +97,10 @@ Decisions in this format:
   simple to check and does not depend on the model getting a tree right.
 - **No `columns` or `website` type.** The page root is always added by our
   code. Columns come from elements that sit side by side (T63).
+- **Navbar links** often come back as one `text` element, e.g.
+  `"Home | Services | About | Contact"`. T62 splits a `text` inside a
+  navbar at `|` (or wide gaps) into separate link buttons, like the navbar
+  of the component palette.
 - **Heading level** is not asked for. T62 picks it from the box height (the
   tallest heading on the page becomes `h1`).
 - Words like "Sign up" are taken as **text to show**, never as instructions
