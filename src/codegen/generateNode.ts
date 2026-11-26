@@ -7,6 +7,7 @@ import {
   layoutStyle,
 } from '../renderer/layout'
 import { safeHref } from '../renderer/safeHref'
+import { placementAttributes, placementStyle } from './placement'
 
 // Describes a single component node as a JSX element. Tags, class names and
 // layout styles match the canvas (see renderer/Renderer.tsx), so the
@@ -114,7 +115,8 @@ function spec(
   }
 }
 
-export function elementSpec(node: ComponentNode): ElementSpec {
+/** Tag, classes and attributes that follow from the component type. */
+function typeSpec(node: ComponentNode): ElementSpec {
   const text = node.content.text ?? ''
 
   switch (node.type) {
@@ -179,6 +181,18 @@ export function elementSpec(node: ComponentNode): ElementSpec {
         ],
       })
     }
+  }
+}
+
+/** The full spec: type spec plus free position and resized size (T53b). */
+export function elementSpec(node: ComponentNode): ElementSpec {
+  const base = typeSpec(node)
+  const placement = placementStyle(node)
+  const placed = Object.keys(placement).length > 0
+  return {
+    ...base,
+    style: base.style || placed ? { ...base.style, ...placement } : null,
+    attributes: [...base.attributes, ...placementAttributes(node)],
   }
 }
 

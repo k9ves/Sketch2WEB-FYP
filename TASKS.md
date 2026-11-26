@@ -87,7 +87,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T51** Split into component files (Navbar.tsx, Hero.tsx...). — _Done when:_ multiple files generated.
 - [x] **T52** Format output (Prettier in browser). — _Done when:_ code is neatly indented.
 - [x] **T53** Generated project runs on its own (test in a fresh Vite project). — _Done when:_ `npm run dev` shows same website.
-- [ ] **T53b** Export freeform (Alt) positions and resize sizes (`x`, `y`, `width`, `boxWidth`, `boxHeight`). — _Done when:_ a freely placed and resized component sits in the same place in the export.
+- [x] **T53b** Export freeform (Alt) positions and resize sizes (`x`, `y`, `width`, `boxWidth`, `boxHeight`). — _Done when:_ a freely placed and resized component sits in the same place in the export.
 - [x] **T54** Escape special characters and handle missing fields. — _Done when:_ weird text does not break code.
 
 ## M10 — Code view and export (Week 11-12)

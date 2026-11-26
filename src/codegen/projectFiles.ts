@@ -8,8 +8,10 @@ import {
   gitignore,
   readmeMarkdown,
 } from './exportReadme'
+import { freeformTs, mainTsxWithFreeform } from './exportRuntime'
 import type { GeneratedFile } from './generateProject'
 import { generatableChildren } from './generateTree'
+import { usesFreeform } from './placement'
 
 // The fixed files of the exported Vite + React + Tailwind project. Package
 // versions come from the builder's own package.json, so the export uses the
@@ -174,13 +176,18 @@ export function websiteTitle(website: WebsiteDocument): string {
 /** Every fixed file of the export, next to the generated components. */
 export function projectFiles(website: WebsiteDocument): GeneratedFile[] {
   const title = websiteTitle(website)
+  const freeform = usesFreeform(website)
 
   return [
     { path: 'package.json', content: packageJson(title) },
     { path: 'tsconfig.json', content: tsconfigJson },
     { path: 'vite.config.ts', content: viteConfig },
     { path: 'index.html', content: indexHtml(title) },
-    { path: 'src/main.tsx', content: mainTsx },
+    {
+      path: 'src/main.tsx',
+      content: freeform ? mainTsxWithFreeform : mainTsx,
+    },
+    ...(freeform ? [{ path: 'src/freeform.ts', content: freeformTs }] : []),
     { path: 'src/index.css', content: indexCss },
     { path: 'src/App.css', content: websiteCss },
     { path: 'src/css-vars.d.ts', content: cssVarsDts },

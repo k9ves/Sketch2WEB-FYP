@@ -67,8 +67,10 @@ of your own or a hosted service.
 
 - The export is one-way. Code you change here cannot be imported back into
   Sketch2Web.
-- Components placed freely (Alt) or resized on the canvas appear in normal
-  flow here; free positions and sizes are not exported yet.
+- Components placed freely (Alt) on the canvas keep their position in
+  pixels, measured at desktop width (\`data-sw-positioned\`; see
+  \`src/freeform.ts\`). On narrow screens they never get wider than the page,
+  but they keep their place, so check them on mobile.
 `
 }
 
