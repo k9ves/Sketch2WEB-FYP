@@ -16,6 +16,7 @@ import TemplateGallery from './editor/TemplateGallery'
 import { downloadProject, readProjectFile } from './editor/projectActions'
 import { PROJECT_FILE_ACCEPT, projectFileName } from './store/projectFile'
 import { findNode, isContainerType } from './store/tree'
+import { useCustomCodeStore } from './store/customCodeStore'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 import './renderer/website.css'
@@ -27,6 +28,8 @@ function isEditableTarget(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLElement &&
     (target.isContentEditable ||
+      // Keys typed in the code editor (Esc, Ctrl+Z, ...) belong to Monaco.
+      target.closest('.monaco-editor') !== null ||
       target.tagName === 'INPUT' ||
       target.tagName === 'TEXTAREA' ||
       target.tagName === 'SELECT')
@@ -71,6 +74,7 @@ function App() {
   const updateNode = useWebsiteStore((state) => state.updateNode)
   const undo = useWebsiteStore((state) => state.undo)
   const redo = useWebsiteStore((state) => state.redo)
+  const clearCustomCode = useCustomCodeStore((state) => state.clearAll)
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
     ? findNode(website, selectedId)
@@ -166,10 +170,13 @@ function App() {
     if (!sample) throw new Error(`Unknown website sample: ${name}`)
     setSampleName(name)
     setWebsite(sample)
+    // Code edits belong to the previous website.
+    clearCustomCode()
   }
 
   function showInEditor(next: WebsiteDocument) {
     setWebsite(next)
+    clearCustomCode()
     // The sample picker shows "Template" until a sample is chosen.
     setSampleName('')
     setIsPreview(false)

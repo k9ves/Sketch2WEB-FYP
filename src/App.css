@@ -930,6 +930,31 @@ textarea.property-input {
   outline-offset: -2px;
 }
 
+.code-tab-edited {
+  margin-left: 6px;
+  color: var(--accent);
+  font-size: 10px;
+}
+
+/* Shown above an edited file (T57). */
+.code-custom-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--divider);
+  background: var(--accent-soft);
+  color: var(--text-label);
+  font-size: 12px;
+}
+
+.code-custom-bar.is-warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
 .code-editor {
   height: min(72vh, 760px);
 }

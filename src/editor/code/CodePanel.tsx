@@ -1,12 +1,29 @@
 import './monacoSetup'
 import Editor from '@monaco-editor/react'
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import type { OnMount } from '@monaco-editor/react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { formatProjectFiles } from '../../codegen/formatCode'
 import { generateProjectFiles } from '../../codegen/generateProject'
 import type { GeneratedFile } from '../../codegen/generateProject'
 import type { WebsiteDocument } from '../../schema/types'
+import {
+  DEFAULT_OPEN_PATH,
+  useCustomCodeStore,
+} from '../../store/customCodeStore'
 
-const DEFAULT_FILE = 'src/App.tsx'
+type CodeEditor = Parameters<OnMount>[0]
+
+type ViewState = ReturnType<CodeEditor['saveViewState']>
+
+/**
+ * Cursor, selection and scroll position per file URI, kept while the page
+ * is open, so reopening Code or a tab continues exactly where work stopped.
+ */
+const viewStates = new Map<string, ViewState>()
+
+function fileUri(path: string): string {
+  return `file:///${path}`
+}
 
 type CodeResult =
   | { website: WebsiteDocument; files: GeneratedFile[] }
@@ -58,7 +75,7 @@ function useGeneratedCode(website: WebsiteDocument): CodeResult | null {
 
 /** Website files first (App, then components), project setup files last. */
 function tabOrder(path: string): number {
-  if (path === DEFAULT_FILE) return 0
+  if (path === DEFAULT_OPEN_PATH) return 0
   if (path.startsWith('src/components/')) return 1
   return 2
 }
@@ -84,17 +101,61 @@ function fileLanguage(path: string): string {
   return languageByExtension[extension] ?? 'plaintext'
 }
 
-/** Read-only view of the code generated from the current website. */
+/**
+ * The code generated from the current website. Files can be edited; edits
+ * are kept as a separate custom copy (customCodeStore) and never change
+ * the canvas.
+ */
 function CodePanel({ website }: { website: WebsiteDocument }) {
   const result = useGeneratedCode(website)
   const isDark = useIsDarkTheme()
-  const [selectedPath, setSelectedPath] = useState(DEFAULT_FILE)
+  const customFiles = useCustomCodeStore((state) => state.files)
+  const editFile = useCustomCodeStore((state) => state.editFile)
+  const resetFile = useCustomCodeStore((state) => state.resetFile)
+  const selectedPath = useCustomCodeStore((state) => state.openPath)
+  const setSelectedPath = useCustomCodeStore((state) => state.setOpenPath)
   const files = result && 'files' in result ? sortForTabs(result.files) : []
   // A component file can disappear (e.g. its section was renamed); fall
   // back to App.tsx instead of showing nothing.
   const file =
     files.find((entry) => entry.path === selectedPath) ??
-    files.find((entry) => entry.path === DEFAULT_FILE)
+    files.find((entry) => entry.path === DEFAULT_OPEN_PATH)
+  const custom = file ? customFiles[file.path] : undefined
+  const canvasChanged =
+    custom !== undefined && custom.baseContent !== file?.content
+  const editorRef = useRef<CodeEditor | null>(null)
+  // URI whose view state may be saved. While Monaco switches to another
+  // file, events of the new model must not overwrite its saved position.
+  const trackedUriRef = useRef<string | null>(null)
+  const filePath = file?.path
+
+  function restoreViewState(editor: CodeEditor, path: string) {
+    const uri = fileUri(path)
+    const saved = viewStates.get(uri)
+    if (saved) editor.restoreViewState(saved)
+    trackedUriRef.current = uri
+    editor.focus()
+  }
+
+  const handleMount: OnMount = (editor) => {
+    editorRef.current = editor
+    const save = () => {
+      const uri = editor.getModel()?.uri.toString()
+      if (uri && uri === trackedUriRef.current) {
+        viewStates.set(uri, editor.saveViewState())
+      }
+    }
+    editor.onDidChangeCursorSelection(save)
+    editor.onDidScrollChange(save)
+    if (filePath) restoreViewState(editor, filePath)
+  }
+
+  // Another tab: Monaco has already switched the model (child effects run
+  // first), so the new file's saved position can be restored.
+  useEffect(() => {
+    const editor = editorRef.current
+    if (editor && filePath) restoreViewState(editor, filePath)
+  }, [filePath])
 
   return (
     <section
@@ -105,23 +166,53 @@ function CodePanel({ website }: { website: WebsiteDocument }) {
       <div className="code-header">
         <h2>Code</h2>
         {file && <span className="code-file-name">{file.path}</span>}
-        <span className="code-note">Read-only · press Esc to go back</span>
+        <span className="code-note">
+          Edits stay in the code only; the canvas does not change. Esc goes
+          back.
+        </span>
       </div>
       {files.length > 0 && (
         <div className="code-tabs" role="tablist" aria-label="Files">
-          {files.map((entry) => (
-            <button
-              key={entry.path}
-              className={`code-tab${entry.path === file?.path ? ' is-active' : ''}`}
-              type="button"
-              role="tab"
-              aria-selected={entry.path === file?.path}
-              title={entry.path}
-              onClick={() => setSelectedPath(entry.path)}
-            >
-              {fileName(entry.path)}
-            </button>
-          ))}
+          {files.map((entry) => {
+            const edited = entry.path in customFiles
+            return (
+              <button
+                key={entry.path}
+                className={`code-tab${entry.path === file?.path ? ' is-active' : ''}`}
+                type="button"
+                role="tab"
+                aria-selected={entry.path === file?.path}
+                title={edited ? `${entry.path} (edited)` : entry.path}
+                onClick={() => setSelectedPath(entry.path)}
+              >
+                {fileName(entry.path)}
+                {edited && (
+                  <span className="code-tab-edited" aria-label="edited">
+                    ●
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      )}
+      {file && custom && (
+        <div
+          className={`code-custom-bar${canvasChanged ? ' is-warning' : ''}`}
+          role="status"
+        >
+          <span>
+            {canvasChanged
+              ? 'The canvas changed since you edited this file. Your edited version is kept and used for export.'
+              : 'Edited by hand. This version is used for export instead of the generated code.'}
+          </span>
+          <button
+            className="toolbar-button"
+            type="button"
+            onClick={() => resetFile(file.path)}
+          >
+            Reset to generated
+          </button>
         </div>
       )}
       {result === null && (
@@ -139,14 +230,14 @@ function CodePanel({ website }: { website: WebsiteDocument }) {
           <Editor
             // One model per file URI: each tab keeps its own scroll
             // position, and a .tsx URI makes Monaco parse the code as TSX.
-            path={`file:///${file.path}`}
+            path={fileUri(file.path)}
             language={fileLanguage(file.path)}
-            value={file.content}
+            value={custom?.content ?? file.content}
+            onChange={(value) => editFile(file.path, value ?? '', file.content)}
+            onMount={handleMount}
             theme={isDark ? 'vs-dark' : 'light'}
             loading={<p className="code-status">Loading code editor…</p>}
             options={{
-              readOnly: true,
-              domReadOnly: true,
               minimap: { enabled: false },
               fontSize: 13,
               scrollBeyondLastLine: false,
