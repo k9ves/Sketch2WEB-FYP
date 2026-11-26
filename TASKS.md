@@ -81,7 +81,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 ## M9 — Code generator (Week 8-11)
 
-- [ ] **T48** Generator for one node: heading/text/button → JSX string. — _Done when:_ correct string output.
+- [x] **T48** Generator for one node: heading/text/button → JSX string. — _Done when:_ correct string output.
 - [ ] **T49** Recursive generator for whole tree. — _Done when:_ landing sample gives full JSX.
 - [ ] **T50** Wrap into `App.tsx` with imports. — _Done when:_ output is valid TSX.
 - [ ] **T51** Split into component files (Navbar.tsx, Hero.tsx...). — _Done when:_ multiple files generated.
