@@ -77,7 +77,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T44** Templates folder (5 templates as JSON). — _Done when:_ 5 valid files.
 - [x] **T45** Start screen: choose Template / Sketch. — _Done when:_ 2 cards shown (Sketch disabled for now).
 - [x] **T46** Template gallery with preview thumbnails. — _Done when:_ click opens template in editor.
-- [ ] **T47** Save/load project as JSON (download and upload). — _Done when:_ reload restores same website. **(Milestone: First end-to-end, Template → Editor)**
+- [x] **T47** Save/load project as JSON (download and upload). — _Done when:_ reload restores same website. **(Milestone: First end-to-end, Template → Editor)**
 
 ## M9 — Code generator (Week 8-11)
 
@@ -85,7 +85,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T49** Recursive generator for whole tree. — _Done when:_ landing sample gives full JSX.
 - [x] **T50** Wrap into `App.tsx` with imports. — _Done when:_ output is valid TSX.
 - [x] **T51** Split into component files (Navbar.tsx, Hero.tsx...). — _Done when:_ multiple files generated.
-- [ ] **T52** Format output (Prettier in browser). — _Done when:_ code is neatly indented.
+- [x] **T52** Format output (Prettier in browser). — _Done when:_ code is neatly indented.
 - [ ] **T53** Generated project runs on its own (test in a fresh Vite project). — _Done when:_ `npm run dev` shows same website.
 - [ ] **T54** Escape special characters and handle missing fields. — _Done when:_ weird text does not break code.
 
