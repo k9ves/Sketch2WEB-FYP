@@ -1,6 +1,13 @@
 import builderPackage from '../../package.json'
 import websiteCss from '../renderer/website.css?raw'
 import type { ComponentNode, WebsiteDocument } from '../schema/types'
+import {
+  apiTs,
+  envDts,
+  envExample,
+  gitignore,
+  readmeMarkdown,
+} from './exportReadme'
 import type { GeneratedFile } from './generateProject'
 import { generatableChildren } from './generateTree'
 
@@ -23,7 +30,7 @@ function versions(names: readonly string[]): Record<string, string> {
 }
 
 /** "Northstar Studio" → "northstar-studio" (a valid npm package name). */
-function packageName(title: string): string {
+export function packageName(title: string): string {
   const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -160,9 +167,13 @@ declare module 'react' {
 }
 `
 
+export function websiteTitle(website: WebsiteDocument): string {
+  return website.content.title?.trim() || 'My website'
+}
+
 /** Every fixed file of the export, next to the generated components. */
 export function projectFiles(website: WebsiteDocument): GeneratedFile[] {
-  const title = website.content.title?.trim() || 'My website'
+  const title = websiteTitle(website)
 
   return [
     { path: 'package.json', content: packageJson(title) },
@@ -173,6 +184,11 @@ export function projectFiles(website: WebsiteDocument): GeneratedFile[] {
     { path: 'src/index.css', content: indexCss },
     { path: 'src/App.css', content: websiteCss },
     { path: 'src/css-vars.d.ts', content: cssVarsDts },
+    { path: 'src/env.d.ts', content: envDts },
+    { path: 'src/api.ts', content: apiTs },
+    { path: 'README.md', content: readmeMarkdown(title) },
+    { path: '.env.example', content: envExample },
+    { path: '.gitignore', content: gitignore },
   ]
 }
 

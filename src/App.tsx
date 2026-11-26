@@ -58,6 +58,7 @@ function App() {
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [isPreview, setIsPreview] = useState(false)
   const [isCodeView, setIsCodeView] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
   const [device, setDevice] = useState<Device>('desktop')
   // Free positions are stored for the desktop width only, so narrower
   // devices are view-only: editing there would move them for desktop too.
@@ -240,6 +241,30 @@ function App() {
     setProjectMessage(`Saved as ${projectFileName(website)}.`)
   }
 
+  async function exportZip() {
+    setIsExporting(true)
+    setProjectMessage(null)
+    try {
+      // Prettier and the exporter load only when exporting.
+      const { exportProjectZip } = await import('./editor/exportProject')
+      const zip = await exportProjectZip(
+        website,
+        useCustomCodeStore.getState().files,
+      )
+      setProjectMessage(
+        zip.missingAssets.length === 0
+          ? `Exported ${zip.fileName}. Unzip it, then run npm install and npm run dev.`
+          : `Exported ${zip.fileName}, but these images could not be added: ${zip.missingAssets.join(', ')}.`,
+      )
+    } catch (error) {
+      setProjectMessage(
+        `Export failed: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   // One hidden file picker, used by the start screen and the editor.
   const projectInput = (
     <input
@@ -336,8 +361,17 @@ function App() {
             >
               {isCodeView ? 'Edit' : 'Code'}
             </button>
-            <button className="toolbar-button" type="button">
-              Export
+            <button
+              className="toolbar-button"
+              type="button"
+              disabled={isExporting}
+              title="Download the website as a runnable React project (.zip)"
+              onClick={(event) => {
+                event.stopPropagation()
+                void exportZip()
+              }}
+            >
+              {isExporting ? 'Exporting…' : 'Export'}
             </button>
           </div>
           <label className="sample-picker">

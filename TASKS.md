@@ -96,7 +96,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T56** File tabs in Monaco for multiple files. — _Done when:_ switch between files.
 - [x] **T57** Allow editing code (keep as separate "custom code" copy, document limits). — _Done when:_ edits persist in session.
 - [x] **T57b** Sync supported code edits back to the canvas (text, style tokens, `href`/`src`/`alt`, heading level). After a short pause the edited file is parsed; if it still matches the generated structure, the changes update the tree as one undo step. Otherwise a bar says "Not supported yet" with the reason and line, plus **Undo my change** / **Keep as code only**. — _Done when:_ a text or style edit in code shows on the canvas, and an unsupported edit (e.g. `useState`) shows the bar without breaking the editor.
-- [ ] **T58** Export as ZIP (full runnable project). — _Done when:_ ZIP downloads and runs. **(Milestone: Preview, code and export complete)**
+- [x] **T58** Export as ZIP (full runnable project). — _Done when:_ ZIP downloads and runs. **(Milestone: Preview, code and export complete)**
 
 **Remember for M9–M10 (export notes):**
 
