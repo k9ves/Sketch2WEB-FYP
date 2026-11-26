@@ -891,6 +891,45 @@ textarea.property-input {
   font-size: 12px;
 }
 
+/* File tabs (T56): one row that scrolls sideways when there are many. */
+.code-tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  padding: 6px 10px 0;
+  border-bottom: 1px solid var(--divider);
+  background: var(--surface-muted);
+}
+
+.code-tab {
+  flex: none;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.code-tab:hover {
+  color: var(--text-strong);
+}
+
+.code-tab.is-active {
+  border-color: var(--divider);
+  background: var(--surface);
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.code-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .code-editor {
   height: min(72vh, 760px);
 }

@@ -93,7 +93,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 ## M10 — Code view and export (Week 11-12)
 
 - [x] **T55** Monaco panel showing generated code (read-only). — _Done when:_ "Code" button opens it.
-- [ ] **T56** File tabs in Monaco for multiple files. — _Done when:_ switch between files.
+- [x] **T56** File tabs in Monaco for multiple files. — _Done when:_ switch between files.
 - [ ] **T57** Allow editing code (keep as separate "custom code" copy, document limits). — _Done when:_ edits persist in session.
 - [ ] **T58** Export as ZIP (full runnable project). — _Done when:_ ZIP downloads and runs. **(Milestone: Preview, code and export complete)**
 

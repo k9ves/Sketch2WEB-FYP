@@ -6,7 +6,7 @@ import { generateProjectFiles } from '../../codegen/generateProject'
 import type { GeneratedFile } from '../../codegen/generateProject'
 import type { WebsiteDocument } from '../../schema/types'
 
-const SHOWN_FILE = 'src/App.tsx'
+const DEFAULT_FILE = 'src/App.tsx'
 
 type CodeResult =
   | { website: WebsiteDocument; files: GeneratedFile[] }
@@ -56,14 +56,45 @@ function useGeneratedCode(website: WebsiteDocument): CodeResult | null {
   return result?.website === website ? result : null
 }
 
+/** Website files first (App, then components), project setup files last. */
+function tabOrder(path: string): number {
+  if (path === DEFAULT_FILE) return 0
+  if (path.startsWith('src/components/')) return 1
+  return 2
+}
+
+function sortForTabs(files: readonly GeneratedFile[]): GeneratedFile[] {
+  return [...files].sort((a, b) => tabOrder(a.path) - tabOrder(b.path))
+}
+
+function fileName(path: string): string {
+  return path.slice(path.lastIndexOf('/') + 1)
+}
+
+const languageByExtension: Record<string, string> = {
+  ts: 'typescript',
+  tsx: 'typescript',
+  css: 'css',
+  json: 'json',
+  html: 'html',
+}
+
+function fileLanguage(path: string): string {
+  const extension = path.slice(path.lastIndexOf('.') + 1)
+  return languageByExtension[extension] ?? 'plaintext'
+}
+
 /** Read-only view of the code generated from the current website. */
 function CodePanel({ website }: { website: WebsiteDocument }) {
   const result = useGeneratedCode(website)
   const isDark = useIsDarkTheme()
+  const [selectedPath, setSelectedPath] = useState(DEFAULT_FILE)
+  const files = result && 'files' in result ? sortForTabs(result.files) : []
+  // A component file can disappear (e.g. its section was renamed); fall
+  // back to App.tsx instead of showing nothing.
   const file =
-    result && 'files' in result
-      ? result.files.find((entry) => entry.path === SHOWN_FILE)
-      : undefined
+    files.find((entry) => entry.path === selectedPath) ??
+    files.find((entry) => entry.path === DEFAULT_FILE)
 
   return (
     <section
@@ -73,9 +104,26 @@ function CodePanel({ website }: { website: WebsiteDocument }) {
     >
       <div className="code-header">
         <h2>Code</h2>
-        <span className="code-file-name">{SHOWN_FILE}</span>
+        {file && <span className="code-file-name">{file.path}</span>}
         <span className="code-note">Read-only · press Esc to go back</span>
       </div>
+      {files.length > 0 && (
+        <div className="code-tabs" role="tablist" aria-label="Files">
+          {files.map((entry) => (
+            <button
+              key={entry.path}
+              className={`code-tab${entry.path === file?.path ? ' is-active' : ''}`}
+              type="button"
+              role="tab"
+              aria-selected={entry.path === file?.path}
+              title={entry.path}
+              onClick={() => setSelectedPath(entry.path)}
+            >
+              {fileName(entry.path)}
+            </button>
+          ))}
+        </div>
+      )}
       {result === null && (
         <p className="code-status" role="status">
           Generating code…
@@ -89,9 +137,10 @@ function CodePanel({ website }: { website: WebsiteDocument }) {
       {file && (
         <div className="code-editor">
           <Editor
-            // A .tsx file URI makes Monaco parse the code as TSX.
+            // One model per file URI: each tab keeps its own scroll
+            // position, and a .tsx URI makes Monaco parse the code as TSX.
             path={`file:///${file.path}`}
-            language="typescript"
+            language={fileLanguage(file.path)}
             value={file.content}
             theme={isDark ? 'vs-dark' : 'light'}
             loading={<p className="code-status">Loading code editor…</p>}
