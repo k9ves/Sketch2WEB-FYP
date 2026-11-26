@@ -43,17 +43,34 @@ function jsxAttribute(name: string, value: string): string {
     : `${name}="${value}"`
 }
 
-function classNameAttribute(
-  node: ComponentNode,
-  slot: string,
-  base: string,
-): string {
-  // Samples often repeat the base class in the style slot; write it once.
-  const classes = `${base} ${node.style[slot] ?? ''}`.split(/\s+/)
-  return jsxAttribute(
-    'className',
-    [...new Set(classes)].filter(Boolean).join(' '),
-  )
+/**
+ * What the generator writes for one node, before it becomes JSX text. The
+ * code-to-canvas sync (syncCode.ts) reads edited code back with the same
+ * spec, so both directions follow one set of rules.
+ */
+export interface ElementSpec {
+  tag: string
+  /** Classes the generator always writes (type and layout flags). */
+  baseClasses: string[]
+  /** Style slot that holds the user's classes (Properties panel tokens). */
+  slot: string
+  /** Attributes after className and style, e.g. href or alt. */
+  attributes: { name: string; value: string }[]
+  /** Layout style of hero and columns. */
+  style: CSSProperties | null
+  /** Unescaped text of leaf elements; null for containers and images. */
+  text: string | null
+}
+
+function splitClasses(value: string | undefined): string[] {
+  return (value ?? '').split(/\s+/).filter(Boolean)
+}
+
+/** Base classes, then the slot's classes; each class written once. */
+export function specClasses(spec: ElementSpec, node: ComponentNode): string[] {
+  return [
+    ...new Set([...spec.baseClasses, ...splitClasses(node.style[spec.slot])]),
+  ]
 }
 
 /**
@@ -75,110 +92,111 @@ function styleAttribute(style: CSSProperties): string {
   return `style={{ ${entries.join(', ')} }}`
 }
 
-const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
+export const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
 
 function headingTag(level: string | undefined): string {
   return headingTags[Number(level) - 1] ?? 'h2'
 }
 
-function container(
-  node: ComponentNode,
+function spec(
   tag: string,
-  base: string,
-  extra: string[] = [],
-): JsxElement {
+  baseClasses: string,
+  slot: string,
+  extra: Partial<Pick<ElementSpec, 'attributes' | 'style' | 'text'>> = {},
+): ElementSpec {
   return {
     tag,
-    attributes: [classNameAttribute(node, 'container', base), ...extra],
-    text: null,
+    baseClasses: splitClasses(baseClasses),
+    slot,
+    attributes: extra.attributes ?? [],
+    style: extra.style ?? null,
+    text: extra.text ?? null,
   }
 }
 
-export function describeElement(node: ComponentNode): JsxElement {
-  const text = escapeJsxText(node.content.text ?? '')
+export function elementSpec(node: ComponentNode): ElementSpec {
+  const text = node.content.text ?? ''
 
   switch (node.type) {
     case 'website':
-      return {
-        tag: 'div',
-        attributes: [classNameAttribute(node, 'background', 'sw-website')],
-        text: null,
-      }
+      return spec('div', 'sw-website', 'background')
     case 'navbar':
-      return container(node, 'nav', 'sw-navbar', [
-        jsxAttribute('aria-label', 'Main navigation'),
-      ])
+      return spec('nav', 'sw-navbar', 'container', {
+        attributes: [{ name: 'aria-label', value: 'Main navigation' }],
+      })
     case 'hero':
-      return container(
-        node,
+      return spec(
         'header',
         isColumnFlow(node.layout, heroLayoutDefaults)
           ? 'sw-hero is-column'
           : 'sw-hero',
-        [styleAttribute(layoutStyle(node.layout, heroLayoutDefaults))],
+        'container',
+        { style: layoutStyle(node.layout, heroLayoutDefaults) },
       )
     case 'section':
-      return container(node, 'section', 'sw-section')
-    case 'columns': {
-      const base = [
-        'sw-columns',
-        node.layout.display === 'flex' ? 'is-flex' : '',
-        isColumnFlow(node.layout, columnsLayoutDefaults) ? 'is-column' : '',
-      ]
-        .filter(Boolean)
-        .join(' ')
-      return container(node, 'div', base, [
-        styleAttribute(layoutStyle(node.layout, columnsLayoutDefaults)),
-      ])
-    }
+      return spec('section', 'sw-section', 'container')
+    case 'columns':
+      return spec(
+        'div',
+        [
+          'sw-columns',
+          node.layout.display === 'flex' ? 'is-flex' : '',
+          isColumnFlow(node.layout, columnsLayoutDefaults) ? 'is-column' : '',
+        ].join(' '),
+        'container',
+        { style: layoutStyle(node.layout, columnsLayoutDefaults) },
+      )
     case 'card':
-      return container(node, 'article', 'sw-card')
+      return spec('article', 'sw-card', 'container')
     case 'footer':
-      return container(node, 'footer', 'sw-footer')
+      return spec('footer', 'sw-footer', 'container')
     case 'heading':
-      return {
-        tag: headingTag(node.content.level),
-        attributes: [classNameAttribute(node, 'text', 'sw-heading')],
+      return spec(headingTag(node.content.level), 'sw-heading', 'text', {
         text,
-      }
+      })
     case 'text':
-      return {
-        tag: 'p',
-        attributes: [classNameAttribute(node, 'text', 'sw-text')],
-        text,
-      }
-    case 'button': {
+      return spec('p', 'sw-text', 'text', { text })
+    case 'button':
       // Unsafe or missing links fall back to "#" so the export never
       // contains a javascript: URL.
-      const href = (node.content.href && safeHref(node.content.href)) || '#'
-      return {
-        tag: 'a',
+      return spec('a', 'sw-button', 'button', {
         attributes: [
-          classNameAttribute(node, 'button', 'sw-button'),
-          jsxAttribute('href', href),
+          {
+            name: 'href',
+            value: (node.content.href && safeHref(node.content.href)) || '#',
+          },
         ],
         text,
-      }
-    }
+      })
     case 'image': {
       // A missing or unsafe source is left out: src="" makes the browser
       // download the page again, and React blocks javascript: URLs.
       const src = imageSrc(node.content.src)
-      return {
-        tag: 'img',
+      return spec('img', 'sw-image', 'image', {
         attributes: [
-          classNameAttribute(node, 'image', 'sw-image'),
-          ...(src ? [jsxAttribute('src', src)] : []),
-          jsxAttribute('alt', node.content.alt ?? ''),
+          ...(src ? [{ name: 'src', value: src }] : []),
+          { name: 'alt', value: node.content.alt ?? '' },
         ],
-        text: null,
-      }
+      })
     }
   }
 }
 
+export function describeElement(node: ComponentNode): JsxElement {
+  const element = elementSpec(node)
+  return {
+    tag: element.tag,
+    attributes: [
+      jsxAttribute('className', specClasses(element, node).join(' ')),
+      ...(element.style ? [styleAttribute(element.style)] : []),
+      ...element.attributes.map(({ name, value }) => jsxAttribute(name, value)),
+    ],
+    text: element.text === null ? null : escapeJsxText(element.text),
+  }
+}
+
 /** A safe image source: a normal link or an embedded `data:image/` URL. */
-function imageSrc(value: string | undefined): string | undefined {
+export function imageSrc(value: string | undefined): string | undefined {
   const src = value?.trim()
   if (!src) return undefined
   return /^data:image\//i.test(src) ? src : safeHref(src)

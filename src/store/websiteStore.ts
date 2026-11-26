@@ -17,6 +17,13 @@ type ComponentNodeUpdate = Partial<
   Pick<ComponentNode, 'content' | 'layout' | 'style'>
 >
 
+/** Content and style keys to merge into one component. */
+export interface NodeContentUpdate {
+  id: string
+  content?: Record<string, string>
+  style?: Record<string, string>
+}
+
 /** Layout keys to merge into nodes, by node id. */
 export type LayoutPatch = Record<string, Record<string, string>>
 
@@ -54,6 +61,8 @@ interface WebsiteState {
   setWebsite: (website: WebsiteDocument) => void
   selectNode: (id: string | null) => void
   updateNode: (id: string, updates: ComponentNodeUpdate) => void
+  /** Updates several components as one undo step (code-to-canvas sync). */
+  updateNodes: (updates: readonly NodeContentUpdate[]) => void
   addNode: (parentId: string, node: ComponentNode, index?: number) => void
   duplicateNode: (id: string) => void
   removeNode: (id: string) => void
@@ -270,6 +279,31 @@ export const useWebsiteStore = create<WebsiteState>((set) => ({
       }
 
       return recordChange(state, website)
+    }),
+  updateNodes: (updates) =>
+    set((state) => {
+      if (updates.length === 0) return state
+      let tree: ComponentNode = state.website
+      for (const update of updates) {
+        if (!findNode(tree, update.id)) {
+          throw new Error(
+            `Cannot update component "${update.id}": node not found.`,
+          )
+        }
+        tree = updateTree(tree, update.id, (node) => ({
+          ...node,
+          content: update.content
+            ? { ...node.content, ...update.content }
+            : node.content,
+          style: update.style ? { ...node.style, ...update.style } : node.style,
+        }))
+      }
+      if (!isWebsiteDocument(tree)) {
+        throw new Error(
+          'Updating components produced an invalid website document.',
+        )
+      }
+      return recordChange(state, tree)
     }),
   addNode: (parentId, node, index) =>
     set((state) => {

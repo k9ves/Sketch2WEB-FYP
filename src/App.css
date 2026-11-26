@@ -945,14 +945,42 @@ textarea.property-input {
   gap: 8px 14px;
   padding: 8px 16px;
   border-bottom: 1px solid var(--divider);
-  background: var(--accent-soft);
+  background: var(--surface-subtle);
   color: var(--text-label);
   font-size: 12px;
+}
+
+/* Sync states (T57b): synced, code only, not supported yet. */
+.code-custom-bar.is-synced {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.code-custom-bar.is-code-only {
+  background: var(--accent-soft);
+  color: var(--text-label);
 }
 
 .code-custom-bar.is-warning {
   background: var(--warning-soft);
   color: var(--warning);
+}
+
+.code-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.code-line-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .code-editor {

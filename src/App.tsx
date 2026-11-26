@@ -16,7 +16,7 @@ import TemplateGallery from './editor/TemplateGallery'
 import { downloadProject, readProjectFile } from './editor/projectActions'
 import { PROJECT_FILE_ACCEPT, projectFileName } from './store/projectFile'
 import { findNode, isContainerType } from './store/tree'
-import { useCustomCodeStore } from './store/customCodeStore'
+import { codeOnlyPaths, useCustomCodeStore } from './store/customCodeStore'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 import './renderer/website.css'
@@ -75,6 +75,19 @@ function App() {
   const undo = useWebsiteStore((state) => state.undo)
   const redo = useWebsiteStore((state) => state.redo)
   const clearCustomCode = useCustomCodeStore((state) => state.clearAll)
+  const hasCodeOnlyEdits = useCustomCodeStore(
+    (state) => codeOnlyPaths(state.files).length > 0,
+  )
+
+  // Code-only edits live in memory; warn before a reload or close loses them.
+  useEffect(() => {
+    if (!hasCodeOnlyEdits) return
+    function warnBeforeLeaving(event: BeforeUnloadEvent) {
+      event.preventDefault()
+    }
+    window.addEventListener('beforeunload', warnBeforeLeaving)
+    return () => window.removeEventListener('beforeunload', warnBeforeLeaving)
+  }, [hasCodeOnlyEdits])
   const websiteTitle = website.content.title || 'Untitled website'
   const selectedCanvasNode = selectedId
     ? findNode(website, selectedId)
@@ -165,16 +178,30 @@ function App() {
     addNode(targetContainerId, createComponentNode(selectedPaletteType))
   }
 
+  /**
+   * Code edits belong to the current website. Code-only edits are never
+   * dropped without asking; returns false when the user keeps them.
+   */
+  function confirmDiscardCode(): boolean {
+    const paths = codeOnlyPaths(useCustomCodeStore.getState().files)
+    if (paths.length === 0) return true
+    const names = paths.map((path) => path.slice(path.lastIndexOf('/') + 1))
+    return window.confirm(
+      `You have code-only changes in ${names.join(', ')}. Opening another website discards them. Continue?`,
+    )
+  }
+
   function changeSample(name: string) {
     const sample = websiteSamples[name]
     if (!sample) throw new Error(`Unknown website sample: ${name}`)
+    if (!confirmDiscardCode()) return
     setSampleName(name)
     setWebsite(sample)
-    // Code edits belong to the previous website.
     clearCustomCode()
   }
 
   function showInEditor(next: WebsiteDocument) {
+    if (!confirmDiscardCode()) return
     setWebsite(next)
     clearCustomCode()
     // The sample picker shows "Template" until a sample is chosen.
