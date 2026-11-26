@@ -1,6 +1,7 @@
 import type { WebsiteDocument } from '../schema/types'
 import { componentNames } from './componentNames'
 import { generateAppTsx, generateComponentTsx } from './generateApp'
+import { generatableChildren } from './generateTree'
 import { projectFiles } from './projectFiles'
 
 export interface GeneratedFile {
@@ -16,12 +17,13 @@ export interface GeneratedFile {
 export function generateProjectFiles(
   website: WebsiteDocument,
 ): GeneratedFile[] {
-  const names = componentNames(website.children)
+  const parts = generatableChildren(website)
+  const names = componentNames(parts)
 
   return [
     ...projectFiles(website),
     { path: 'src/App.tsx', content: generateAppTsx(website, names) },
-    ...website.children.map((node, index) => ({
+    ...parts.map((node, index) => ({
       path: `src/components/${names[index]}.tsx`,
       content: generateComponentTsx(names[index], node),
     })),

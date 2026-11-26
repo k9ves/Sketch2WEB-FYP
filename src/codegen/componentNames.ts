@@ -1,4 +1,5 @@
 import type { ComponentNode, ComponentType } from '../schema/types'
+import { generatableChildren } from './generateTree'
 
 // Picks a file and component name for each top-level part of the website,
 // e.g. Navbar, Hero, WhatWeDo, Footer. Sections are named after their first
@@ -20,7 +21,7 @@ function firstHeadingText(node: ComponentNode): string | null {
   if (node.type === 'heading' && node.content.text?.trim()) {
     return node.content.text
   }
-  for (const child of node.children) {
+  for (const child of generatableChildren(node)) {
     const text = firstHeadingText(child)
     if (text) return text
   }

@@ -2,6 +2,7 @@ import builderPackage from '../../package.json'
 import websiteCss from '../renderer/website.css?raw'
 import type { ComponentNode, WebsiteDocument } from '../schema/types'
 import type { GeneratedFile } from './generateProject'
+import { generatableChildren } from './generateTree'
 
 // The fixed files of the exported Vite + React + Tailwind project. Package
 // versions come from the builder's own package.json, so the export uses the
@@ -179,7 +180,9 @@ function collectImageSources(node: ComponentNode, sources: Set<string>) {
   if (node.type === 'image' && node.content.src?.startsWith('/')) {
     sources.add(node.content.src)
   }
-  node.children.forEach((child) => collectImageSources(child, sources))
+  generatableChildren(node).forEach((child) =>
+    collectImageSources(child, sources),
+  )
 }
 
 /**

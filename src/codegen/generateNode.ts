@@ -33,11 +33,12 @@ function escapeJsxText(value: string): string {
 }
 
 /**
- * A JSX attribute. JSX string attributes have no backslash escapes, so a
- * value with a quote or backslash is written as a JS expression instead.
+ * A JSX attribute. JSX string attributes have no backslash escapes and
+ * decode HTML entities (`&amp;` would become `&`), so a value with a quote,
+ * backslash or `&` is written as a JS expression instead.
  */
 function jsxAttribute(name: string, value: string): string {
-  return /["\\]/.test(value)
+  return /["\\&]/.test(value)
     ? `${name}={${JSON.stringify(value)}}`
     : `${name}="${value}"`
 }
@@ -159,17 +160,28 @@ export function describeElement(node: ComponentNode): JsxElement {
         text,
       }
     }
-    case 'image':
+    case 'image': {
+      // A missing or unsafe source is left out: src="" makes the browser
+      // download the page again, and React blocks javascript: URLs.
+      const src = imageSrc(node.content.src)
       return {
         tag: 'img',
         attributes: [
           classNameAttribute(node, 'image', 'sw-image'),
-          jsxAttribute('src', node.content.src ?? ''),
+          ...(src ? [jsxAttribute('src', src)] : []),
           jsxAttribute('alt', node.content.alt ?? ''),
         ],
         text: null,
       }
+    }
   }
+}
+
+/** A safe image source: a normal link or an embedded `data:image/` URL. */
+function imageSrc(value: string | undefined): string | undefined {
+  const src = value?.trim()
+  if (!src) return undefined
+  return /^data:image\//i.test(src) ? src : safeHref(src)
 }
 
 export function openTag(element: JsxElement, selfClosing = false): string {
