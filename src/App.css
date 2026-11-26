@@ -848,6 +848,64 @@ textarea.property-input {
   grid-template-areas: 'canvas';
 }
 
+/* Code view: only the generated code (T55). */
+.editor-layout.is-code {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: none;
+}
+
+.code-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 55px rgb(42 31 71 / 10%);
+}
+
+.code-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.code-header h2 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.code-file-name {
+  color: var(--text-label);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+}
+
+.code-note {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.code-editor {
+  height: min(72vh, 760px);
+}
+
+.code-status {
+  margin: 0;
+  padding: 24px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.code-status.is-error {
+  color: var(--warning);
+}
+
 .sw-canvas-root.is-preview :is(.sw-node, .sw-component) {
   cursor: auto;
 }

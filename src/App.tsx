@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { websiteSamples } from './samples'
 import { componentTypes } from './schema/types'
 import type { WebsiteDocument } from './schema/types'
@@ -19,6 +19,9 @@ import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
 import './renderer/website.css'
+
+// Monaco and Prettier are large; they load the first time Code is opened.
+const CodePanel = lazy(() => import('./editor/code/CodePanel'))
 
 function isEditableTarget(target: EventTarget | null): boolean {
   return (
@@ -51,6 +54,7 @@ function App() {
   const [sampleName, setSampleName] = useState('landing')
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('components')
   const [isPreview, setIsPreview] = useState(false)
+  const [isCodeView, setIsCodeView] = useState(false)
   const [device, setDevice] = useState<Device>('desktop')
   // Free positions are stored for the desktop width only, so narrower
   // devices are view-only: editing there would move them for desktop too.
@@ -91,9 +95,13 @@ function App() {
       // The start screen hides the website; shortcuts must not change it.
       if (screen !== 'editor' || isEditableTarget(event.target)) return
 
-      // Preview only listens for Esc (back to editing); no edit shortcuts.
-      if (isPreview) {
-        if (event.key === 'Escape') setIsPreview(false)
+      // Preview and code view only listen for Esc (back to editing); no
+      // edit shortcuts, since the canvas is not visible to undo on.
+      if (isPreview || isCodeView) {
+        if (event.key === 'Escape') {
+          setIsPreview(false)
+          setIsCodeView(false)
+        }
         return
       }
 
@@ -120,13 +128,20 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPreview, redo, removeNode, screen, selectedId, undo])
+  }, [isCodeView, isPreview, redo, removeNode, screen, selectedId, undo])
 
   function togglePreview() {
     // Leaving the selection on would show outlines and handles again
     // when going back to editing; start from a clean state both ways.
     selectNode(null)
+    setIsCodeView(false)
     setIsPreview((current) => !current)
+  }
+
+  function toggleCodeView() {
+    selectNode(null)
+    setIsPreview(false)
+    setIsCodeView((current) => !current)
   }
 
   function changeDevice(next: Device) {
@@ -158,6 +173,7 @@ function App() {
     // The sample picker shows "Template" until a sample is chosen.
     setSampleName('')
     setIsPreview(false)
+    setIsCodeView(false)
     setDevice('desktop')
     setScreen('editor')
   }
@@ -272,8 +288,19 @@ function App() {
             >
               {isPreview ? 'Edit' : 'Preview'}
             </button>
-            <button className="toolbar-button" type="button">
-              Code
+            <button
+              className={`toolbar-button${isCodeView ? ' is-active' : ''}`}
+              type="button"
+              aria-pressed={isCodeView}
+              title={
+                isCodeView ? 'Back to editing (Esc)' : 'Show generated code'
+              }
+              onClick={(event) => {
+                event.stopPropagation()
+                toggleCodeView()
+              }}
+            >
+              {isCodeView ? 'Edit' : 'Code'}
             </button>
             <button className="toolbar-button" type="button">
               Export
@@ -304,8 +331,21 @@ function App() {
         </p>
       )}
       <FreeformDndProvider>
-        <div className={`editor-layout${isPreview ? ' is-preview' : ''}`}>
-          {!isPreview && (
+        <div
+          className={`editor-layout${isPreview ? ' is-preview' : ''}${isCodeView ? ' is-code' : ''}`}
+        >
+          {isCodeView && (
+            <Suspense
+              fallback={
+                <p className="code-status" role="status">
+                  Loading code editor…
+                </p>
+              }
+            >
+              <CodePanel website={website} />
+            </Suspense>
+          )}
+          {!isPreview && !isCodeView && (
             <aside className="editor-panel components-panel">
               <div
                 className="sidebar-tabs"
@@ -393,71 +433,76 @@ function App() {
               )}
             </aside>
           )}
-          <section className="canvas-panel" aria-label="Canvas">
-            <div className="canvas-header">
-              <h2>{isPreview ? 'Preview' : 'Canvas'}</h2>
-              <div
-                className="device-switch"
-                role="group"
-                aria-label="Device width"
-              >
-                {devices.map((option) => (
-                  <button
-                    key={option.id}
-                    className={`device-button${device === option.id ? ' is-active' : ''}`}
-                    type="button"
-                    aria-pressed={device === option.id}
-                    title={
-                      option.width === null
-                        ? option.label
-                        : `${option.label} (${option.width}px)`
-                    }
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      changeDevice(option.id)
-                    }}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            {!isPreview && device !== 'desktop' && (
-              <p className="canvas-note" role="status">
-                Tablet and mobile views are read-only. Switch to Desktop to
-                edit.
-              </p>
-            )}
-            <section
-              className="preview-frame"
-              aria-label={`${websiteTitle} preview`}
-              style={deviceWidth ? { maxWidth: `${deviceWidth}px` } : undefined}
-            >
-              <div className="preview-titlebar">
-                <span className="preview-dots" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span>
-                  {isCanvasReadOnly ? (
-                    websiteTitle
-                  ) : (
-                    <InlineText
-                      value={websiteTitle}
-                      onSave={(title) =>
-                        updateNode(website.id, { content: { title } })
+          {/* Unmounted in code view: the freeform canvas measures its DOM. */}
+          {!isCodeView && (
+            <section className="canvas-panel" aria-label="Canvas">
+              <div className="canvas-header">
+                <h2>{isPreview ? 'Preview' : 'Canvas'}</h2>
+                <div
+                  className="device-switch"
+                  role="group"
+                  aria-label="Device width"
+                >
+                  {devices.map((option) => (
+                    <button
+                      key={option.id}
+                      className={`device-button${device === option.id ? ' is-active' : ''}`}
+                      type="button"
+                      aria-pressed={device === option.id}
+                      title={
+                        option.width === null
+                          ? option.label
+                          : `${option.label} (${option.width}px)`
                       }
-                    />
-                  )}
-                </span>
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        changeDevice(option.id)
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="preview-page" id="top">
-                <FreeformCanvas preview={isCanvasReadOnly} />
-              </div>
+              {!isPreview && device !== 'desktop' && (
+                <p className="canvas-note" role="status">
+                  Tablet and mobile views are read-only. Switch to Desktop to
+                  edit.
+                </p>
+              )}
+              <section
+                className="preview-frame"
+                aria-label={`${websiteTitle} preview`}
+                style={
+                  deviceWidth ? { maxWidth: `${deviceWidth}px` } : undefined
+                }
+              >
+                <div className="preview-titlebar">
+                  <span className="preview-dots" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span>
+                    {isCanvasReadOnly ? (
+                      websiteTitle
+                    ) : (
+                      <InlineText
+                        value={websiteTitle}
+                        onSave={(title) =>
+                          updateNode(website.id, { content: { title } })
+                        }
+                      />
+                    )}
+                  </span>
+                </div>
+                <div className="preview-page" id="top">
+                  <FreeformCanvas preview={isCanvasReadOnly} />
+                </div>
+              </section>
             </section>
-          </section>
-          {!isPreview && <PropertiesPanel />}
+          )}
+          {!isPreview && !isCodeView && <PropertiesPanel />}
         </div>
       </FreeformDndProvider>
     </main>
