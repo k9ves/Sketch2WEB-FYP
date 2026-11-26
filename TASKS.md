@@ -83,7 +83,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 - [x] **T48** Generator for one node: heading/text/button → JSX string. — _Done when:_ correct string output.
 - [x] **T49** Recursive generator for whole tree. — _Done when:_ landing sample gives full JSX.
-- [ ] **T50** Wrap into `App.tsx` with imports. — _Done when:_ output is valid TSX.
+- [x] **T50** Wrap into `App.tsx` with imports. — _Done when:_ output is valid TSX.
 - [ ] **T51** Split into component files (Navbar.tsx, Hero.tsx...). — _Done when:_ multiple files generated.
 - [ ] **T52** Format output (Prettier in browser). — _Done when:_ code is neatly indented.
 - [ ] **T53** Generated project runs on its own (test in a fresh Vite project). — _Done when:_ `npm run dev` shows same website.
