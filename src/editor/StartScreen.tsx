@@ -2,6 +2,7 @@ import ThemePicker from './ThemePicker'
 
 interface StartScreenProps {
   onChooseTemplate: () => void
+  onChooseSketch: () => void
   onOpenProject: () => void
   /** Result of opening a project, e.g. why a file was refused. */
   message: string | null
@@ -30,6 +31,7 @@ function SketchIcon() {
 /** First screen: choose how to start a website (docs: TASKS T45). */
 function StartScreen({
   onChooseTemplate,
+  onChooseSketch,
   onOpenProject,
   message,
 }: StartScreenProps) {
@@ -56,8 +58,7 @@ function StartScreen({
             Choose a ready-made website and make it your own.
           </span>
         </button>
-        <button className="start-card" type="button" disabled>
-          <span className="start-card-badge">Coming soon</span>
+        <button className="start-card" type="button" onClick={onChooseSketch}>
           <span className="start-card-icon">
             <SketchIcon />
           </span>

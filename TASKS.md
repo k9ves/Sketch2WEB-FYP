@@ -113,7 +113,7 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 ## M11 — Sketch input (Week 12-16)
 
 - [ ] **T59** Collect 20-30 sample sketches (photos of hand-drawn UIs). — _Done when:_ folder with images.
-- [ ] **T60** Sketch upload UI (image picker and preview). — _Done when:_ image shows on screen.
+- [x] **T60** Sketch upload UI (image picker and preview). — _Done when:_ image shows on screen.
 - [ ] **T61** Choose approach (existing vision model/API) with Asim, test on 5 sketches. — _Done when:_ returns element list.
 - [ ] **T62** Convert detected elements to ComponentNode JSON (mapping function). — _Done when:_ sketch gives valid JSON.
 - [ ] **T63** Layout ordering (top-to-bottom, columns by x-position). — _Done when:_ order matches sketch.

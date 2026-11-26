@@ -11,6 +11,7 @@ import FreeformDndProvider from './editor/freeform/FreeformDnd'
 import PropertiesPanel from './editor/properties/PropertiesPanel'
 import TreePanel from './editor/tree/TreePanel'
 import ThemePicker from './editor/ThemePicker'
+import SketchUpload from './editor/SketchUpload'
 import StartScreen from './editor/StartScreen'
 import TemplateGallery from './editor/TemplateGallery'
 import { downloadProject, readProjectFile } from './editor/projectActions'
@@ -38,7 +39,7 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 type SidebarTab = 'components' | 'layers'
 
-type Screen = 'start' | 'gallery' | 'editor'
+type Screen = 'start' | 'gallery' | 'sketch' | 'editor'
 
 type Device = 'desktop' | 'tablet' | 'mobile'
 
@@ -287,11 +288,16 @@ function App() {
         {projectInput}
         <StartScreen
           onChooseTemplate={() => setScreen('gallery')}
+          onChooseSketch={() => setScreen('sketch')}
           onOpenProject={chooseProjectFile}
           message={projectMessage}
         />
       </>
     )
+  }
+
+  if (screen === 'sketch') {
+    return <SketchUpload onBack={() => setScreen('start')} />
   }
 
   if (screen === 'gallery') {

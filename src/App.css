@@ -192,18 +192,6 @@
   line-height: 1.6;
 }
 
-.start-card-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  color: var(--warning);
-  background: var(--warning-soft);
-  font-size: 12px;
-  font-weight: 600;
-}
-
 @media (max-width: 640px) {
   .start-options {
     grid-template-columns: minmax(0, 1fr);
@@ -311,6 +299,89 @@
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.5;
+}
+
+/* Sketch upload (T60) */
+.sketch-screen {
+  width: min(760px, calc(100% - 40px));
+}
+
+.sketch-drop {
+  display: grid;
+  width: 100%;
+  min-height: 280px;
+  place-items: center;
+  padding: 24px;
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  color: var(--text-muted);
+  background: var(--surface);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.sketch-drop:hover,
+.sketch-drop.is-dragging {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.sketch-drop:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sketch-drop.has-image {
+  padding: 12px;
+  border-style: solid;
+  background: var(--surface-muted);
+}
+
+.sketch-drop-text {
+  display: grid;
+  gap: 6px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.sketch-drop-text strong {
+  color: var(--accent);
+}
+
+.sketch-drop-text span {
+  font-size: 13px;
+}
+
+.sketch-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 60vh;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.sketch-problem {
+  margin: 14px 0 0;
+  color: var(--warning);
+  font-size: 14px;
+  text-align: center;
+}
+
+.sketch-actions {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.sketch-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 .theme-picker {
