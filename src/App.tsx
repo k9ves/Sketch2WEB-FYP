@@ -18,6 +18,7 @@ import { PROJECT_FILE_ACCEPT, projectFileName } from './store/projectFile'
 import { findNode, isContainerType } from './store/tree'
 import { useWebsiteStore } from './store/websiteStore'
 import './App.css'
+import './renderer/website.css'
 
 function isEditableTarget(target: EventTarget | null): boolean {
   return (

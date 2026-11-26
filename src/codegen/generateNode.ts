@@ -56,13 +56,13 @@ function classNameAttribute(
 }
 
 /**
- * Writes a style object as `style={{ ... }}`. CSS variables (`--sw-*`) are
- * only read by the editor's node wrappers and are not valid keys of React's
- * CSSProperties type, so they are left out.
+ * Writes a style object as `style={{ ... }}`. CSS variables (`--sw-align`,
+ * `--sw-justify`) are kept for website.css; the exported `css-vars.d.ts`
+ * lets React's CSSProperties type accept them.
  */
 function styleAttribute(style: CSSProperties): string {
   const entries = Object.entries(style)
-    .filter(([key, value]) => value !== undefined && !key.startsWith('--'))
+    .filter(([, value]) => value !== undefined)
     .map(([key, value]) => {
       const name = /^[A-Za-z_$][\w$]*$/.test(key) ? key : JSON.stringify(key)
       const literal =

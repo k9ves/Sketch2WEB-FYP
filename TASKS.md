@@ -86,7 +86,8 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 - [x] **T50** Wrap into `App.tsx` with imports. — _Done when:_ output is valid TSX.
 - [x] **T51** Split into component files (Navbar.tsx, Hero.tsx...). — _Done when:_ multiple files generated.
 - [x] **T52** Format output (Prettier in browser). — _Done when:_ code is neatly indented.
-- [ ] **T53** Generated project runs on its own (test in a fresh Vite project). — _Done when:_ `npm run dev` shows same website.
+- [x] **T53** Generated project runs on its own (test in a fresh Vite project). — _Done when:_ `npm run dev` shows same website.
+- [ ] **T53b** Export freeform (Alt) positions and resize sizes (`x`, `y`, `width`, `boxWidth`, `boxHeight`). — _Done when:_ a freely placed and resized component sits in the same place in the export.
 - [ ] **T54** Escape special characters and handle missing fields. — _Done when:_ weird text does not break code.
 
 ## M10 — Code view and export (Week 11-12)
@@ -98,7 +99,8 @@ Commit after every task (`feat: T12 card renderer`). Each milestone ends with a 
 
 **Remember for M9–M10 (export notes):**
 
-- **Responsive columns:** the canvas stacks columns below 640px through `@container sw-page` (`App.css`). Generated code must give the same result with Tailwind classes, e.g. `grid-cols-1 sm:grid-cols-3`.
+- **Responsive columns:** the canvas stacks columns below 640px through `@container sw-page` (`src/renderer/website.css`). The export ships the same file as `src/App.css` and makes `#root` the `sw-page` container, so it stacks the same way.
+- **Images:** `publicAssetPaths()` lists site-relative images (e.g. `/templates/saas/dashboard.svg`); the ZIP must copy them from the builder's `public/` folder.
 - **The export is frontend only.** Users connect a backend themselves, so make that easy:
   - Add `.env.example` with `VITE_API_URL=` and an empty `src/api.ts` starter (a `fetch` helper reading `import.meta.env.VITE_API_URL`).
   - Add a `README.md` to the export: how to connect their own API (env, CORS, deploy frontend and backend separately), or a service such as Supabase/Firebase (data, login), Formspree (forms) or Stripe Payment Links.
